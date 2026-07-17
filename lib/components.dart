@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'custom_cursor.dart';
-import 'dart:convert';
 import 'dart:math';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 
 class LanguageManager extends ChangeNotifier {
   static final LanguageManager instance = LanguageManager();
@@ -18,23 +15,6 @@ class LanguageManager extends ChangeNotifier {
 
 String tr(String arText, String enText) {
   return LanguageManager.instance.isArabic ? arText : enText;
-}
-
-class AuthManager extends ChangeNotifier {
-  static final AuthManager instance = AuthManager();
-  String? _username;
-  String? get username => _username;
-  bool get isLoggedIn => _username != null;
-
-  void login(String user) {
-    _username = user;
-    notifyListeners();
-  }
-
-  void logout() {
-    _username = null;
-    notifyListeners();
-  }
 }
 
 class Navbar extends StatefulWidget {
@@ -160,9 +140,9 @@ class _NavbarState extends State<Navbar> {
                 if (isDesktop)
                   Row(
                     children: [
-                      _buildNavLink(tr('القدرات', 'Capabilities'), '#capabilities'),
+                      _buildNavLink(tr('أعمالنا', 'Works'), '#works'),
                       const SizedBox(width: 32),
-                      _buildNavLink(tr('التقنيات', 'Technology'), '#capabilities'),
+                      _buildNavLink(tr('التقنيات', 'Technology'), '#works'),
                       const SizedBox(width: 32),
                       _buildNavLink(tr('الاستوديو', 'Studio'), '#cta'),
                       const SizedBox(width: 32),
@@ -170,128 +150,45 @@ class _NavbarState extends State<Navbar> {
                     ],
                   ),
 
-                // Auth, Language and Get Started Buttons
-                AnimatedBuilder(
-                  animation: Listenable.merge([AuthManager.instance, LanguageManager.instance]),
-                  builder: (context, _) {
-                    final auth = AuthManager.instance;
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Language switcher Globe
-                        CustomCursorHover(
-                          child: IconButton(
-                            icon: Icon(Icons.language, color: Colors.white, size: isSmallMobile ? 18 : 20),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            onPressed: () {
-                              LanguageManager.instance.toggleLanguage();
-                            },
-                            tooltip: tr('English', 'عربي'),
-                          ),
-                        ),
-                        SizedBox(width: isSmallMobile ? 8 : 12),
+                // Language and Get Started Buttons
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Language switcher Globe
+                    CustomCursorHover(
+                      child: IconButton(
+                        icon: Icon(Icons.language, color: Colors.white, size: isSmallMobile ? 18 : 20),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () {
+                          LanguageManager.instance.toggleLanguage();
+                        },
+                        tooltip: tr('English', 'عربي'),
+                      ),
+                    ),
+                    SizedBox(width: isSmallMobile ? 8 : 12),
 
-                        if (auth.isLoggedIn) ...[
-                          if (!isSmallMobile) ...[
-                            Text(
-                              tr('مرحباً، ${auth.username}', 'Hi, ${auth.username}'),
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF3FD2FF),
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            CustomCursorHover(
-                              child: TextButton(
-                                onPressed: () => auth.logout(),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Colors.redAccent,
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                  textStyle: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Inter',
-                                  ),
-                                ),
-                                child: Text(tr('خروج', 'Logout')),
-                              ),
-                            ),
-                          ] else ...[
-                            CustomCursorHover(
-                              child: IconButton(
-                                icon: const Icon(Icons.logout, color: Colors.redAccent, size: 18),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                onPressed: () => auth.logout(),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                          ]
-                        ] else ...[
-                          if (!isSmallMobile)
-                            CustomCursorHover(
-                              child: TextButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => const AuthDialog(),
-                                  );
-                                },
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                  textStyle: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Inter',
-                                  ),
-                                ),
-                                child: Text(tr('دخول', 'Login')),
-                              ),
-                            )
-                          else
-                            CustomCursorHover(
-                              child: IconButton(
-                                icon: const Icon(Icons.person, color: Colors.white, size: 18),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => const AuthDialog(),
-                                  );
-                                },
-                              ),
-                            ),
-                          SizedBox(width: isSmallMobile ? 8 : 12),
-                        ],
-                        
-                        CustomCursorHover(
-                          child: TextButton(
-                            onPressed: () => widget.onLinkTap('#cta'),
-                            style: TextButton.styleFrom(
-                              backgroundColor: const Color(0xFF3FD2FF),
-                              foregroundColor: const Color(0xFF090D16),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: isSmallMobile ? 12 : 20, 
-                                vertical: isSmallMobile ? 6 : 10
-                              ),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(999)),
-                              textStyle: TextStyle(
-                                  fontSize: isSmallMobile ? 12 : 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Inter'),
-                            ),
-                            child: Text(tr('ابدأ', 'Start')),
+                    CustomCursorHover(
+                      child: TextButton(
+                        onPressed: () => widget.onLinkTap('#cta'),
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xFF3FD2FF),
+                          foregroundColor: const Color(0xFF090D16),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isSmallMobile ? 12 : 20, 
+                            vertical: isSmallMobile ? 6 : 10
                           ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(999)),
+                          textStyle: TextStyle(
+                              fontSize: isSmallMobile ? 12 : 14,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Inter'),
                         ),
-                      ],
-                    );
-                  },
+                        child: Text(tr('ابدأ', 'Start')),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -642,296 +539,7 @@ class CardGlowPainter extends CustomPainter {
   }
 }
 
-class AuthDialog extends StatefulWidget {
-  const AuthDialog({super.key});
 
-  @override
-  State<AuthDialog> createState() => _AuthDialogState();
-}
-
-class _AuthDialogState extends State<AuthDialog> {
-  final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  
-  bool _isLogin = true;
-  bool _isLoading = false;
-  String? _errorMessage;
-  String? _successMessage;
-
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
-    
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-      _successMessage = null;
-    });
-
-    final username = _usernameController.text.trim();
-    final password = _passwordController.text.trim();
-
-    try {
-      final baseUrl = kIsWeb ? "" : "http://localhost:5555";
-      final endpoint = _isLogin ? "/api/login" : "/api/register";
-      
-      final response = await http.post(
-        Uri.parse("$baseUrl$endpoint"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"username": username, "password": password}),
-      );
-
-      final resData = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        if (_isLogin) {
-          AuthManager.instance.login(username);
-          if (mounted) {
-            Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(tr("أهلاً بك مجدداً، $username!", "Welcome back, $username!"))),
-            );
-          }
-        } else {
-          setState(() {
-            _isLogin = true;
-            _successMessage = tr("تم التسجيل بنجاح! يرجى تسجيل الدخول.", "Registration successful! Please login.");
-          });
-        }
-      } else {
-        setState(() {
-          _errorMessage = resData['message'] ?? tr("حدث خطأ ما.", "An error occurred.");
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = tr("تعذر الاتصال بسيرفر تسجيل الدخول.", "Could not connect to authentication server.");
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      child: Container(
-        width: 400,
-        padding: const EdgeInsets.all(28),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          color: const Color(0xFF141A29).withOpacity(0.9), // Dark glass
-          border: Border.all(
-            color: const Color(0xFF3FD2FF).withOpacity(0.2),
-            width: 1.5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF3FD2FF).withOpacity(0.1),
-              blurRadius: 32,
-              spreadRadius: 4,
-            ),
-          ],
-        ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Dialog title
-              Text(
-                _isLogin ? tr("أهلاً بك مجدداً", "Welcome Back") : tr("إنشاء حساب", "Create Account"),
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Inter',
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                _isLogin 
-                    ? tr("أدخل بيانات الاعتماد للوصول إلى لوحة التحكم", "Enter your credentials to access your console") 
-                    : tr("انضم إلى إطار عمل رواد التكنولوجيا الرائد", "Join the premier tech pioneer framework"),
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontFamily: 'Inter',
-                  color: Color(0xFFA6ABB6),
-                ),
-              ),
-              const SizedBox(height: 24),
-              
-              if (_errorMessage != null) ...[
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.redAccent.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
-                  ),
-                  child: Text(
-                    _errorMessage!,
-                    style: const TextStyle(color: Colors.redAccent, fontSize: 13),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              if (_successMessage != null) ...[
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.green.withOpacity(0.3)),
-                  ),
-                  child: Text(
-                    _successMessage!,
-                    style: const TextStyle(color: Colors.green, fontSize: 13),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              // Username input
-              Text(
-                tr("اسم المستخدم", "Username"),
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _usernameController,
-                style: const TextStyle(color: Colors.white, fontSize: 14),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color(0xFF090D16),
-                  hintText: "admin",
-                  hintStyle: const TextStyle(color: Colors.white24),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: const Color(0xFF3FD2FF).withOpacity(0.1)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFF3FD2FF)),
-                  ),
-                ),
-                validator: (val) => val == null || val.isEmpty ? tr("اسم المستخدم مطلوب", "Username is required") : null,
-              ),
-              const SizedBox(height: 20),
-
-              // Password input
-              Text(
-                tr("كلمة المرور", "Password"),
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                style: const TextStyle(color: Colors.white, fontSize: 14),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color(0xFF090D16),
-                  hintText: "••••••••",
-                  hintStyle: const TextStyle(color: Colors.white24),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: const Color(0xFF3FD2FF).withOpacity(0.1)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFF3FD2FF)),
-                  ),
-                ),
-                validator: (val) => val == null || val.isEmpty ? tr("كلمة المرور مطلوبة", "Password is required") : null,
-              ),
-              const SizedBox(height: 32),
-
-              // Action button
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: TextButton(
-                  onPressed: _isLoading ? null : _submit,
-                  style: TextButton.styleFrom(
-                    backgroundColor: const Color(0xFF3FD2FF),
-                    foregroundColor: const Color(0xFF090D16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Color(0xFF090D16),
-                          ),
-                        )
-                      : Text(
-                          _isLogin ? tr("تسجيل الدخول", "Sign In") : tr("تسجيل في إطار العمل", "Register framework"),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Toggle Auth mode
-              Center(
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      _isLogin = !_isLogin;
-                      _errorMessage = null;
-                      _successMessage = null;
-                    });
-                  },
-                  child: Text(
-                    _isLogin 
-                        ? tr("ليس لديك حساب؟ سجل الآن", "Don't have an account? Register") 
-                        : tr("لديك حساب بالفعل؟ سجل الدخول", "Already have an account? Sign In"),
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF3FD2FF),
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 // -------------------------------------------------------------
 // Real-Time 3D Geometry Visualizer for Homepage Cards
