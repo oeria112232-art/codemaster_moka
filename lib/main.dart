@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:url_launcher/url_launcher.dart';
 import 'components.dart';
 import 'custom_cursor.dart';
-import 'hero_scene.dart';
+import 'portal/clean_hero_bg.dart';
 import 'pages.dart';
 import 'pages/portal_entry.dart';
 import 'pages/infinite_portal.dart';
@@ -308,7 +308,7 @@ class HeroSection extends StatelessWidget {
       width: double.infinity,
       child: Stack(
         children: [
-          const Positioned.fill(child: HeroScene()),
+          const Positioned.fill(child: CleanHeroBg()),
           Positioned(
             top: 0,
             left: 0,

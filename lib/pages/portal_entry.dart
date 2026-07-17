@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../components.dart';
-import '../portal/generative_painter.dart';
+import '../hero_scene.dart';
 
 class PortalEntryPage extends StatefulWidget {
   final VoidCallback onEnter;
@@ -18,17 +18,12 @@ class PortalEntryPage extends StatefulWidget {
 
 class _PortalEntryPageState extends State<PortalEntryPage>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _timeCtrl;
   late final AnimationController _pulseCtrl;
   bool _isHovering = false;
 
   @override
   void initState() {
     super.initState();
-    _timeCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 60),
-    )..repeat();
     _pulseCtrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
@@ -37,7 +32,6 @@ class _PortalEntryPageState extends State<PortalEntryPage>
 
   @override
   void dispose() {
-    _timeCtrl.dispose();
     _pulseCtrl.dispose();
     super.dispose();
   }
@@ -45,25 +39,12 @@ class _PortalEntryPageState extends State<PortalEntryPage>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final isAr = LanguageManager.instance.isArabic;
 
     return Scaffold(
       backgroundColor: const Color(0xFF010409),
       body: Stack(
         children: [
-          AnimatedBuilder(
-            animation: Listenable.merge([_timeCtrl, _pulseCtrl]),
-            builder: (context, _) {
-              return CustomPaint(
-                painter: PortalVisualPainter(
-                  time: _timeCtrl.value * 60,
-                  depth: 0.0,
-                  seed: 42,
-                ),
-                size: size,
-              );
-            },
-          ),
+          const Positioned.fill(child: HeroScene()),
           Container(
             decoration: BoxDecoration(
               gradient: RadialGradient(
