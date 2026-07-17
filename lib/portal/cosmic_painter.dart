@@ -181,7 +181,7 @@ class CosmicPainter extends CustomPainter {
     final py = center.dy + math.cos(t * 0.08 + d * 1.5) * size.height * 0.1;
 
     final moonConfigs = [
-      _MoonConfig(orbit: 2.2, size: 0.15, speed: 0.6, color: const Color(0xFFA78BFA), hasRing: false),
+      _MoonConfig(orbit: 2.2, size: 0.15, speed: 0.6, color: const Color(0xFF22C55E), hasRing: false),
       _MoonConfig(orbit: 3.0, size: 0.08, speed: -0.4, color: const Color(0xFF3FD2FF), hasRing: true),
       _MoonConfig(orbit: 1.6, size: 0.06, speed: 1.2, color: const Color(0xFFFF6B6B), hasRing: false),
       _MoonConfig(orbit: 3.8, size: 0.1, speed: -0.25, color: const Color(0xFF3FB950), hasRing: false),
@@ -339,7 +339,7 @@ class CosmicPainter extends CustomPainter {
           ? cloudColors[1]
           : colorIndex == 1
               ? cloudColors[2]
-              : const Color(0xFFA78BFA);
+               : const Color(0xFF22C55E);
 
       canvas.drawCircle(
         Offset(cx, cy),
@@ -406,7 +406,7 @@ class CosmicPainter extends CustomPainter {
 
   List<Color> _getDepthColors(double d) {
     if (d < 1.0) {
-      return [const Color(0xFF0a0a2e), const Color(0xFF3FD2FF), const Color(0xFFA78BFA)];
+      return [const Color(0xFF0a0a2e), const Color(0xFF3FD2FF), const Color(0xFF22C55E)];
     } else if (d < 2.0) {
       return [const Color(0xFF0d0822), const Color(0xFFAD00FF), const Color(0xFF58A6FF)];
     } else if (d < 3.0) {

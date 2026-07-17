@@ -13,7 +13,7 @@ class PortalVisualPainter extends CustomPainter {
   });
 
   static const List<List<Color>> _zonePalettes = [
-    [Color(0xFF0a0a2e), Color(0xFF3FD2FF), Color(0xFFA78BFA)],
+    [Color(0xFF0a0a2e), Color(0xFF3FD2FF), Color(0xFF22C55E)],
     [Color(0xFF0d1117), Color(0xFF58A6FF), Color(0xFF79C0FF)],
     [Color(0xFF0b0e14), Color(0xFF3FB950), Color(0xFF56D364)],
     [Color(0xFF161b22), Color(0xFFD2A8FF), Color(0xFFBC8CFF)],
@@ -87,7 +87,7 @@ class PortalVisualPainter extends CustomPainter {
       final r = 0.5 + rng.nextDouble() * 2.5;
       final alpha = (0.3 + sin(time * 2 + i) * 0.3).clamp(0.0, 1.0);
 
-      paint.color = (rng.nextBool() ? const Color(0xFF3FD2FF) : const Color(0xFFA78BFA))
+      paint.color = (rng.nextBool() ? const Color(0xFF3FD2FF) : const Color(0xFF22C55E))
           .withValues(alpha: alpha);
       canvas.drawCircle(Offset(x, y), r, paint);
     }
@@ -102,7 +102,7 @@ class PortalVisualPainter extends CustomPainter {
     final baseR = 80 + sin(time * 0.7) * 20;
     canvas.drawCircle(Offset(cx, cy), baseR, ringPaint);
     canvas.drawCircle(
-        Offset(cx, cy), baseR * 1.5, ringPaint..color = const Color(0xFFA78BFA).withValues(alpha: 0.08));
+        Offset(cx, cy), baseR * 1.5, ringPaint..color = const Color(0xFF22C55E).withValues(alpha: 0.08));
     canvas.drawCircle(
         Offset(cx, cy), baseR * 2.2, ringPaint..color = const Color(0xFF3FD2FF).withValues(alpha: 0.05));
   }
@@ -158,7 +158,7 @@ class PortalVisualPainter extends CustomPainter {
       final alpha = (0.15 - w * 0.015).clamp(0.03, 0.15);
       paint.color = Color.lerp(
         const Color(0xFF3FB950),
-        const Color(0xFFA78BFA),
+        const Color(0xFF22C55E),
         w / 8.0,
       )!.withValues(alpha: alpha);
 
@@ -269,7 +269,7 @@ class PortalVisualPainter extends CustomPainter {
     final paint = Paint()..style = PaintingStyle.fill;
     final colors = [
       const Color(0xFF3FD2FF),
-      const Color(0xFFA78BFA),
+      const Color(0xFF22C55E),
       const Color(0xFF3FB950),
     ];
 

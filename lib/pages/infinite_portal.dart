@@ -288,7 +288,7 @@ class _CosmicZoomPainter extends CustomPainter {
     final spread = ((d - 5) / 7.0).clamp(0.0, 1.0);
     final planetConfigs = [
       _PCfg(offset: const Offset(-0.3, -0.15), radius: 0.12, body: const Color(0xFF3FD2FF), wire: const Color(0xFF8FF2FF), speed: 0.3),
-      _PCfg(offset: const Offset(0.25, -0.2), radius: 0.08, body: const Color(0xFFA78BFA), wire: const Color(0xFFD2A8FF), speed: -0.5),
+      _PCfg(offset: const Offset(0.25, -0.2), radius: 0.08, body: const Color(0xFF22C55E), wire: const Color(0xFF56D364), speed: -0.5),
       _PCfg(offset: const Offset(-0.1, 0.2), radius: 0.06, body: const Color(0xFF3FB950), wire: const Color(0xFF56D364), speed: 0.7),
       _PCfg(offset: const Offset(0.3, 0.15), radius: 0.09, body: const Color(0xFFF78166), wire: const Color(0xFFFFA657), speed: -0.4),
       _PCfg(offset: const Offset(-0.25, 0.25), radius: 0.05, body: const Color(0xFFFF6B6B), wire: const Color(0xFFFF8A8A), speed: 0.9),
@@ -326,7 +326,7 @@ class _CosmicZoomPainter extends CustomPainter {
       _OrbitCfg(radius: 0.13, speed: 1.0, planetR: 5.0, color: const Color(0xFFFFB020)),
       _OrbitCfg(radius: 0.19, speed: 0.7, planetR: 6.0, color: const Color(0xFF3FD2FF)),
       _OrbitCfg(radius: 0.26, speed: 0.45, planetR: 10.0, color: const Color(0xFFF78166)),
-      _OrbitCfg(radius: 0.34, speed: 0.25, planetR: 8.0, color: const Color(0xFFA78BFA)),
+      _OrbitCfg(radius: 0.34, speed: 0.25, planetR: 8.0, color: const Color(0xFF22C55E)),
       _OrbitCfg(radius: 0.42, speed: 0.15, planetR: 4.0, color: const Color(0xFF3FB950)),
     ];
 
@@ -367,7 +367,7 @@ class _CosmicZoomPainter extends CustomPainter {
     // Galaxy core glow
     canvas.drawCircle(center, 30 + spread * 20, Paint()
       ..shader = RadialGradient(colors: [
-        const Color(0xFFA78BFA).withValues(alpha: 0.15),
+        const Color(0xFF22C55E).withValues(alpha: 0.15),
         const Color(0xFF3FD2FF).withValues(alpha: 0.05),
         Colors.transparent,
       ]).createShader(Rect.fromCircle(center: center, radius: 50)));
@@ -386,7 +386,7 @@ class _CosmicZoomPainter extends CustomPainter {
         final r = (0.5 + rng.nextDouble() * 1.5) * sizeFactor;
         final alpha = (0.1 + rng.nextDouble() * 0.3) * sizeFactor;
 
-        final colors = [const Color(0xFF3FD2FF), const Color(0xFFA78BFA), const Color(0xFF8FF2FF), Colors.white];
+        final colors = [const Color(0xFF3FD2FF), const Color(0xFF22C55E), const Color(0xFF8FF2FF), Colors.white];
         paint.color = colors[rng.nextInt(colors.length)].withValues(alpha: alpha);
         canvas.drawCircle(Offset(x, y), r, paint);
       }
@@ -409,7 +409,7 @@ class _CosmicZoomPainter extends CustomPainter {
 
       final colors = [
         const Color(0xFF3FD2FF),
-        const Color(0xFFA78BFA),
+        const Color(0xFF22C55E),
         const Color(0xFF3FB950),
         const Color(0xFFF78166),
       ];
@@ -505,7 +505,7 @@ class _CosmicZoomPainter extends CustomPainter {
 
   Color _getAccentColor(double d) {
     if (d < 5) return const Color(0xFF3FD2FF);
-    if (d < 12) return const Color(0xFFA78BFA);
+    if (d < 12) return const Color(0xFF22C55E);
     if (d < 22) return const Color(0xFFFFB020);
     if (d < 35) return const Color(0xFF3FB950);
     return const Color(0xFFD2A8FF);
@@ -558,8 +558,8 @@ class _SectionParticles extends CustomPainter {
   }
 
   List<Color> _getColors() {
-    if (depth < 5) return [const Color(0xFF3FD2FF), const Color(0xFFA78BFA)];
-    if (depth < 12) return [const Color(0xFFA78BFA), const Color(0xFF58A6FF)];
+    if (depth < 5) return [const Color(0xFF3FD2FF), const Color(0xFF22C55E)];
+    if (depth < 12) return [const Color(0xFF22C55E), const Color(0xFF58A6FF)];
     if (depth < 22) return [const Color(0xFFFFB020), const Color(0xFFF78166)];
     if (depth < 35) return [const Color(0xFF3FB950), const Color(0xFF3FD2FF)];
     return [const Color(0xFFD2A8FF), const Color(0xFFFF6B6B)];

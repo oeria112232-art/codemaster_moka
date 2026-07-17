@@ -282,7 +282,7 @@ class _SectionHeader extends StatelessWidget {
           height: 3,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF3FD2FF), Color(0xFFA78BFA)],
+              colors: [Color(0xFF3FD2FF), Color(0xFF22C55E)],
             ),
             borderRadius: BorderRadius.circular(2),
           ),
@@ -345,7 +345,8 @@ class HeroSection extends StatelessWidget {
                   center: const Alignment(0, -0.2),
                   radius: 1.2,
                   colors: [
-                    const Color(0xFF3FD2FF).withValues(alpha: 0.08),
+                    const Color(0xFF3FD2FF).withValues(alpha: 0.1),
+                    const Color(0xFF22C55E).withValues(alpha: 0.03),
                     Colors.transparent,
                   ],
                 ),
@@ -381,7 +382,7 @@ class HeroSection extends StatelessWidget {
                     height: 3,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFF3FD2FF), Color(0xFFA78BFA)],
+                        colors: [Color(0xFF3FD2FF), Color(0xFF22C55E)],
                       ),
                       borderRadius: BorderRadius.circular(2),
                     ),
@@ -410,11 +411,11 @@ class HeroSection extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  Semantics(
+                    Semantics(
                     header: true,
                     child: ShaderMask(
                       shaderCallback: (bounds) => const LinearGradient(
-                        colors: [Color(0xFF3FD2FF), Color(0xFFA78BFA)],
+                        colors: [Color(0xFF3FD2FF), Color(0xFF22C55E)],
                       ).createShader(bounds),
                       child: Text(
                         'Code Mster',
@@ -436,7 +437,7 @@ class HeroSection extends StatelessWidget {
                     style: TextStyle(
                       fontSize: size.width > 600 ? 22 : 16,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFFA78BFA),
+                      color: const Color(0xFF22C55E),
                       letterSpacing: 1,
                     ),
                   ),
@@ -750,27 +751,27 @@ class VisionSection extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: const Color(0xFF141A29),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: const Color(0xFFA78BFA).withValues(alpha: 0.3),
-            ),
+          color: const Color(0xFF141A29),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: const Color(0xFF22C55E).withValues(alpha: 0.3),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFA78BFA).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.flag,
-                  color: Color(0xFFA78BFA),
-                  size: 28,
-                ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF22C55E).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
+              child: const Icon(
+                Icons.flag,
+                color: Color(0xFF22C55E),
+                size: 28,
+              ),
+            ),
               const SizedBox(height: 20),
               Text(
                 tr('مهمتنا', 'Our Mission'),
@@ -907,7 +908,7 @@ class ServicesSection extends StatelessWidget {
         descriptionEn: 'Complete e-commerce stores with smart dashboards for product management. Local payment gateway integration including Zain Cash, Asia Hawala, and credit cards.',
         descriptionAr: 'نوفر خدمات تصميم متجر إلكتروني متكامل في العراق مع لوحة تحكم ذكية وشاملة لإدارة المنتجات والمبيعات. الميزة الأهم لدينا هي دعم وتسهيل ربط بوابات الدفع المحلية مثل زين كاش وآسيا حوالة بداخل التطبيقات والمواقع، مما يضمن لعملائك تجربة تسوق محلية وسلسة تزيد من نسب أرباحك.',
         icon: Icons.shopping_cart,
-        color: const Color(0xFFA78BFA),
+        color: const Color(0xFF22C55E),
         tags: ['Zain Cash', 'Asia Hawala', 'Store', 'Payment'],
       ),
       _ServiceData(
@@ -1191,7 +1192,7 @@ class ValuesSection extends StatelessWidget {
         titleAr: 'الجودة',
         descriptionEn: 'Excellence is not negotiable. We deliver top-tier quality.',
         descriptionAr: 'التميز غير قابل للتفاوض. نقدم جودة من الطراز الأول.',
-        color: const Color(0xFFA78BFA),
+        color: const Color(0xFF22C55E),
       ),
       _ValueData(
         icon: Icons.lightbulb,
@@ -1628,30 +1629,30 @@ class CTASection extends StatelessWidget {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                const Color(0xFF3FD2FF).withValues(alpha: 0.12),
-                                const Color(0xFFA78BFA).withValues(alpha: 0.12),
+                                const Color(0xFF3FD2FF).withValues(alpha: 0.15),
+                                const Color(0xFF22C55E).withValues(alpha: 0.15),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: const Color(0xFFA78BFA).withValues(alpha: 0.3),
+                              color: const Color(0xFF3FD2FF).withValues(alpha: 0.35),
                             ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.auto_awesome, color: Color(0xFFA78BFA), size: 22),
+                              const Icon(Icons.auto_awesome, color: Color(0xFF3FD2FF), size: 22),
                               const SizedBox(width: 12),
                               Text(
                                 tr('حدود إبداعنا', 'Our Creative Bounds'),
                                 style: const TextStyle(
-                                  color: Color(0xFFA78BFA),
+                                  color: Color(0xFF3FD2FF),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              const Icon(Icons.arrow_forward_ios, color: Color(0xFFA78BFA), size: 14),
+                              const Icon(Icons.arrow_forward_ios, color: Color(0xFF3FD2FF), size: 14),
                             ],
                           ),
                         ),

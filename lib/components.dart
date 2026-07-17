@@ -181,17 +181,17 @@ class _NavbarState extends State<Navbar> {
                             borderRadius: BorderRadius.circular(999),
                             gradient: LinearGradient(
                               colors: [
-                                const Color(0xFFA78BFA).withValues(alpha: 0.15),
-                                const Color(0xFF3FD2FF).withValues(alpha: 0.15),
+                                const Color(0xFF3FD2FF).withValues(alpha: 0.12),
+                                const Color(0xFF22C55E).withValues(alpha: 0.12),
                               ],
                             ),
                             border: Border.all(
-                              color: const Color(0xFFA78BFA).withValues(alpha: 0.3),
+                              color: const Color(0xFF3FD2FF).withValues(alpha: 0.3),
                             ),
                           ),
                           child: Icon(
                             Icons.auto_awesome,
-                            color: const Color(0xFFA78BFA),
+                            color: const Color(0xFF3FD2FF),
                             size: isSmallMobile ? 16 : 18,
                           ),
                         ),
@@ -260,12 +260,12 @@ class _NavbarState extends State<Navbar> {
             borderRadius: BorderRadius.circular(999),
             gradient: LinearGradient(
               colors: [
-                const Color(0xFFA78BFA).withValues(alpha: 0.15),
-                const Color(0xFF3FD2FF).withValues(alpha: 0.15),
+                const Color(0xFF3FD2FF).withValues(alpha: 0.12),
+                const Color(0xFF22C55E).withValues(alpha: 0.12),
               ],
             ),
             border: Border.all(
-              color: const Color(0xFFA78BFA).withValues(alpha: 0.4),
+              color: const Color(0xFF3FD2FF).withValues(alpha: 0.35),
               width: 1,
             ),
           ),
@@ -274,7 +274,7 @@ class _NavbarState extends State<Navbar> {
             children: [
               Icon(
                 Icons.auto_awesome,
-                color: const Color(0xFFA78BFA),
+                color: const Color(0xFF3FD2FF),
                 size: isSmallMobile ? 14 : 16,
               ),
               const SizedBox(width: 6),
@@ -282,7 +282,7 @@ class _NavbarState extends State<Navbar> {
                 tr('حدود إبداعنا', 'Creative Bounds'),
                 style: TextStyle(
                   fontSize: isSmallMobile ? 11 : 13,
-                  color: const Color(0xFFA78BFA),
+                  color: const Color(0xFF3FD2FF),
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Inter',
                 ),

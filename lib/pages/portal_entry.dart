@@ -108,7 +108,7 @@ class _PortalEntryPageState extends State<PortalEntryPage>
                       fontWeight: FontWeight.w900,
                       foreground: Paint()
                         ..shader = const LinearGradient(
-                          colors: [Color(0xFF3FD2FF), Color(0xFFA78BFA)],
+                          colors: [Color(0xFF3FD2FF), Color(0xFF22C55E)],
                         ).createShader(const Rect.fromLTWH(0, 0, 500, 60)),
                     ),
                   ),
@@ -126,14 +126,14 @@ class _PortalEntryPageState extends State<PortalEntryPage>
                           gradient: LinearGradient(
                             colors: [
                               const Color(0xFF3FD2FF).withValues(alpha: _isHovering ? 0.25 : 0.12),
-                              const Color(0xFFA78BFA).withValues(alpha: _isHovering ? 0.25 : 0.12),
+                              const Color(0xFF22C55E).withValues(alpha: _isHovering ? 0.25 : 0.12),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                             color: Color.lerp(
                               const Color(0xFF3FD2FF),
-                              const Color(0xFFA78BFA),
+                              const Color(0xFF22C55E),
                               _pulseCtrl.value,
                             )!.withValues(alpha: _isHovering ? 0.6 : 0.3),
                             width: _isHovering ? 2 : 1,
