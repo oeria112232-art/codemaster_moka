@@ -140,11 +140,11 @@ class _NavbarState extends State<Navbar> {
                 if (isDesktop)
                   Row(
                     children: [
-                      _buildNavLink(tr('أعمالنا', 'Works'), '#works'),
+                      _buildNavLink(tr('الخدمات', 'Services'), '#services'),
                       const SizedBox(width: 32),
-                      _buildNavLink(tr('التقنيات', 'Technology'), '#works'),
+                      _buildNavLink(tr('رؤيتنا', 'Vision'), '#vision'),
                       const SizedBox(width: 32),
-                      _buildNavLink(tr('الاستوديو', 'Studio'), '#cta'),
+                      _buildNavLink(tr('قيمنا', 'Values'), '#values'),
                       const SizedBox(width: 32),
                       _buildNavLink(tr('اتصل بنا', 'Contact'), '#cta'),
                     ],
