@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../components.dart';
 import '../hero_scene.dart';
@@ -17,21 +18,35 @@ class PortalEntryPage extends StatefulWidget {
 }
 
 class _PortalEntryPageState extends State<PortalEntryPage>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _pulseCtrl;
+    with TickerProviderStateMixin {
+  bool _showContent = false;
   bool _isHovering = false;
+  late final AnimationController _fadeCtrl;
+  late final AnimationController _pulseCtrl;
 
   @override
   void initState() {
     super.initState();
+    _fadeCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
     _pulseCtrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
     )..repeat(reverse: true);
+
+    Future.delayed(const Duration(seconds: 5), () {
+      if (mounted) {
+        setState(() => _showContent = true);
+        _fadeCtrl.forward();
+      }
+    });
   }
 
   @override
   void dispose() {
+    _fadeCtrl.dispose();
     _pulseCtrl.dispose();
     super.dispose();
   }
@@ -45,18 +60,6 @@ class _PortalEntryPageState extends State<PortalEntryPage>
       body: Stack(
         children: [
           const Positioned.fill(child: HeroScene()),
-          Container(
-            decoration: BoxDecoration(
-              gradient: RadialGradient(
-                center: const Alignment(0, -0.1),
-                radius: 1.2,
-                colors: [
-                  const Color(0xFF3FD2FF).withValues(alpha: 0.04 + _pulseCtrl.value * 0.03),
-                  Colors.transparent,
-                ],
-              ),
-            ),
-          ),
           Positioned(
             top: 24,
             left: 24,
@@ -93,126 +96,81 @@ class _PortalEntryPageState extends State<PortalEntryPage>
             ),
           ),
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 3,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        const Color(0xFF3FD2FF).withValues(alpha: 0.6 + _pulseCtrl.value * 0.4),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                Text(
-                  tr('حدود إبداعنا', 'Our Creative Bounds'),
-                  style: TextStyle(
-                    fontSize: size.width > 600 ? 48 : 32,
-                    fontWeight: FontWeight.w900,
-                    foreground: Paint()
-                      ..shader = const LinearGradient(
-                        colors: [Color(0xFF3FD2FF), Color(0xFFA78BFA)],
-                      ).createShader(
-                        const Rect.fromLTWH(0, 0, 400, 60),
-                      ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 500),
-                  child: Text(
-                    tr(
-                      'عالم لا نهاية له من الإبداع والابتكار. انزل لاكتشاف ما لا يستطيع غيرنا فعله.',
-                      'A world of endless creativity and innovation. Scroll down to discover what no one else can do.',
-                    ),
-                    textAlign: TextAlign.center,
+            child: FadeTransition(
+              opacity: _fadeCtrl,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    tr('إبداعنا يفوق التخيلات', 'Our Creativity Exceeds Imagination'),
                     style: TextStyle(
-                      fontSize: size.width > 600 ? 18 : 15,
-                      color: const Color(0xFFA6ABB6),
-                      height: 1.7,
+                      fontSize: size.width > 600 ? 44 : 28,
+                      fontWeight: FontWeight.w900,
+                      foreground: Paint()
+                        ..shader = const LinearGradient(
+                          colors: [Color(0xFF3FD2FF), Color(0xFFA78BFA)],
+                        ).createShader(const Rect.fromLTWH(0, 0, 500, 60)),
                     ),
                   ),
-                ),
-                const SizedBox(height: 60),
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  onEnter: (_) => setState(() => _isHovering = true),
-                  onExit: (_) => setState(() => _isHovering = false),
-                  child: GestureDetector(
-                    onTap: widget.onEnter,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 400),
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            const Color(0xFF3FD2FF).withValues(alpha: _isHovering ? 0.25 : 0.12),
-                            const Color(0xFFA78BFA).withValues(alpha: _isHovering ? 0.25 : 0.12),
+                  const SizedBox(height: 60),
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    onEnter: (_) => setState(() => _isHovering = true),
+                    onExit: (_) => setState(() => _isHovering = false),
+                    child: GestureDetector(
+                      onTap: widget.onEnter,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 400),
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              const Color(0xFF3FD2FF).withValues(alpha: _isHovering ? 0.25 : 0.12),
+                              const Color(0xFFA78BFA).withValues(alpha: _isHovering ? 0.25 : 0.12),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Color.lerp(
+                              const Color(0xFF3FD2FF),
+                              const Color(0xFFA78BFA),
+                              _pulseCtrl.value,
+                            )!.withValues(alpha: _isHovering ? 0.6 : 0.3),
+                            width: _isHovering ? 2 : 1,
+                          ),
+                          boxShadow: _isHovering
+                              ? [
+                                  BoxShadow(
+                                    color: const Color(0xFF3FD2FF).withValues(alpha: 0.2),
+                                    blurRadius: 40,
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.play_arrow_rounded,
+                              color: Color(0xFF3FD2FF),
+                              size: 28,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              tr('اضغط للتأكد من ذلك', 'Click to Verify'),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: _isHovering ? Colors.white : const Color(0xFF3FD2FF),
+                              ),
+                            ),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Color.lerp(
-                            const Color(0xFF3FD2FF),
-                            const Color(0xFFA78BFA),
-                            _pulseCtrl.value,
-                          )!.withValues(alpha: _isHovering ? 0.6 : 0.3),
-                          width: _isHovering ? 2 : 1,
-                        ),
-                        boxShadow: _isHovering
-                            ? [
-                                BoxShadow(
-                                  color: const Color(0xFF3FD2FF).withValues(alpha: 0.2),
-                                  blurRadius: 40,
-                                  spreadRadius: 0,
-                                ),
-                              ]
-                            : null,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.keyboard_double_arrow_down,
-                            color: Color(0xFF3FD2FF),
-                            size: 24,
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            tr('ابدأ الرحلة', 'Begin the Journey'),
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: _isHovering ? Colors.white : const Color(0xFF3FD2FF),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 40),
-                AnimatedBuilder(
-                  animation: _pulseCtrl,
-                  builder: (context, _) {
-                    return Opacity(
-                      opacity: 0.3 + _pulseCtrl.value * 0.3,
-                      child: const Icon(
-                        Icons.expand_more,
-                        color: Color(0xFF3FD2FF),
-                        size: 32,
-                      ),
-                    );
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

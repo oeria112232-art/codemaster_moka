@@ -90,6 +90,8 @@ class _HomePageState extends State<HomePage> {
       _scrollToKey(_valuesKey);
     } else if (link == '#cta') {
       _scrollToKey(_ctaKey);
+    } else if (link == '#portal') {
+      _openPortal();
     } else if (link == '#tech') {
       Navigator.push(
         context,
@@ -106,6 +108,29 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(builder: (_) => ContactView(onBack: () => Navigator.pop(context))),
       );
     }
+  }
+
+  void _openPortal() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => PortalEntryPage(
+          onEnter: () {
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) => InfinitePortalPage(onBack: () => Navigator.pop(context)),
+                transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: const Duration(milliseconds: 600),
+              ),
+            );
+          },
+          onBack: () => Navigator.pop(context),
+        ),
+        transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
+    );
   }
 
   @override

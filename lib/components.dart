@@ -146,6 +146,8 @@ class _NavbarState extends State<Navbar> {
                       const SizedBox(width: 32),
                       _buildNavLink(tr('قيمنا', 'Values'), '#values'),
                       const SizedBox(width: 32),
+                      _buildPortalButton(isSmallMobile),
+                      const SizedBox(width: 32),
                       _buildNavLink(tr('اتصل بنا', 'Contact'), '#cta'),
                     ],
                   ),
@@ -164,6 +166,35 @@ class _NavbarState extends State<Navbar> {
                           LanguageManager.instance.toggleLanguage();
                         },
                         tooltip: tr('English', 'عربي'),
+                      ),
+                    ),
+                    SizedBox(width: isSmallMobile ? 8 : 12),
+
+                    // Portal button (mobile)
+                    CustomCursorHover(
+                      child: InkWell(
+                        onTap: () => widget.onLinkTap('#portal'),
+                        overlayColor: WidgetStateProperty.all(Colors.transparent),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(999),
+                            gradient: LinearGradient(
+                              colors: [
+                                const Color(0xFFA78BFA).withValues(alpha: 0.15),
+                                const Color(0xFF3FD2FF).withValues(alpha: 0.15),
+                              ],
+                            ),
+                            border: Border.all(
+                              color: const Color(0xFFA78BFA).withValues(alpha: 0.3),
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.auto_awesome,
+                            color: const Color(0xFFA78BFA),
+                            size: isSmallMobile ? 16 : 18,
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(width: isSmallMobile ? 8 : 12),
@@ -207,8 +238,56 @@ class _NavbarState extends State<Navbar> {
           label,
           style: const TextStyle(
             fontSize: 14,
-            color: Color(0xFFA6ABB6), // muted foreground
+            color: Color(0xFFA6ABB6),
             fontFamily: 'Inter',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPortalButton(bool isSmallMobile) {
+    return CustomCursorHover(
+      child: InkWell(
+        onTap: () => widget.onLinkTap('#portal'),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: isSmallMobile ? 10 : 16,
+            vertical: 6,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(999),
+            gradient: LinearGradient(
+              colors: [
+                const Color(0xFFA78BFA).withValues(alpha: 0.15),
+                const Color(0xFF3FD2FF).withValues(alpha: 0.15),
+              ],
+            ),
+            border: Border.all(
+              color: const Color(0xFFA78BFA).withValues(alpha: 0.4),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.auto_awesome,
+                color: const Color(0xFFA78BFA),
+                size: isSmallMobile ? 14 : 16,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                tr('حدود إبداعنا', 'Creative Bounds'),
+                style: TextStyle(
+                  fontSize: isSmallMobile ? 11 : 13,
+                  color: const Color(0xFFA78BFA),
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ],
           ),
         ),
       ),
