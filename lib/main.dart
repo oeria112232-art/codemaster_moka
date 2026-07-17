@@ -5,6 +5,8 @@ import 'components.dart';
 import 'custom_cursor.dart';
 import 'hero_scene.dart';
 import 'pages.dart';
+import 'pages/portal_entry.dart';
+import 'pages/infinite_portal.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -1338,6 +1340,29 @@ class _ValueCardState extends State<_ValueCard> {
 class CTASection extends StatelessWidget {
   const CTASection({super.key});
 
+  void _openPortal(BuildContext context) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => PortalEntryPage(
+          onEnter: () {
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) => InfinitePortalPage(onBack: () => Navigator.pop(context)),
+                transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
+                transitionDuration: const Duration(milliseconds: 600),
+              ),
+            );
+          },
+          onBack: () => Navigator.pop(context),
+        ),
+        transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -1418,6 +1443,54 @@ class CTASection extends StatelessWidget {
                           url: 'https://t.me/codemaster6',
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 32),
+                    Container(
+                      height: 1,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.transparent, Color(0xFF3FD2FF), Colors.transparent],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => _openPortal(context),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 16),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                const Color(0xFF3FD2FF).withValues(alpha: 0.12),
+                                const Color(0xFFA78BFA).withValues(alpha: 0.12),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: const Color(0xFFA78BFA).withValues(alpha: 0.3),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.auto_awesome, color: Color(0xFFA78BFA), size: 22),
+                              const SizedBox(width: 12),
+                              Text(
+                                tr('حدود إبداعنا', 'Our Creative Bounds'),
+                                style: const TextStyle(
+                                  color: Color(0xFFA78BFA),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.arrow_forward_ios, color: Color(0xFFA78BFA), size: 14),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 28),
                     Row(
