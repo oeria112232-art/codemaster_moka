@@ -67,10 +67,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _scrollToKey(GlobalKey key) {
-    final context = key.currentContext;
-    if (context != null) {
+    final ctx = key.currentContext;
+    if (ctx != null) {
       Scrollable.ensureVisible(
-        context,
+        ctx,
         duration: const Duration(milliseconds: 800),
         curve: Curves.easeInOutCubic,
       );
@@ -108,45 +108,177 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WidgetDirectionalityFix(
-      child: Scaffold(
-          body: Stack(
-            children: [
-              SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  children: [
-                    Container(
-                      key: _homeKey,
-                      child: HeroSection(
-                        onGetStarted: () => _handleLinkTap('#cta'),
-                        onServices: () => _handleLinkTap('#services'),
-                      ),
-                    ),
-                    const StatsSection(),
-                    Container(key: _servicesKey, child: const ServicesSection()),
-                    Container(key: _visionKey, child: const VisionSection()),
-                    Container(key: _valuesKey, child: const ValuesSection()),
-                    Container(key: _ctaKey, child: const CTASection()),
-                    const FooterSection(),
-                  ],
+    return Scaffold(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              children: [
+                Container(
+                  key: _homeKey,
+                  child: HeroSection(
+                    onGetStarted: () => _handleLinkTap('#cta'),
+                    onServices: () => _handleLinkTap('#services'),
+                  ),
                 ),
-              ),
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Navbar(
+                _ScrollReveal(
                   scrollController: _scrollController,
-                  onLogoTap: () => _scrollToKey(_homeKey),
-                  onLinkTap: (link) {
-                    _handleLinkTap(link);
-                  },
+                  child: StatsSection(scrollController: _scrollController),
                 ),
-              ),
-            ],
+                Container(
+                  key: _servicesKey,
+                  child: _ScrollReveal(
+                    scrollController: _scrollController,
+                    child: const ServicesSection(),
+                  ),
+                ),
+                Container(
+                  key: _visionKey,
+                  child: _ScrollReveal(
+                    scrollController: _scrollController,
+                    child: const VisionSection(),
+                  ),
+                ),
+                Container(
+                  key: _valuesKey,
+                  child: _ScrollReveal(
+                    scrollController: _scrollController,
+                    child: const ValuesSection(),
+                  ),
+                ),
+                Container(
+                  key: _ctaKey,
+                  child: _ScrollReveal(
+                    scrollController: _scrollController,
+                    child: const CTASection(),
+                  ),
+                ),
+                _ScrollReveal(
+                  scrollController: _scrollController,
+                  child: const FooterSection(),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Navbar(
+              scrollController: _scrollController,
+              onLogoTap: () => _scrollToKey(_homeKey),
+              onLinkTap: _handleLinkTap,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ScrollReveal extends StatefulWidget {
+  final Widget child;
+  final ScrollController scrollController;
+  const _ScrollReveal({required this.child, required this.scrollController});
+
+  @override
+  State<_ScrollReveal> createState() => _ScrollRevealState();
+}
+
+class _ScrollRevealState extends State<_ScrollReveal>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _fade;
+  late final Animation<Offset> _slide;
+  bool _done = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+    _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
+    _slide = Tween<Offset>(
+      begin: const Offset(0, 0.06),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
+    widget.scrollController.addListener(_check);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _check());
+  }
+
+  void _check() {
+    if (_done) return;
+    final box = context.findRenderObject() as RenderBox?;
+    if (box == null || !box.attached) return;
+    final y = box.localToGlobal(Offset.zero).dy;
+    final h = MediaQuery.of(context).size.height;
+    if (y < h * 0.9) {
+      _done = true;
+      _ctrl.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.scrollController.removeListener(_check);
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fade,
+      child: SlideTransition(position: _slide, child: widget.child),
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  const _SectionHeader({required this.title, required this.subtitle});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 48,
+          height: 3,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF3FD2FF), Color(0xFFA78BFA)],
+            ),
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
+        const SizedBox(height: 24),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 12),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 560),
+          child: Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Color(0xFFA6ABB6),
+              height: 1.6,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -170,14 +302,7 @@ class HeroSection extends StatelessWidget {
       width: double.infinity,
       child: Stack(
         children: [
-          Positioned.fill(
-            child: CustomPaint(
-              painter: GridFloorPainter(),
-            ),
-          ),
-          const Positioned.fill(
-            child: HeroScene(),
-          ),
+          const Positioned.fill(child: HeroScene()),
           Positioned(
             top: 0,
             left: 0,
@@ -221,6 +346,17 @@ class HeroSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
+                    width: 48,
+                    height: 3,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF3FD2FF), Color(0xFFA78BFA)],
+                      ),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 10,
@@ -257,15 +393,14 @@ class HeroSection extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 20),
                   Text(
-                    '_COMPANY',
+                    tr('حلول برمجية متكاملة', 'Integrated Software Solutions'),
                     style: TextStyle(
-                      fontSize: size.width > 600 ? 20 : 14,
-                      fontFamily: 'monospace',
-                      color: const Color(0xFFA6ABB6),
-                      letterSpacing: 8,
-                      fontWeight: FontWeight.w300,
+                      fontSize: size.width > 600 ? 22 : 16,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFFA78BFA),
+                      letterSpacing: 2,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -273,8 +408,8 @@ class HeroSection extends StatelessWidget {
                     constraints: const BoxConstraints(maxWidth: 600),
                     child: Text(
                       tr(
-                        'نحول أفكارك إلى حلول تقنية مبتكرة. نقدم خدمات تطوير شاملة تشمل المواقع والتطبيقات والأنظمة الأمنية.',
-                        'We turn your ideas into innovative tech solutions. We deliver comprehensive development services including websites, apps, and security systems.',
+                        'نطور منصات رقمية مبتكرة تمنح الشركات القدرة على التفوق في عالم التكنولوجيا المتسارع',
+                        'We develop innovative digital platforms that empower companies to excel in the rapidly evolving world of technology',
                       ),
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -314,41 +449,47 @@ class HeroSection extends StatelessWidget {
   }
 }
 
-class GridFloorPainter extends CustomPainter {
+class StatsSection extends StatefulWidget {
+  final ScrollController scrollController;
+  const StatsSection({super.key, required this.scrollController});
+
   @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0xFF3FD2FF).withValues(alpha: 0.06)
-      ..strokeWidth = 0.5;
+  State<StatsSection> createState() => _StatsSectionState();
+}
 
-    const double spacing = 40;
-    final double horizon = size.height * 0.55;
-    final double vanishX = size.width / 2;
+class _StatsSectionState extends State<StatsSection>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _counterCtrl;
+  bool _started = false;
 
-    for (double x = -size.width; x <= size.width * 2; x += spacing) {
-      final path = Path();
-      path.moveTo(vanishX, horizon);
-      path.lineTo(x, size.height);
-      canvas.drawPath(path, paint);
-    }
+  @override
+  void initState() {
+    super.initState();
+    _counterCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+    widget.scrollController.addListener(_check);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _check());
+  }
 
-    for (double y = horizon; y <= size.height; y += spacing) {
-      final progress = (y - horizon) / (size.height - horizon);
-      final spread = size.width * 0.5 + size.width * 0.8 * progress;
-      canvas.drawLine(
-        Offset(vanishX - spread, y),
-        Offset(vanishX + spread, y),
-        paint,
-      );
+  void _check() {
+    if (_started) return;
+    final box = context.findRenderObject() as RenderBox?;
+    if (box == null || !box.attached) return;
+    final y = box.localToGlobal(Offset.zero).dy;
+    if (y < MediaQuery.of(context).size.height * 0.85) {
+      _started = true;
+      _counterCtrl.forward();
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class StatsSection extends StatelessWidget {
-  const StatsSection({super.key});
+  void dispose() {
+    widget.scrollController.removeListener(_check);
+    _counterCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -365,21 +506,80 @@ class StatsSection extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _StatItem(value: '+50', label: tr('مشروع', 'Projects')),
-          _StatItem(value: '+30', label: tr('عميل', 'Clients')),
-          _StatItem(value: '+5', label: tr('سنوات', 'Years')),
-          _StatItem(value: '24/7', label: tr('دعم', 'Support')),
+          _AnimatedStat(
+            target: 50,
+            prefix: '+',
+            label: tr('مشروع مكتمل', 'Projects'),
+            animation: _counterCtrl,
+          ),
+          _AnimatedStat(
+            target: 30,
+            prefix: '+',
+            label: tr('عميل راضي', 'Clients'),
+            animation: _counterCtrl,
+          ),
+          _AnimatedStat(
+            target: 5,
+            prefix: '+',
+            label: tr('سنوات خبرة', 'Years'),
+            animation: _counterCtrl,
+          ),
+          const _StaticStat(value: '24/7', label: 'Support / دعم'),
         ],
       ),
     );
   }
 }
 
-class _StatItem extends StatelessWidget {
+class _AnimatedStat extends StatelessWidget {
+  final int target;
+  final String prefix;
+  final String label;
+  final Animation<double> animation;
+
+  const _AnimatedStat({
+    required this.target,
+    required this.prefix,
+    required this.label,
+    required this.animation,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, _) {
+        final v = (animation.value * target).toInt();
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '$prefix$v',
+              style: const TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF3FD2FF),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFFA6ABB6),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _StaticStat extends StatelessWidget {
   final String value;
   final String label;
-
-  const _StatItem({required this.value, required this.label});
+  const _StaticStat({required this.value, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -416,13 +616,11 @@ class VisionSection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
       child: Column(
         children: [
-          Text(
-            tr('// رؤيتنا //', '// OUR VISION //'),
-            style: const TextStyle(
-              fontSize: 14,
-              fontFamily: 'monospace',
-              color: Color(0xFF3FD2FF),
-              letterSpacing: 4,
+          _SectionHeader(
+            title: tr('رؤيتنا ورسالتنا', 'Our Vision & Mission'),
+            subtitle: tr(
+              'نلتزم بقيادة التحول الرقمي وتمكين الشركات من النجاح',
+              'Committed to leading digital transformation and empowering companies to succeed',
             ),
           ),
           const SizedBox(height: 48),
@@ -548,8 +746,8 @@ class VisionSection extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 tr(
-                  'تمكين الشركات من خلال التكنولوجيا المبتكرة، وتقديم حلول برمجية متكاملة بمعايير عالمية ت助力 النمو المستدام.',
-                  'Empowering businesses through innovative technology, delivering integrated software solutions with global standards that drive sustainable growth.',
+                  'تمكين الشركات والمؤسسات من خلال منتجات رقمية متكاملة عالية الجودة، مبنية على أسس هندسية صلبة ومصممة لتحقيق أقصى عائد على استثمارهم التقني.',
+                  'Empowering companies through high-quality integrated digital products, built on solid engineering principles and designed to maximize their technology ROI.',
                 ),
                 style: const TextStyle(
                   fontSize: 15,
@@ -700,7 +898,7 @@ class ServicesSection extends StatelessWidget {
         titleEn: 'UI/UX Design',
         titleAr: 'تصميم واجهات المستخدم',
         descriptionEn: 'User-centered design with modern aesthetics and intuitive interactions.',
-        descriptionAr: 'تصميم ي为中心 المستخدم مع جماليات حديثة وتفاعلات بديهية.',
+        descriptionAr: 'تصميم يركّز على المستخدم مع جماليات حديثة وتفاعلات بديهية.',
         icon: Icons.design_services,
         color: const Color(0xFFFFD93D),
         tags: ['Figma', 'Prototyping', 'Research', 'Design System'],
@@ -721,22 +919,11 @@ class ServicesSection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
       child: Column(
         children: [
-          Text(
-            tr('// خدماتنا //', '// OUR SERVICES //'),
-            style: const TextStyle(
-              fontSize: 14,
-              fontFamily: 'monospace',
-              color: Color(0xFF3FD2FF),
-              letterSpacing: 4,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            tr('حلول تقنية شاملة لنجاح أعمالك', 'Comprehensive tech solutions for your business success'),
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
+          _SectionHeader(
+            title: tr('خدماتنا', 'Our Services'),
+            subtitle: tr(
+              'حلول تقنية شاملة لنجاح أعمالك',
+              'Comprehensive tech solutions for your business success',
             ),
           ),
           const SizedBox(height: 48),
@@ -1004,7 +1191,7 @@ class ValuesSection extends StatelessWidget {
         titleEn: 'Innovation',
         titleAr: 'الابتكار',
         descriptionEn: 'We push boundaries with creative and forward-thinking solutions.',
-        descriptionAr: 'ندفع الحدود بحلول إبداعية وتفكير前瞻性.',
+        descriptionAr: 'ندفع الحدود بحلول إبداعية ومبتكرة.',
         color: const Color(0xFF25D366),
       ),
       _ValueData(
@@ -1029,22 +1216,11 @@ class ValuesSection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
       child: Column(
         children: [
-          Text(
-            tr('// قيمنا //', '// OUR VALUES //'),
-            style: const TextStyle(
-              fontSize: 14,
-              fontFamily: 'monospace',
-              color: Color(0xFF3FD2FF),
-              letterSpacing: 4,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            tr('المبادئ التي نؤمن بها', 'The principles we believe in'),
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
+          _SectionHeader(
+            title: tr('قيمنا', 'Our Values'),
+            subtitle: tr(
+              'المبادئ التي نؤمن بها ونعمل وفقها',
+              'The principles we believe in and work by',
             ),
           ),
           const SizedBox(height: 48),
@@ -1202,7 +1378,7 @@ class CTASection extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      tr('هل أنت مستعد لبناء المستقبل؟', 'Ready to Build the Future?'),
+                      tr('جاهز لبناء المستقبل الرقمي؟', 'Ready to Build the Digital Future?'),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 32,
