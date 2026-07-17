@@ -98,8 +98,8 @@ class _CleanBgPainter extends CustomPainter {
         ),
         radius: 1.2,
         colors: [
-          const Color(0xFF3FD2FF).withValues(alpha: 0.06 + math.sin(time * 0.4) * 0.02),
-          const Color(0xFF22C55E).withValues(alpha: 0.03),
+          const Color(0xFF1080E0).withValues(alpha: 0.06 + math.sin(time * 0.4) * 0.02),
+          const Color(0xFF2090FF).withValues(alpha: 0.03),
           Colors.transparent,
         ],
         stops: const [0.0, 0.4, 1.0],
@@ -112,7 +112,7 @@ class _CleanBgPainter extends CustomPainter {
         center: const Alignment(0.6, 0.4),
         radius: 0.8,
         colors: [
-          const Color(0xFF22C55E).withValues(alpha: 0.04),
+          const Color(0xFF2090FF).withValues(alpha: 0.04),
           Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -133,8 +133,8 @@ class _CleanBgPainter extends CustomPainter {
           .clamp(0.05, 0.45);
 
       final color = rng.nextInt(3) == 0
-          ? const Color(0xFF22C55E)
-          : const Color(0xFF3FD2FF);
+          ? const Color(0xFF2090FF)
+          : const Color(0xFF1080E0);
       starPaint.color = color.withValues(alpha: twinkle);
       canvas.drawCircle(Offset(x, y), r, starPaint);
     }
@@ -146,7 +146,7 @@ class _CleanBgPainter extends CustomPainter {
 
     final gridSpacing = 120.0;
     final gridAlpha = 0.03 + math.sin(time * 0.2) * 0.01;
-    gridPaint.color = const Color(0xFF3FD2FF).withValues(alpha: gridAlpha);
+    gridPaint.color = const Color(0xFF1080E0).withValues(alpha: gridAlpha);
 
     for (double x = 0; x < size.width; x += gridSpacing) {
       canvas.drawLine(

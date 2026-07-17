@@ -28,7 +28,7 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
 
   void _onScroll() {
     setState(() {
-      _scrollDepth = (_scrollCtrl.offset / 300).clamp(0.0, 50.0);
+      _scrollDepth = (_scrollCtrl.offset / 200).clamp(0.0, 60.0);
     });
   }
 
@@ -64,7 +64,7 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
             child: ListView.builder(
               controller: _scrollCtrl,
               padding: EdgeInsets.zero,
-              itemCount: 300,
+              itemCount: 400,
               itemBuilder: (context, index) {
                 return SizedBox(
                   height: 400,
@@ -98,18 +98,18 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
                     color: const Color(0xFF141A29).withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: const Color(0xFF3FD2FF).withValues(alpha: 0.2),
+                      color: const Color(0xFF1080E0).withValues(alpha: 0.2),
                     ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.arrow_back, color: Color(0xFF3FD2FF), size: 20),
+                      const Icon(Icons.arrow_back, color: Color(0xFF1080E0), size: 20),
                       const SizedBox(width: 8),
                       Text(
                         tr('خروج', 'Exit'),
                         style: const TextStyle(
-                          color: Color(0xFF3FD2FF),
+                          color: Color(0xFF1080E0),
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -133,16 +133,16 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
                   color: const Color(0xFF141A29).withValues(alpha: 0.5),
                 ),
                 child: Align(
-                  alignment: Alignment(0, (_scrollDepth / 50.0 * 2 - 1).clamp(-1.0, 1.0)),
+                  alignment: Alignment(0, (_scrollDepth / 60.0 * 2 - 1).clamp(-1.0, 1.0)),
                   child: Container(
                     width: 3,
                     height: 40,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(2),
-                      color: const Color(0xFF3FD2FF).withValues(alpha: 0.8),
+                      color: const Color(0xFF1080E0).withValues(alpha: 0.8),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF3FD2FF).withValues(alpha: 0.4),
+                          color: const Color(0xFF1080E0).withValues(alpha: 0.4),
                           blurRadius: 8,
                         ),
                       ],
@@ -161,7 +161,7 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
                 color: const Color(0xFF141A29).withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: const Color(0xFF3FD2FF).withValues(alpha: 0.15),
+                  color: const Color(0xFF1080E0).withValues(alpha: 0.15),
                 ),
               ),
               child: Column(
@@ -170,7 +170,7 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
                   Text(
                     _getScaleLabel(_scrollDepth.floor(), isAr),
                     style: const TextStyle(
-                      color: Color(0xFF3FD2FF),
+                      color: Color(0xFF1080E0),
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                     ),
@@ -193,18 +193,18 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
   }
 
   String _getScaleLabel(int d, bool isAr) {
-    if (d < 5) return isAr ? 'كوكب واحد' : 'One Planet';
-    if (d < 12) return isAr ? 'كواكب' : 'Planets';
-    if (d < 22) return isAr ? 'نظام شمسي' : 'Solar System';
-    if (d < 35) return isAr ? 'مجرة' : 'Galaxy';
-    return isAr ? 'مجرات' : 'Galaxies';
+    if (d < 8) return isAr ? 'كوكب واحد' : 'One Planet';
+    if (d < 18) return isAr ? 'كواكب متعددة' : 'Multiple Planets';
+    if (d < 30) return isAr ? 'نظام شمسي' : 'Solar System';
+    if (d < 45) return isAr ? 'مجرة' : 'Galaxy';
+    return isAr ? 'مجرات لا نهائية' : 'Infinite Galaxies';
   }
 
   String _getZoneLabel(int d, bool isAr) {
-    if (d < 5) return isAr ? 'البوابة' : 'Gate';
-    if (d < 12) return isAr ? 'الكوكب' : 'Planet';
-    if (d < 22) return isAr ? 'المجموعة' : 'System';
-    if (d < 35) return isAr ? 'المجرة' : 'Galaxy';
+    if (d < 8) return isAr ? 'البوابة' : 'Gate';
+    if (d < 18) return isAr ? 'الكواكب' : 'Planets';
+    if (d < 30) return isAr ? 'المجموعة الشمسية' : 'Solar System';
+    if (d < 45) return isAr ? 'المجرة' : 'Galaxy';
     return isAr ? 'اللانهاية' : 'Infinite';
   }
 }
@@ -224,13 +224,13 @@ class _CosmicZoomPainter extends CustomPainter {
     _drawBackground(canvas, size, d, t);
     _drawStars(canvas, size, d, t);
 
-    if (d < 5) {
+    if (d < 8) {
       _drawSinglePlanet(canvas, size, center, d, t);
-    } else if (d < 12) {
+    } else if (d < 18) {
       _drawPlanets(canvas, size, center, d, t);
-    } else if (d < 22) {
+    } else if (d < 30) {
       _drawSolarSystem(canvas, size, center, d, t);
-    } else if (d < 35) {
+    } else if (d < 45) {
       _drawGalaxy(canvas, size, center, d, t);
     } else {
       _drawGalaxies(canvas, size, center, d, t);
@@ -258,7 +258,7 @@ class _CosmicZoomPainter extends CustomPainter {
   void _drawStars(Canvas canvas, Size size, double d, double t) {
     final rng = math.Random(d.floor() * 7);
     final paint = Paint()..style = PaintingStyle.fill;
-    final count = (100 + d * 5).toInt().clamp(100, 400);
+    final count = (100 + d * 5).toInt().clamp(100, 500);
 
     for (int i = 0; i < count; i++) {
       final bx = rng.nextDouble() * size.width;
@@ -274,24 +274,42 @@ class _CosmicZoomPainter extends CustomPainter {
   }
 
   void _drawSinglePlanet(Canvas canvas, Size size, Offset center, double d, double t) {
-    final shrink = (1.0 - d / 5.0).clamp(0.2, 1.0);
+    final shrink = (1.0 - d / 8.0).clamp(0.2, 1.0);
     final planetR = math.min(size.width, size.height) * 0.18 * shrink;
 
     _drawPlanet(canvas, center, planetR, t,
-      bodyColor: const Color(0xFF3FD2FF),
-      wireColor: const Color(0xFF8FF2FF),
-      glowColor: const Color(0xFF3FD2FF),
+      bodyColor: const Color(0xFF1080E0),
+      wireColor: const Color(0xFF40A0FF),
+      glowColor: const Color(0xFF1080E0),
     );
+
+    final fadeOut = (1.0 - d / 8.0).clamp(0.0, 1.0);
+    if (fadeOut > 0.0 && fadeOut < 1.0) {
+      final labelPaint = Paint()
+        ..color = Colors.white.withValues(alpha: fadeOut * 0.6)
+        ..style = PaintingStyle.fill;
+      final tp = TextPainter(
+        text: TextSpan(
+          text: '↑ ${LanguageManager.instance.isArabic ? 'اسحب للأسفل' : 'Scroll down'}',
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: fadeOut * 0.5),
+            fontSize: 14,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      tp.paint(canvas, Offset(center.dx - tp.width / 2, center.dy + planetR + 40));
+    }
   }
 
   void _drawPlanets(Canvas canvas, Size size, Offset center, double d, double t) {
-    final spread = ((d - 5) / 7.0).clamp(0.0, 1.0);
+    final spread = ((d - 8) / 10.0).clamp(0.0, 1.0);
     final planetConfigs = [
-      _PCfg(offset: const Offset(-0.3, -0.15), radius: 0.12, body: const Color(0xFF3FD2FF), wire: const Color(0xFF8FF2FF), speed: 0.3),
-      _PCfg(offset: const Offset(0.25, -0.2), radius: 0.08, body: const Color(0xFF22C55E), wire: const Color(0xFF56D364), speed: -0.5),
-      _PCfg(offset: const Offset(-0.1, 0.2), radius: 0.06, body: const Color(0xFF3FB950), wire: const Color(0xFF56D364), speed: 0.7),
-      _PCfg(offset: const Offset(0.3, 0.15), radius: 0.09, body: const Color(0xFFF78166), wire: const Color(0xFFFFA657), speed: -0.4),
-      _PCfg(offset: const Offset(-0.25, 0.25), radius: 0.05, body: const Color(0xFFFF6B6B), wire: const Color(0xFFFF8A8A), speed: 0.9),
+      _PCfg(offset: const Offset(-0.3, -0.15), radius: 0.12, body: const Color(0xFF1080E0), wire: const Color(0xFF40A0FF), speed: 0.3),
+      _PCfg(offset: const Offset(0.25, -0.2), radius: 0.08, body: const Color(0xFF2090FF), wire: const Color(0xFF60B0FF), speed: -0.5),
+      _PCfg(offset: const Offset(-0.1, 0.2), radius: 0.06, body: const Color(0xFF0060B0), wire: const Color(0xFF40A0FF), speed: 0.7),
+      _PCfg(offset: const Offset(0.3, 0.15), radius: 0.09, body: const Color(0xFF1080E0), wire: const Color(0xFF2090FF), speed: -0.4),
+      _PCfg(offset: const Offset(-0.25, 0.25), radius: 0.05, body: const Color(0xFF40A0FF), wire: const Color(0xFF60B0FF), speed: 0.9),
     ];
 
     for (final pc in planetConfigs) {
@@ -305,9 +323,8 @@ class _CosmicZoomPainter extends CustomPainter {
   }
 
   void _drawSolarSystem(Canvas canvas, Size size, Offset center, double d, double t) {
-    final spread = ((d - 12) / 10.0).clamp(0.0, 1.0);
+    final spread = ((d - 18) / 12.0).clamp(0.0, 1.0);
 
-    // Sun
     final sunR = 15.0 + spread * 10;
     canvas.drawCircle(center, sunR * 2, Paint()
       ..shader = RadialGradient(colors: [
@@ -320,14 +337,13 @@ class _CosmicZoomPainter extends CustomPainter {
         const Color(0xFFFF8C00).withValues(alpha: 0.3),
       ]).createShader(Rect.fromCircle(center: center, radius: sunR)));
 
-    // Orbit rings + planets
     final orbits = [
       _OrbitCfg(radius: 0.08, speed: 1.5, planetR: 3.0, color: const Color(0xFFA6ABB6)),
       _OrbitCfg(radius: 0.13, speed: 1.0, planetR: 5.0, color: const Color(0xFFFFB020)),
-      _OrbitCfg(radius: 0.19, speed: 0.7, planetR: 6.0, color: const Color(0xFF3FD2FF)),
-      _OrbitCfg(radius: 0.26, speed: 0.45, planetR: 10.0, color: const Color(0xFFF78166)),
-      _OrbitCfg(radius: 0.34, speed: 0.25, planetR: 8.0, color: const Color(0xFF22C55E)),
-      _OrbitCfg(radius: 0.42, speed: 0.15, planetR: 4.0, color: const Color(0xFF3FB950)),
+      _OrbitCfg(radius: 0.19, speed: 0.7, planetR: 6.0, color: const Color(0xFF1080E0)),
+      _OrbitCfg(radius: 0.26, speed: 0.45, planetR: 10.0, color: const Color(0xFF2090FF)),
+      _OrbitCfg(radius: 0.34, speed: 0.25, planetR: 8.0, color: const Color(0xFF0060B0)),
+      _OrbitCfg(radius: 0.42, speed: 0.15, planetR: 4.0, color: const Color(0xFF40A0FF)),
     ];
 
     final orbitPaint = Paint()
@@ -336,7 +352,7 @@ class _CosmicZoomPainter extends CustomPainter {
 
     for (final o in orbits) {
       final r = size.width * o.radius * (0.5 + spread * 0.5);
-      orbitPaint.color = const Color(0xFF3FD2FF).withValues(alpha: 0.06);
+      orbitPaint.color = const Color(0xFF1080E0).withValues(alpha: 0.06);
       canvas.drawOval(
         Rect.fromCenter(center: center, width: r * 2, height: r * 0.7),
         orbitPaint,
@@ -359,20 +375,18 @@ class _CosmicZoomPainter extends CustomPainter {
   }
 
   void _drawGalaxy(Canvas canvas, Size size, Offset center, double d, double t) {
-    final spread = ((d - 22) / 13.0).clamp(0.0, 1.0);
+    final spread = ((d - 30) / 15.0).clamp(0.0, 1.0);
     final arms = 4;
     final rng = math.Random(42);
     final paint = Paint()..style = PaintingStyle.fill;
 
-    // Galaxy core glow
     canvas.drawCircle(center, 30 + spread * 20, Paint()
       ..shader = RadialGradient(colors: [
-        const Color(0xFF22C55E).withValues(alpha: 0.15),
-        const Color(0xFF3FD2FF).withValues(alpha: 0.05),
+        const Color(0xFF2090FF).withValues(alpha: 0.15),
+        const Color(0xFF1080E0).withValues(alpha: 0.05),
         Colors.transparent,
       ]).createShader(Rect.fromCircle(center: center, radius: 50)));
 
-    // Spiral arms with stars
     for (int arm = 0; arm < arms; arm++) {
       final armOffset = (arm / arms) * math.pi * 2;
       for (int i = 0; i < 200; i++) {
@@ -386,7 +400,7 @@ class _CosmicZoomPainter extends CustomPainter {
         final r = (0.5 + rng.nextDouble() * 1.5) * sizeFactor;
         final alpha = (0.1 + rng.nextDouble() * 0.3) * sizeFactor;
 
-        final colors = [const Color(0xFF3FD2FF), const Color(0xFF22C55E), const Color(0xFF8FF2FF), Colors.white];
+        final colors = [const Color(0xFF1080E0), const Color(0xFF2090FF), const Color(0xFF40A0FF), Colors.white];
         paint.color = colors[rng.nextInt(colors.length)].withValues(alpha: alpha);
         canvas.drawCircle(Offset(x, y), r, paint);
       }
@@ -396,7 +410,7 @@ class _CosmicZoomPainter extends CustomPainter {
   void _drawGalaxies(Canvas canvas, Size size, Offset center, double d, double t) {
     final rng = math.Random(d.floor() * 31);
     final paint = Paint()..style = PaintingStyle.fill;
-    final count = 15 + ((d - 35) * 2).toInt().clamp(0, 30);
+    final count = 15 + ((d - 45) * 2).toInt().clamp(0, 30);
 
     for (int i = 0; i < count; i++) {
       final gx = rng.nextDouble() * size.width;
@@ -408,21 +422,19 @@ class _CosmicZoomPainter extends CustomPainter {
       final rot = t * 0.03 + i * 0.5;
 
       final colors = [
-        const Color(0xFF3FD2FF),
-        const Color(0xFF22C55E),
-        const Color(0xFF3FB950),
-        const Color(0xFFF78166),
+        const Color(0xFF1080E0),
+        const Color(0xFF2090FF),
+        const Color(0xFF40A0FF),
+        const Color(0xFF0060B0),
       ];
       final color = colors[rng.nextInt(colors.length)];
 
-      // Galaxy glow
       canvas.drawCircle(Offset(x, y), r * 1.5, Paint()
         ..shader = RadialGradient(colors: [
           color.withValues(alpha: 0.06),
           Colors.transparent,
         ]).createShader(Rect.fromCircle(center: Offset(x, y), radius: r * 1.5)));
 
-      // Mini spiral
       canvas.save();
       canvas.translate(x, y);
       canvas.rotate(rot);
@@ -450,7 +462,6 @@ class _CosmicZoomPainter extends CustomPainter {
   void _drawPlanet(Canvas canvas, Offset center, double r, double t,
       {required Color bodyColor, required Color wireColor, required Color glowColor}) {
 
-    // Atmosphere
     canvas.drawCircle(center, r * 1.5, Paint()
       ..shader = RadialGradient(colors: [
         glowColor.withValues(alpha: 0.12),
@@ -458,7 +469,6 @@ class _CosmicZoomPainter extends CustomPainter {
         Colors.transparent,
       ], stops: const [0.0, 0.5, 1.0]).createShader(Rect.fromCircle(center: center, radius: r * 1.5)));
 
-    // Body
     canvas.drawCircle(center, r, Paint()
       ..shader = RadialGradient(
         center: const Alignment(-0.3, -0.3),
@@ -469,7 +479,6 @@ class _CosmicZoomPainter extends CustomPainter {
         ],
       ).createShader(Rect.fromCircle(center: center, radius: r)));
 
-    // Wireframe lines
     final wirePaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.8;
@@ -496,19 +505,19 @@ class _CosmicZoomPainter extends CustomPainter {
   }
 
   Color _getBgColor(double d) {
-    if (d < 5) return const Color(0xFF0a0a2e);
-    if (d < 12) return const Color(0xFF0d0822);
-    if (d < 22) return const Color(0xFF0b0514);
-    if (d < 35) return const Color(0xFF05100a);
+    if (d < 8) return const Color(0xFF080818);
+    if (d < 18) return const Color(0xFF0a0820);
+    if (d < 30) return const Color(0xFF080416);
+    if (d < 45) return const Color(0xFF041008);
     return const Color(0xFF010409);
   }
 
   Color _getAccentColor(double d) {
-    if (d < 5) return const Color(0xFF3FD2FF);
-    if (d < 12) return const Color(0xFF22C55E);
-    if (d < 22) return const Color(0xFFFFB020);
-    if (d < 35) return const Color(0xFF3FB950);
-    return const Color(0xFFD2A8FF);
+    if (d < 8) return const Color(0xFF1080E0);
+    if (d < 18) return const Color(0xFF2090FF);
+    if (d < 30) return const Color(0xFFFFB020);
+    if (d < 45) return const Color(0xFF2090FF);
+    return const Color(0xFF40A0FF);
   }
 
   @override
@@ -558,11 +567,11 @@ class _SectionParticles extends CustomPainter {
   }
 
   List<Color> _getColors() {
-    if (depth < 5) return [const Color(0xFF3FD2FF), const Color(0xFF22C55E)];
-    if (depth < 12) return [const Color(0xFF22C55E), const Color(0xFF58A6FF)];
-    if (depth < 22) return [const Color(0xFFFFB020), const Color(0xFFF78166)];
-    if (depth < 35) return [const Color(0xFF3FB950), const Color(0xFF3FD2FF)];
-    return [const Color(0xFFD2A8FF), const Color(0xFFFF6B6B)];
+    if (depth < 8) return [const Color(0xFF1080E0), const Color(0xFF2090FF)];
+    if (depth < 18) return [const Color(0xFF2090FF), const Color(0xFF40A0FF)];
+    if (depth < 30) return [const Color(0xFFFFB020), const Color(0xFF1080E0)];
+    if (depth < 45) return [const Color(0xFF2090FF), const Color(0xFF1080E0)];
+    return [const Color(0xFF40A0FF), const Color(0xFF1080E0)];
   }
 
   @override

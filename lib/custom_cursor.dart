@@ -155,14 +155,14 @@ class _CustomCursorOverlayState extends State<CustomCursorOverlay>
                             height: 40,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: const Color(0xFF3FD2FF).withOpacity(0.06),
+                              color: const Color(0xFF1080E0).withOpacity(0.06),
                               border: Border.all(
-                                color: const Color(0xFF3FD2FF).withOpacity(0.6),
+                                color: const Color(0xFF1080E0).withOpacity(0.6),
                                 width: 1.0,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFF3FD2FF).withOpacity(0.45),
+                                  color: const Color(0xFF1080E0).withOpacity(0.45),
                                   blurRadius: 22,
                                   spreadRadius: 4,
                                 ),
@@ -179,10 +179,10 @@ class _CustomCursorOverlayState extends State<CustomCursorOverlay>
                           height: 6,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color(0xFF3FD2FF),
+                            color: const Color(0xFF1080E0),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF3FD2FF).withOpacity(0.9),
+                                color: const Color(0xFF1080E0).withOpacity(0.9),
                                 blurRadius: 10,
                                 spreadRadius: 2,
                               ),

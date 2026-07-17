@@ -23,15 +23,15 @@ class MyApp extends StatelessWidget {
       builder: (context, _) {
         final isAr = LanguageManager.instance.isArabic;
         return MaterialApp(
-          title: tr('Code Mster | أفضل شركة حلول تقنية وتصميم تطبيقات في العراق', 'Code Mster | Best Software & App Development in Iraq'),
+          title: tr('Code Master | أفضل شركة حلول تقنية وتصميم تطبيقات في العراق', 'Code Master | Best Software & App Development in Iraq'),
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             brightness: Brightness.dark,
             scaffoldBackgroundColor: const Color(0xFF090D16),
-            primaryColor: const Color(0xFF3FD2FF),
+            primaryColor: const Color(0xFF1080E0),
             fontFamily: 'Inter',
             colorScheme: const ColorScheme.dark(
-              primary: Color(0xFF3FD2FF),
+              primary: Color(0xFF1080E0),
               surface: Color(0xFF090D16),
             ),
           ),
@@ -147,6 +147,7 @@ class _HomePageState extends State<HomePage> {
                   child: HeroSection(
                     onGetStarted: () => _handleLinkTap('#cta'),
                     onServices: () => _handleLinkTap('#services'),
+                    onPortal: _openPortal,
                   ),
                 ),
                 _ScrollReveal(
@@ -282,7 +283,7 @@ class _SectionHeader extends StatelessWidget {
           height: 3,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF3FD2FF), Color(0xFF22C55E)],
+              colors: [Color(0xFF1080E0), Color(0xFF2090FF)],
             ),
             borderRadius: BorderRadius.circular(2),
           ),
@@ -317,11 +318,13 @@ class _SectionHeader extends StatelessWidget {
 class HeroSection extends StatelessWidget {
   final VoidCallback onGetStarted;
   final VoidCallback onServices;
+  final VoidCallback onPortal;
 
   const HeroSection({
     super.key,
     required this.onGetStarted,
     required this.onServices,
+    required this.onPortal,
   });
 
   @override
@@ -345,8 +348,8 @@ class HeroSection extends StatelessWidget {
                   center: const Alignment(0, -0.2),
                   radius: 1.2,
                   colors: [
-                    const Color(0xFF3FD2FF).withValues(alpha: 0.1),
-                    const Color(0xFF22C55E).withValues(alpha: 0.03),
+                    const Color(0xFF1080E0).withValues(alpha: 0.1),
+                    const Color(0xFF2090FF).withValues(alpha: 0.03),
                     Colors.transparent,
                   ],
                 ),
@@ -382,7 +385,7 @@ class HeroSection extends StatelessWidget {
                     height: 3,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFF3FD2FF), Color(0xFF22C55E)],
+                        colors: [Color(0xFF1080E0), Color(0xFF2090FF)],
                       ),
                       borderRadius: BorderRadius.circular(2),
                     ),
@@ -394,16 +397,16 @@ class HeroSection extends StatelessWidget {
                       vertical: 10,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF3FD2FF).withValues(alpha: 0.1),
+                      color: const Color(0xFF1080E0).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(
-                        color: const Color(0xFF3FD2FF).withValues(alpha: 0.3),
+                        color: const Color(0xFF1080E0).withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
                       tr('شريكك التقني المتكامل في العراق', 'Your Integrated Tech Partner in Iraq'),
                       style: const TextStyle(
-                        color: Color(0xFF3FD2FF),
+                        color: Color(0xFF1080E0),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 1,
@@ -415,10 +418,10 @@ class HeroSection extends StatelessWidget {
                     header: true,
                     child: ShaderMask(
                       shaderCallback: (bounds) => const LinearGradient(
-                        colors: [Color(0xFF3FD2FF), Color(0xFF22C55E)],
+                        colors: [Color(0xFF1080E0), Color(0xFF2090FF)],
                       ).createShader(bounds),
                       child: Text(
-                        'Code Mster',
+                        'Code Master',
                         style: TextStyle(
                           fontSize: size.width > 600 ? 80 : 48,
                           fontWeight: FontWeight.w900,
@@ -437,7 +440,7 @@ class HeroSection extends StatelessWidget {
                     style: TextStyle(
                       fontSize: size.width > 600 ? 22 : 16,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF22C55E),
+                      color: const Color(0xFF2090FF),
                       letterSpacing: 1,
                     ),
                   ),
@@ -446,8 +449,8 @@ class HeroSection extends StatelessWidget {
                     constraints: const BoxConstraints(maxWidth: 640),
                     child: Text(
                       tr(
-                        'مرحباً بك في منصة Code Mster للحلول البرمجية المتكاملة. نحن نبتكر ونطور أحدث الحلول التقنية للشركات في العراق، ونمكّن أصحاب الأعمال والشركات الناشئة من امتلاك بنية رقمية قوية عبر تصميم مواقع إلكترونية احترافية وتطوير تطبيقات الموبايل الذكية. هدفنا هو نقل مشروعك التجاري إلى مستويات جديدة من النمو والانتشار وفق أعلى معايير الأمان والسرعة التقنية.',
-                        'Welcome to Code Mster, your integrated software solutions platform. We innovate and develop the latest tech solutions for businesses in Iraq, empowering entrepreneurs and startups with a strong digital presence through professional website design and smart mobile app development.',
+                        'مرحباً بك في منصة Code Master للحلول البرمجية المتكاملة. نحن نبتكر ونطور أحدث الحلول التقنية للشركات في العراق، ونمكّن أصحاب الأعمال والشركات الناشئة من امتلاك بنية رقمية قوية عبر تصميم مواقع إلكترونية احترافية وتطوير تطبيقات الموبايل الذكية. هدفنا هو نقل مشروعك التجاري إلى مستويات جديدة من النمو والانتشار وفق أعلى معايير الأمان والسرعة التقنية.',
+                        'Welcome to Code Master, your integrated software solutions platform. We innovate and develop the latest tech solutions for businesses in Iraq, empowering entrepreneurs and startups with a strong digital presence through professional website design and smart mobile app development.',
                       ),
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -474,6 +477,12 @@ class HeroSection extends StatelessWidget {
                         icon: const Icon(Icons.arrow_downward, size: 18),
                         isSolid: false,
                         onPressed: onServices,
+                      ),
+                      MagneticButton(
+                        label: tr('حدود إبداعنا', 'Creative Bounds'),
+                        icon: const Icon(Icons.explore, size: 18),
+                        isSolid: false,
+                        onPressed: onPortal,
                       ),
                     ],
                   ),
@@ -538,7 +547,7 @@ class _StatsSectionState extends State<StatsSection>
         color: const Color(0xFF141A29).withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: const Color(0xFF3FD2FF).withValues(alpha: 0.1),
+          color: const Color(0xFF1080E0).withValues(alpha: 0.1),
         ),
       ),
       child: Row(
@@ -596,7 +605,7 @@ class _AnimatedStat extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF3FD2FF),
+                color: Color(0xFF1080E0),
               ),
             ),
             const SizedBox(height: 8),
@@ -629,7 +638,7 @@ class _StaticStat extends StatelessWidget {
           style: const TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.w800,
-            color: Color(0xFF3FD2FF),
+            color: Color(0xFF1080E0),
           ),
         ),
         const SizedBox(height: 8),
@@ -699,7 +708,7 @@ class VisionSection extends StatelessWidget {
             color: const Color(0xFF141A29),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFF3FD2FF).withValues(alpha: 0.3),
+              color: const Color(0xFF1080E0).withValues(alpha: 0.3),
             ),
           ),
           child: Column(
@@ -708,12 +717,12 @@ class VisionSection extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3FD2FF).withValues(alpha: 0.1),
+                  color: const Color(0xFF1080E0).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.visibility,
-                  color: Color(0xFF3FD2FF),
+                  color: Color(0xFF1080E0),
                   size: 28,
                 ),
               ),
@@ -754,7 +763,7 @@ class VisionSection extends StatelessWidget {
           color: const Color(0xFF141A29),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: const Color(0xFF22C55E).withValues(alpha: 0.3),
+            color: const Color(0xFF2090FF).withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -763,12 +772,12 @@ class VisionSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF22C55E).withValues(alpha: 0.1),
+                color: const Color(0xFF2090FF).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
                 Icons.flag,
-                color: Color(0xFF22C55E),
+                color: Color(0xFF2090FF),
                 size: 28,
               ),
             ),
@@ -810,7 +819,7 @@ class VisionSection extends StatelessWidget {
             color: const Color(0xFF141A29),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFF3FD2FF).withValues(alpha: 0.1),
+              color: const Color(0xFF1080E0).withValues(alpha: 0.1),
             ),
           ),
           child: Column(
@@ -865,10 +874,10 @@ class _GoalItem extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: const Color(0xFF3FD2FF).withValues(alpha: 0.1),
+            color: const Color(0xFF1080E0).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, color: const Color(0xFF3FD2FF), size: 20),
+          child: Icon(icon, color: const Color(0xFF1080E0), size: 20),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -898,7 +907,7 @@ class ServicesSection extends StatelessWidget {
         descriptionEn: 'We specialize in programming and designing professional mobile apps for iPhone and Android. Using Flutter framework for fast, modern UIs that adapt to all screen sizes.',
         descriptionAr: 'نحن متخصصون في برمجة وتصميم تطبيقات احترافية للهواتف الذكية بنظامي آيفون وأندرويد. نعتمد على أحدث التقنيات البرمجية العالمية مثل إطار عمل فلاتر لنمنحك تطبيقاً سريعاً، ذا واجهة مستخدم عصرية، ومتوافقاً مع كافة الشاشات ليلبي تطلعات عملائك في السوق العراقي.',
         icon: Icons.phone_android,
-        color: const Color(0xFF3FD2FF),
+        color: const Color(0xFF1080E0),
         tags: ['Flutter', 'iOS', 'Android', 'UI/UX'],
       ),
       _ServiceData(
@@ -908,7 +917,7 @@ class ServicesSection extends StatelessWidget {
         descriptionEn: 'Complete e-commerce stores with smart dashboards for product management. Local payment gateway integration including Zain Cash, Asia Hawala, and credit cards.',
         descriptionAr: 'نوفر خدمات تصميم متجر إلكتروني متكامل في العراق مع لوحة تحكم ذكية وشاملة لإدارة المنتجات والمبيعات. الميزة الأهم لدينا هي دعم وتسهيل ربط بوابات الدفع المحلية مثل زين كاش وآسيا حوالة بداخل التطبيقات والمواقع، مما يضمن لعملائك تجربة تسوق محلية وسلسة تزيد من نسب أرباحك.',
         icon: Icons.shopping_cart,
-        color: const Color(0xFF22C55E),
+        color: const Color(0xFF2090FF),
         tags: ['Zain Cash', 'Asia Hawala', 'Store', 'Payment'],
       ),
       _ServiceData(
@@ -1184,7 +1193,7 @@ class ValuesSection extends StatelessWidget {
         titleAr: 'الاحترافية',
         descriptionEn: 'We uphold the highest professional standards in every project.',
         descriptionAr: 'نلتزم بأعلى المعايير المهنية في كل مشروع.',
-        color: const Color(0xFF3FD2FF),
+        color: const Color(0xFF1080E0),
       ),
       _ValueData(
         icon: Icons.stars,
@@ -1192,7 +1201,7 @@ class ValuesSection extends StatelessWidget {
         titleAr: 'الجودة',
         descriptionEn: 'Excellence is not negotiable. We deliver top-tier quality.',
         descriptionAr: 'التميز غير قابل للتفاوض. نقدم جودة من الطراز الأول.',
-        color: const Color(0xFF22C55E),
+        color: const Color(0xFF2090FF),
       ),
       _ValueData(
         icon: Icons.lightbulb,
@@ -1216,7 +1225,7 @@ class ValuesSection extends StatelessWidget {
         titleAr: 'السرعة',
         descriptionEn: 'Fast delivery without compromising quality or attention to detail.',
         descriptionAr: 'تسليم سريع دون المساس بالجودة أو الاهتمام بالتفاصيل.',
-        color: const Color(0xFFFF6B6B),
+        color: const Color(0xFF40A0FF),
       ),
     ];
 
@@ -1355,14 +1364,14 @@ class _FAQSectionState extends State<FAQSection> {
 
   final _faqs = [
     {
-      'questionAr': 'هل تدعم المتاجر والأنظمة المبرمجة بواسطة Code Mster طرق الدفع المحلية في العراق؟',
-      'questionEn': 'Does Code Mster support local payment methods in Iraq for stores and systems?',
+      'questionAr': 'هل تدعم المتاجر والأنظمة المبرمجة بواسطة Code Master طرق الدفع المحلية في العراق؟',
+      'questionEn': 'Does Code Master support local payment methods in Iraq for stores and systems?',
       'answerAr': 'نعم بكل تأكيد. نحن ندرك أهمية البيئة المالية المحلية، لذا نتولى بشكل كامل ربط بوابة دفع زين كاش، وآسيا حوالة، وبطاقات الائتمان بداخل موقعك أو تطبيقك. هذا يتيح للمستخدمين في بغداد، العمارة، البصرة، وكافة المحافظات العراقية إتمام عمليات الشراء والدفع بأمان وسهولة فائقة.',
       'answerEn': 'Absolutely. We fully integrate Zain Cash, Asia Hawala, and credit card payment gateways into your website or app. This enables users in Baghdad, Al-Amarah, Basra, and all Iraqi governorates to complete purchases securely and easily.',
     },
     {
-      'questionAr': 'ما الذي يجعل Code Mster أفضل شركة حلول تقنية برمجية في العراق؟',
-      'questionEn': 'What makes Code Mster the best software solutions company in Iraq?',
+      'questionAr': 'ما الذي يجعل Code Master أفضل شركة حلول تقنية برمجية في العراق؟',
+      'questionEn': 'What makes Code Master the best software solutions company in Iraq?',
       'answerAr': 'تميزنا يكمن في تقديم حلول تقنية متكاملة ومخصصة لكل عميل؛ فنحن لا نكتفي بكتابة كود برمجي، بل نؤمن مشروعك باستضافة فائقة السرعة مدعومة بتقنيات توزيع المحتوى والـ Cloudflare لتقليل زمن الاستجابة داخل العراق، بالإضافة إلى توفير حماية مشددة لقواعد البيانات، ودعم فني متواصل على مدار الساعة يضمن استقرار عمل أنظمتك وموقعك دون أي انقطاع.',
       'answerEn': 'Our distinction lies in delivering integrated, customized tech solutions for every client. We go beyond coding — we provision high-speed hosting powered by Cloudflare CDN for minimal latency within Iraq, provide robust database protection, and offer 24/7 technical support to ensure your systems and website run without interruption.',
     },
@@ -1412,8 +1421,8 @@ class _FAQSectionState extends State<FAQSection> {
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                             color: isExpanded
-                                ? const Color(0xFF3FD2FF).withValues(alpha: 0.4)
-                                : const Color(0xFF3FD2FF).withValues(alpha: 0.08),
+                                ? const Color(0xFF1080E0).withValues(alpha: 0.4)
+                                : const Color(0xFF1080E0).withValues(alpha: 0.08),
                           ),
                         ),
                         child: Column(
@@ -1425,12 +1434,12 @@ class _FAQSectionState extends State<FAQSection> {
                                   Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFF3FD2FF).withValues(alpha: 0.1),
+                                      color: const Color(0xFF1080E0).withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: const Icon(
                                       Icons.question_answer,
-                                      color: Color(0xFF3FD2FF),
+                                      color: Color(0xFF1080E0),
                                       size: 20,
                                     ),
                                   ),
@@ -1452,7 +1461,7 @@ class _FAQSectionState extends State<FAQSection> {
                                     duration: const Duration(milliseconds: 300),
                                     child: const Icon(
                                       Icons.keyboard_arrow_down,
-                                      color: Color(0xFF3FD2FF),
+                                      color: Color(0xFF1080E0),
                                       size: 24,
                                     ),
                                   ),
@@ -1470,7 +1479,7 @@ class _FAQSectionState extends State<FAQSection> {
                                     color: const Color(0xFF0F1320),
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: const Color(0xFF3FD2FF).withValues(alpha: 0.08),
+                                      color: const Color(0xFF1080E0).withValues(alpha: 0.08),
                                     ),
                                   ),
                                   child: Text(
@@ -1543,7 +1552,7 @@ class CTASection extends StatelessWidget {
               color: const Color(0xFF141A29).withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: const Color(0xFF3FD2FF).withValues(alpha: 0.15),
+                color: const Color(0xFF1080E0).withValues(alpha: 0.15),
               ),
             ),
             child: Stack(
@@ -1558,7 +1567,7 @@ class CTASection extends StatelessWidget {
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          const Color(0xFF3FD2FF).withValues(alpha: 0.1),
+                          const Color(0xFF1080E0).withValues(alpha: 0.1),
                           Colors.transparent,
                         ],
                       ),
@@ -1611,60 +1620,12 @@ class CTASection extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 32),
-                    Container(
-                      height: 1,
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.transparent, Color(0xFF3FD2FF), Colors.transparent],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () => _openPortal(context),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 16),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                const Color(0xFF3FD2FF).withValues(alpha: 0.15),
-                                const Color(0xFF22C55E).withValues(alpha: 0.15),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: const Color(0xFF3FD2FF).withValues(alpha: 0.35),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.auto_awesome, color: Color(0xFF3FD2FF), size: 22),
-                              const SizedBox(width: 12),
-                              Text(
-                                tr('حدود إبداعنا', 'Our Creative Bounds'),
-                                style: const TextStyle(
-                                  color: Color(0xFF3FD2FF),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.arrow_forward_ios, color: Color(0xFF3FD2FF), size: 14),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 28),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(
                           Icons.phone,
-                          color: Color(0xFF3FD2FF),
+                          color: Color(0xFF1080E0),
                           size: 18,
                         ),
                         const SizedBox(width: 8),
@@ -1672,7 +1633,7 @@ class CTASection extends StatelessWidget {
                           '+964 777 163 2241',
                           style: const TextStyle(
                             fontSize: 16,
-                            color: Color(0xFF3FD2FF),
+                            color: Color(0xFF1080E0),
                             fontWeight: FontWeight.w600,
                             letterSpacing: 1,
                           ),
@@ -1791,7 +1752,7 @@ class FooterSection extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            '${tr('© 2026', '© 2026')} Code Mster. ${tr('جميع الحقوق محفوظة - العراق', 'All rights reserved - Iraq')}',
+            '${tr('© 2026', '© 2026')} Code Master. ${tr('جميع الحقوق محفوظة - العراق', 'All rights reserved - Iraq')}',
             style: const TextStyle(
               fontSize: 13,
               color: Color(0xFFA6ABB6),
@@ -1827,7 +1788,7 @@ class FooterSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w800,
-              color: const Color(0xFF3FD2FF),
+              color: const Color(0xFF1080E0),
             ),
           ),
         ],

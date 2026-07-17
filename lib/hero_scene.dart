@@ -241,7 +241,7 @@ class _HeroSceneState extends State<HeroScene> with SingleTickerProviderStateMix
       const Color(0xFFFF4500), // Fire Orange
       const Color(0xFFFF0033), // Red Plasma
       const Color(0xFF00E5FF), // Neon Cyan Rebuild Sparks
-      const Color(0xFFAD00FF), // Cyber Purple Sparks
+      const Color(0xFF0060B0), // Cyber Purple Sparks
     ];
     for (var i = 0; i < count; i++) {
       final theta = random.nextDouble() * math.pi * 2;
@@ -414,12 +414,12 @@ class StoryScenePainter extends CustomPainter {
         text: TextSpan(
           text: drop.char,
           style: TextStyle(
-            color: const Color(0xFF3FD2FF).withOpacity(alpha * 0.40),
+            color: const Color(0xFF1080E0).withOpacity(alpha * 0.40),
             fontFamily: 'monospace',
             fontSize: 14,
             fontWeight: FontWeight.bold,
             shadows: [
-              Shadow(color: const Color(0xFF3FD2FF).withOpacity(alpha * 0.8), blurRadius: 8)
+              Shadow(color: const Color(0xFF1080E0).withOpacity(alpha * 0.8), blurRadius: 8)
             ]
           ),
         ),
@@ -461,15 +461,15 @@ class StoryScenePainter extends CustomPainter {
       }
 
       if (px >= 0 && px <= size.width && py >= 0 && py <= size.height) {
-        Color starColor = const Color(0xFF3FD2FF);
+        Color starColor = const Color(0xFF1080E0);
         if (time >= 8.0 && time < 10.0) {
           final t = (time - 8.0) / 2.0;
-          starColor = Color.lerp(const Color(0xFF3FD2FF), const Color(0xFFFF5500), t)!;
+          starColor = Color.lerp(const Color(0xFF1080E0), const Color(0xFFFF5500), t)!;
         } else if (time >= 10.0 && time < 13.5) {
           starColor = const Color(0xFFFF3300);
         } else if (time >= 13.5 && time < 17.5) {
           final t = (time - 13.5) / 4.0;
-          starColor = Color.lerp(const Color(0xFFFF3300), const Color(0xFF3FD2FF), t)!;
+          starColor = Color.lerp(const Color(0xFFFF3300), const Color(0xFF1080E0), t)!;
         }
         canvas.drawCircle(
           Offset(px, py),
@@ -523,7 +523,7 @@ class StoryScenePainter extends CustomPainter {
 
     // Draw 2 Orbiter Moons / Planets (Spherical Configs orbiting the Earth) at all times
     final planetConfigs = [
-      _PlanetOrbitConfig(orbitRadius: 280.0, sizeRadius: 0.35, speed: 0.8, color: const Color(0xFFAD00FF), name: "Planet Alpha"),
+      _PlanetOrbitConfig(orbitRadius: 280.0, sizeRadius: 0.35, speed: 0.8, color: const Color(0xFF0060B0), name: "Planet Alpha"),
       _PlanetOrbitConfig(orbitRadius: 400.0, sizeRadius: 0.25, speed: -0.5, color: const Color(0xFFFF3F80), name: "Planet Beta"),
     ];
 
@@ -601,8 +601,8 @@ class StoryScenePainter extends CustomPainter {
       // Render main Earth
       final spheres = [
         _SphereConfig(radius: 1.15, opacity: 0.12, color: const Color(0xFF00E5FF), isCore: true),
-        _SphereConfig(radius: 1.55, opacity: 0.50, color: const Color(0xFF3FD2FF), isCore: false),
-        _SphereConfig(radius: 2.25, opacity: 0.22, color: const Color(0xFF8FF2FF), isCore: false),
+        _SphereConfig(radius: 1.55, opacity: 0.50, color: const Color(0xFF1080E0), isCore: false),
+        _SphereConfig(radius: 2.25, opacity: 0.22, color: const Color(0xFF40A0FF), isCore: false),
       ];
 
       for (final conf in spheres) {
@@ -744,8 +744,8 @@ class StoryScenePainter extends CustomPainter {
 
       final spheres = [
         _SphereConfig(radius: 1.15, opacity: 0.12 * (cyberOpacity / 0.65), color: const Color(0xFF00E5FF), isCore: true),
-        _SphereConfig(radius: 1.55, opacity: 0.50 * (cyberOpacity / 0.65), color: const Color(0xFF3FD2FF), isCore: false),
-        _SphereConfig(radius: 2.25, opacity: 0.22 * (cyberOpacity / 0.65), color: const Color(0xFF8FF2FF), isCore: false),
+        _SphereConfig(radius: 1.55, opacity: 0.50 * (cyberOpacity / 0.65), color: const Color(0xFF1080E0), isCore: false),
+        _SphereConfig(radius: 2.25, opacity: 0.22 * (cyberOpacity / 0.65), color: const Color(0xFF40A0FF), isCore: false),
       ];
 
       for (final conf in spheres) {
@@ -777,7 +777,7 @@ class StoryScenePainter extends CustomPainter {
           ..style = PaintingStyle.stroke;
 
         final glowPaint = Paint()
-          ..color = const Color(0xFFAD00FF).withOpacity(conf.opacity * 0.45)
+          ..color = const Color(0xFF0060B0).withOpacity(conf.opacity * 0.45)
           ..strokeWidth = conf.isCore ? 1.6 : 3.0;
 
         for (final edge in edges) {
@@ -788,7 +788,7 @@ class StoryScenePainter extends CustomPainter {
           final currentOpacity = conf.opacity * fade.clamp(0.2, 1.0);
 
           // Draw the glowing cyber background line (purple neon shadow)
-          canvas.drawLine(p1, p2, glowPaint..color = const Color(0xFFAD00FF).withOpacity(currentOpacity * 0.45));
+          canvas.drawLine(p1, p2, glowPaint..color = const Color(0xFF0060B0).withOpacity(currentOpacity * 0.45));
           // Draw the main clean detailed wireframe line
           canvas.drawLine(p1, p2, edgePaint..color = conf.color.withOpacity(currentOpacity));
         }
@@ -829,7 +829,7 @@ class StoryScenePainter extends CustomPainter {
       }
 
       final ringPaint = Paint()
-        ..color = const Color(0xFFAD00FF).withOpacity(cyberOpacity * 0.7)
+        ..color = const Color(0xFF0060B0).withOpacity(cyberOpacity * 0.7)
         ..strokeWidth = 1.2
         ..style = PaintingStyle.stroke;
       

@@ -84,7 +84,7 @@ class _NavbarState extends State<Navbar> {
                   : Colors.transparent,
               border: Border.all(
                 color: _isScrolled 
-                    ? const Color(0xFF3FD2FF).withOpacity(0.15) 
+                    ? const Color(0xFF1080E0).withOpacity(0.15) 
                     : Colors.transparent,
                 width: 1,
               ),
@@ -116,7 +116,7 @@ class _NavbarState extends State<Navbar> {
                           children: [
                             Icon(
                               Icons.code,
-                              color: const Color(0xFF3FD2FF),
+                              color: const Color(0xFF1080E0),
                               size: isSmallMobile ? 24 : 28,
                             ),
                             const SizedBox(width: 8),
@@ -146,8 +146,6 @@ class _NavbarState extends State<Navbar> {
                       const SizedBox(width: 32),
                       _buildNavLink(tr('قيمنا', 'Values'), '#values'),
                       const SizedBox(width: 32),
-                      _buildPortalButton(isSmallMobile),
-                      const SizedBox(width: 32),
                       _buildNavLink(tr('اتصل بنا', 'Contact'), '#cta'),
                     ],
                   ),
@@ -170,40 +168,11 @@ class _NavbarState extends State<Navbar> {
                     ),
                     SizedBox(width: isSmallMobile ? 8 : 12),
 
-                    // Portal button (mobile)
-                    CustomCursorHover(
-                      child: InkWell(
-                        onTap: () => widget.onLinkTap('#portal'),
-                        overlayColor: WidgetStateProperty.all(Colors.transparent),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(999),
-                            gradient: LinearGradient(
-                              colors: [
-                                const Color(0xFF3FD2FF).withValues(alpha: 0.12),
-                                const Color(0xFF22C55E).withValues(alpha: 0.12),
-                              ],
-                            ),
-                            border: Border.all(
-                              color: const Color(0xFF3FD2FF).withValues(alpha: 0.3),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.auto_awesome,
-                            color: const Color(0xFF3FD2FF),
-                            size: isSmallMobile ? 16 : 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: isSmallMobile ? 8 : 12),
-
                     CustomCursorHover(
                       child: TextButton(
                         onPressed: () => widget.onLinkTap('#cta'),
                         style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xFF3FD2FF),
+                          backgroundColor: const Color(0xFF1080E0),
                           foregroundColor: const Color(0xFF090D16),
                           padding: EdgeInsets.symmetric(
                             horizontal: isSmallMobile ? 12 : 20, 
@@ -246,53 +215,6 @@ class _NavbarState extends State<Navbar> {
     );
   }
 
-  Widget _buildPortalButton(bool isSmallMobile) {
-    return CustomCursorHover(
-      child: InkWell(
-        onTap: () => widget.onLinkTap('#portal'),
-        overlayColor: WidgetStateProperty.all(Colors.transparent),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: isSmallMobile ? 10 : 16,
-            vertical: 6,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(999),
-            gradient: LinearGradient(
-              colors: [
-                const Color(0xFF3FD2FF).withValues(alpha: 0.12),
-                const Color(0xFF22C55E).withValues(alpha: 0.12),
-              ],
-            ),
-            border: Border.all(
-              color: const Color(0xFF3FD2FF).withValues(alpha: 0.35),
-              width: 1,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.auto_awesome,
-                color: const Color(0xFF3FD2FF),
-                size: isSmallMobile ? 14 : 16,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                tr('حدود إبداعنا', 'Creative Bounds'),
-                style: TextStyle(
-                  fontSize: isSmallMobile ? 11 : 13,
-                  color: const Color(0xFF3FD2FF),
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class MagneticButton extends StatefulWidget {
@@ -366,14 +288,14 @@ class _MagneticButtonState extends State<MagneticButton> {
               padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(999),
-                color: widget.isSolid ? const Color(0xFF3FD2FF) : const Color(0xFF141A29).withOpacity(0.5),
+                color: widget.isSolid ? const Color(0xFF1080E0) : const Color(0xFF141A29).withOpacity(0.5),
                 border: Border.all(
-                  color: widget.isSolid ? Colors.transparent : const Color(0xFF3FD2FF).withOpacity(0.3),
+                  color: widget.isSolid ? Colors.transparent : const Color(0xFF1080E0).withOpacity(0.3),
                   width: 1.5,
                 ),
                 boxShadow: widget.isSolid ? [
                   BoxShadow(
-                    color: const Color(0xFF3FD2FF).withOpacity(0.25),
+                    color: const Color(0xFF1080E0).withOpacity(0.25),
                     blurRadius: 24,
                     spreadRadius: 0,
                   ),
@@ -501,13 +423,13 @@ class _TiltCardState extends State<TiltCard> {
               color: const Color(0xFF141A29).withOpacity(0.5), // glass
               border: Border.all(
                 color: _isHovered 
-                    ? const Color(0xFF3FD2FF).withOpacity(0.4) 
-                    : const Color(0xFF3FD2FF).withOpacity(0.1),
+                    ? const Color(0xFF1080E0).withOpacity(0.4) 
+                    : const Color(0xFF1080E0).withOpacity(0.1),
                 width: 1.0,
               ),
               boxShadow: _isHovered ? [
                 BoxShadow(
-                  color: const Color(0xFF3FD2FF).withOpacity(0.25),
+                  color: const Color(0xFF1080E0).withOpacity(0.25),
                   blurRadius: 24,
                   spreadRadius: -8,
                 ),
@@ -535,8 +457,8 @@ class _TiltCardState extends State<TiltCard> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         color: _isHovered 
-                            ? const Color(0xFF3FD2FF).withOpacity(0.2) 
-                            : const Color(0xFF3FD2FF).withOpacity(0.1),
+                            ? const Color(0xFF1080E0).withOpacity(0.2) 
+                            : const Color(0xFF1080E0).withOpacity(0.1),
                       ),
                       alignment: Alignment.center,
                       child: Card3DVisualizer(
@@ -603,7 +525,7 @@ class CardGlowPainter extends CustomPainter {
     final paint = Paint()
       ..shader = RadialGradient(
         colors: [
-          const Color(0xFF3FD2FF).withOpacity(0.18),
+          const Color(0xFF1080E0).withOpacity(0.18),
           Colors.transparent,
         ],
         stops: const [0.0, 0.65],
@@ -695,7 +617,7 @@ class Card3DGeometryPainter extends CustomPainter {
 
     // Draw rotating outer diagnostic HUD ring segments for sci-fi look
     final ringPaint = Paint()
-      ..color = const Color(0xFF3FD2FF).withOpacity(isHovered ? 0.28 : 0.12)
+      ..color = const Color(0xFF1080E0).withOpacity(isHovered ? 0.28 : 0.12)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
     
@@ -705,11 +627,11 @@ class Card3DGeometryPainter extends CustomPainter {
     // Draw spinning segmented ring pieces in clockwise/counter-clockwise directions
     canvas.drawArc(hudRect, angleY, 1.2, false, ringPaint);
     canvas.drawArc(hudRect, angleY + pi, 1.2, false, ringPaint);
-    canvas.drawArc(hudRect, -angleY * 0.7, 0.6, false, ringPaint..color = const Color(0xFFFF2A85).withOpacity(isHovered ? 0.28 : 0.12));
+    canvas.drawArc(hudRect, -angleY * 0.7, 0.6, false, ringPaint..color = const Color(0xFF0060B0).withOpacity(isHovered ? 0.28 : 0.12));
 
     // Dash telemetry support circle
     final dashPaint = Paint()
-      ..color = const Color(0xFF3FD2FF).withOpacity(0.06)
+      ..color = const Color(0xFF1080E0).withOpacity(0.06)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.8;
     canvas.drawCircle(Offset(cx, cy), size.width * 0.38, dashPaint);
@@ -1015,7 +937,7 @@ class Card3DGeometryPainter extends CustomPainter {
         final p2 = Offset(cx + cos(angle) * endDist, cy + sin(angle) * endDist);
         
         final rayPaint = Paint()
-          ..color = (i % 2 == 0 ? const Color(0xFF3FD2FF) : const Color(0xFFFF2A85)).withOpacity((1.0 - t) * 0.4)
+          ..color = (i % 2 == 0 ? const Color(0xFF1080E0) : const Color(0xFF0060B0)).withOpacity((1.0 - t) * 0.4)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1.5 * (1.0 - t)
           ..strokeCap = StrokeCap.round;
@@ -1039,8 +961,8 @@ class Card3DGeometryPainter extends CustomPainter {
         final particleAlpha = (1.0 - t).clamp(0.0, 1.0);
         
         final particleColor = i % 3 == 0 
-            ? const Color(0xFFFF2A85) 
-            : (i % 3 == 1 ? const Color(0xFF3FD2FF) : Colors.white);
+            ? const Color(0xFF0060B0) 
+            : (i % 3 == 1 ? const Color(0xFF1080E0) : Colors.white);
 
         final pPaint = Paint()
           ..color = particleColor.withOpacity(particleAlpha * 0.9)
@@ -1064,7 +986,7 @@ class Card3DGeometryPainter extends CustomPainter {
         double depthOpacity = (100.0 - zAvg) / 100.0;
         depthOpacity = depthOpacity.clamp(0.15, 1.0);
 
-        final glowColor = isHovered ? const Color(0xFFFF2A85) : const Color(0xFF3FD2FF);
+        final glowColor = isHovered ? const Color(0xFF0060B0) : const Color(0xFF1080E0);
 
         final glowPaint = Paint()
           ..color = glowColor.withOpacity(depthOpacity * (isHovered ? 0.4 : 0.28))
@@ -1105,7 +1027,7 @@ class Card3DGeometryPainter extends CustomPainter {
       // Dynamic pulsing effect on hover
       final pulse = isHovered ? sin(animationValue * pi * 8.0 + i) * 1.5 : 0.0;
 
-      final pointColor = isHovered ? const Color(0xFFFF2A85) : const Color(0xFF3FD2FF);
+      final pointColor = isHovered ? const Color(0xFF0060B0) : const Color(0xFF1080E0);
 
       // Outer neon particle dot
       final nodeGlow = Paint()

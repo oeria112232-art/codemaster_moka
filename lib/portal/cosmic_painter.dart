@@ -73,7 +73,7 @@ class CosmicPainter extends CustomPainter {
       final isBright = rng.nextInt(5) == 0;
       paint.color = isBright
           ? Colors.white.withValues(alpha: twinkle * 1.5)
-          : const Color(0xFF3FD2FF).withValues(alpha: twinkle);
+          : const Color(0xFF1080E0).withValues(alpha: twinkle);
       canvas.drawCircle(Offset(x, y), r, paint);
     }
   }
@@ -181,10 +181,10 @@ class CosmicPainter extends CustomPainter {
     final py = center.dy + math.cos(t * 0.08 + d * 1.5) * size.height * 0.1;
 
     final moonConfigs = [
-      _MoonConfig(orbit: 2.2, size: 0.15, speed: 0.6, color: const Color(0xFF22C55E), hasRing: false),
-      _MoonConfig(orbit: 3.0, size: 0.08, speed: -0.4, color: const Color(0xFF3FD2FF), hasRing: true),
-      _MoonConfig(orbit: 1.6, size: 0.06, speed: 1.2, color: const Color(0xFFFF6B6B), hasRing: false),
-      _MoonConfig(orbit: 3.8, size: 0.1, speed: -0.25, color: const Color(0xFF3FB950), hasRing: false),
+      _MoonConfig(orbit: 2.2, size: 0.15, speed: 0.6, color: const Color(0xFF2090FF), hasRing: false),
+      _MoonConfig(orbit: 3.0, size: 0.08, speed: -0.4, color: const Color(0xFF1080E0), hasRing: true),
+      _MoonConfig(orbit: 1.6, size: 0.06, speed: 1.2, color: const Color(0xFF40A0FF), hasRing: false),
+      _MoonConfig(orbit: 3.8, size: 0.1, speed: -0.25, color: const Color(0xFF2090FF), hasRing: false),
     ];
 
     for (final mc in moonConfigs) {
@@ -339,7 +339,7 @@ class CosmicPainter extends CustomPainter {
           ? cloudColors[1]
           : colorIndex == 1
               ? cloudColors[2]
-               : const Color(0xFF22C55E);
+               : const Color(0xFF2090FF);
 
       canvas.drawCircle(
         Offset(cx, cy),
@@ -396,39 +396,39 @@ class CosmicPainter extends CustomPainter {
       paint.color = const Color(0xFF6B7280).withValues(alpha: alpha);
       canvas.drawCircle(Offset(x, y), r, paint);
 
-      paint.color = const Color(0xFF3FD2FF).withValues(alpha: alpha * 0.3);
+      paint.color = const Color(0xFF1080E0).withValues(alpha: alpha * 0.3);
       canvas.drawCircle(Offset(x, y), r + 3, Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.5
-        ..color = const Color(0xFF3FD2FF).withValues(alpha: alpha * 0.3));
+        ..color = const Color(0xFF1080E0).withValues(alpha: alpha * 0.3));
     }
   }
 
   List<Color> _getDepthColors(double d) {
     if (d < 1.0) {
-      return [const Color(0xFF0a0a2e), const Color(0xFF3FD2FF), const Color(0xFF22C55E)];
+      return [const Color(0xFF0a0a2e), const Color(0xFF1080E0), const Color(0xFF2090FF)];
     } else if (d < 2.0) {
-      return [const Color(0xFF0d0822), const Color(0xFFAD00FF), const Color(0xFF58A6FF)];
+      return [const Color(0xFF0d0822), const Color(0xFF0060B0), const Color(0xFF58A6FF)];
     } else if (d < 3.0) {
-      return [const Color(0xFF0b0514), const Color(0xFFF78166), const Color(0xFFFFB020)];
+      return [const Color(0xFF0b0514), const Color(0xFF40A0FF), const Color(0xFFFFB020)];
     } else if (d < 4.0) {
-      return [const Color(0xFF05100a), const Color(0xFF3FB950), const Color(0xFF3FD2FF)];
+      return [const Color(0xFF05100a), const Color(0xFF2090FF), const Color(0xFF1080E0)];
     } else {
-      return [const Color(0xFF010409), const Color(0xFFD2A8FF), const Color(0xFFFF6B6B)];
+      return [const Color(0xFF010409), const Color(0xFF40A0FF), const Color(0xFF40A0FF)];
     }
   }
 
   List<Color> _getPlanetColors(double d) {
     if (d < 1.0) {
-      return [const Color(0xFF3FD2FF), const Color(0xFF8FF2FF), const Color(0xFF3FD2FF)];
+      return [const Color(0xFF1080E0), const Color(0xFF40A0FF), const Color(0xFF1080E0)];
     } else if (d < 2.0) {
-      return [const Color(0xFFAD00FF), const Color(0xFFD2A8FF), const Color(0xFFAD00FF)];
+      return [const Color(0xFF0060B0), const Color(0xFF40A0FF), const Color(0xFF0060B0)];
     } else if (d < 3.0) {
-      return [const Color(0xFFF78166), const Color(0xFFFFA657), const Color(0xFFFFB020)];
+      return [const Color(0xFF40A0FF), const Color(0xFF2090FF), const Color(0xFFFFB020)];
     } else if (d < 4.0) {
-      return [const Color(0xFF3FB950), const Color(0xFF56D364), const Color(0xFF3FD2FF)];
+      return [const Color(0xFF2090FF), const Color(0xFF40A0FF), const Color(0xFF1080E0)];
     } else {
-      return [const Color(0xFFFF6B6B), const Color(0xFFFF2A85), const Color(0xFFD2A8FF)];
+      return [const Color(0xFF40A0FF), const Color(0xFF0060B0), const Color(0xFF40A0FF)];
     }
   }
 

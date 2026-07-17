@@ -1,11 +1,13 @@
 {
-    "name": "code_master",
-    "short_name": "code_master",
+    "name": "Code Master",
+    "short_name": "Code Master",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#081018",
+    "theme_color": "#1080E0",
+    "description": "Code Master - أفضل شركة حلول تقنية في العراق",
+    "lang": "ar",
+    "dir": "rtl",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

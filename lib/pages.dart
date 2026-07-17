@@ -47,10 +47,10 @@ class TechnologyView extends StatelessWidget {
             CustomCursorHover(
               child: TextButton.icon(
                 onPressed: onBack,
-                icon: const Icon(Icons.arrow_back, color: Color(0xFF3FD2FF)),
+                icon: const Icon(Icons.arrow_back, color: Color(0xFF1080E0)),
                 label: Text(
                   tr('العودة للرئيسية', 'Back to Home'),
-                  style: const TextStyle(color: Color(0xFF3FD2FF), fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: Color(0xFF1080E0), fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -60,7 +60,7 @@ class TechnologyView extends StatelessWidget {
               style: const TextStyle(
                 fontFamily: 'monospace',
                 fontSize: 14,
-                color: Color(0xFF3FD2FF),
+                color: Color(0xFF1080E0),
                 letterSpacing: 2.0,
               ),
             ),
@@ -94,7 +94,7 @@ class TechnologyView extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: const Color(0xFF141A29).withOpacity(0.5),
-                    border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.15)),
+                    border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.15)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +104,7 @@ class TechnologyView extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF3FD2FF),
+                          color: Color(0xFF1080E0),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -116,7 +116,7 @@ class TechnologyView extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 4.0),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.bolt, color: Color(0xFF3FD2FF), size: 16),
+                                  const Icon(Icons.bolt, color: Color(0xFF1080E0), size: 16),
                                   const SizedBox(width: 8),
                                   Text(
                                     item,
@@ -181,10 +181,10 @@ class StudioView extends StatelessWidget {
             CustomCursorHover(
               child: TextButton.icon(
                 onPressed: onBack,
-                icon: const Icon(Icons.arrow_back, color: Color(0xFF3FD2FF)),
+                icon: const Icon(Icons.arrow_back, color: Color(0xFF1080E0)),
                 label: Text(
                   tr('العودة للرئيسية', 'Back to Home'),
-                  style: const TextStyle(color: Color(0xFF3FD2FF), fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: Color(0xFF1080E0), fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -194,7 +194,7 @@ class StudioView extends StatelessWidget {
               style: const TextStyle(
                 fontFamily: 'monospace',
                 fontSize: 14,
-                color: Color(0xFF3FD2FF),
+                color: Color(0xFF1080E0),
                 letterSpacing: 2.0,
               ),
             ),
@@ -228,7 +228,7 @@ class StudioView extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: const Color(0xFF141A29).withOpacity(0.5),
-                    border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.15)),
+                    border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.15)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,13 +236,13 @@ class StudioView extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF3FD2FF).withOpacity(0.1),
+                          color: const Color(0xFF1080E0).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.3)),
+                          border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.3)),
                         ),
                         child: Text(
                           project['tag']!,
-                          style: const TextStyle(color: Color(0xFF3FD2FF), fontSize: 12, fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: Color(0xFF1080E0), fontSize: 12, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -356,10 +356,10 @@ class _ContactViewState extends State<ContactView> {
             CustomCursorHover(
               child: TextButton.icon(
                 onPressed: widget.onBack,
-                icon: const Icon(Icons.arrow_back, color: Color(0xFF3FD2FF)),
+                icon: const Icon(Icons.arrow_back, color: Color(0xFF1080E0)),
                 label: Text(
                   tr('العودة للرئيسية', 'Back to Home'),
-                  style: const TextStyle(color: Color(0xFF3FD2FF), fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: Color(0xFF1080E0), fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -369,7 +369,7 @@ class _ContactViewState extends State<ContactView> {
               style: const TextStyle(
                 fontFamily: 'monospace',
                 fontSize: 14,
-                color: Color(0xFF3FD2FF),
+                color: Color(0xFF1080E0),
                 letterSpacing: 2.0,
               ),
             ),
@@ -390,7 +390,7 @@ class _ContactViewState extends State<ContactView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 color: const Color(0xFF141A29).withOpacity(0.5),
-                border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.15)),
+                border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.15)),
               ),
               child: Form(
                 key: _formKey,
@@ -461,7 +461,7 @@ class _ContactViewState extends State<ContactView> {
                       child: TextButton(
                         onPressed: _isLoading ? null : _sendMessage,
                         style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xFF3FD2FF),
+                          backgroundColor: const Color(0xFF1080E0),
                           foregroundColor: const Color(0xFF090D16),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
@@ -489,11 +489,11 @@ class _ContactViewState extends State<ContactView> {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: const Color(0xFF3FD2FF).withOpacity(0.15)),
+        borderSide: BorderSide(color: const Color(0xFF1080E0).withOpacity(0.15)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF3FD2FF)),
+        borderSide: const BorderSide(color: Color(0xFF1080E0)),
       ),
     );
   }
@@ -590,10 +590,10 @@ class _LaunchProjectViewState extends State<LaunchProjectView> {
             CustomCursorHover(
               child: TextButton.icon(
                 onPressed: widget.onBack,
-                icon: const Icon(Icons.arrow_back, color: Color(0xFF3FD2FF)),
+                icon: const Icon(Icons.arrow_back, color: Color(0xFF1080E0)),
                 label: Text(
                   tr('العودة للرئيسية', 'Back to Home'),
-                  style: const TextStyle(color: Color(0xFF3FD2FF), fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: Color(0xFF1080E0), fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -603,7 +603,7 @@ class _LaunchProjectViewState extends State<LaunchProjectView> {
               style: const TextStyle(
                 fontFamily: 'monospace',
                 fontSize: 14,
-                color: Color(0xFF3FD2FF),
+                color: Color(0xFF1080E0),
                 letterSpacing: 2.0,
               ),
             ),
@@ -624,7 +624,7 @@ class _LaunchProjectViewState extends State<LaunchProjectView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 color: const Color(0xFF141A29).withOpacity(0.5),
-                border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.15)),
+                border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.15)),
               ),
               child: Form(
                 key: _formKey,
@@ -727,7 +727,7 @@ class _LaunchProjectViewState extends State<LaunchProjectView> {
                       child: TextButton(
                         onPressed: _isLoading ? null : _submitProject,
                         style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xFF3FD2FF),
+                          backgroundColor: const Color(0xFF1080E0),
                           foregroundColor: const Color(0xFF090D16),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
@@ -755,11 +755,11 @@ class _LaunchProjectViewState extends State<LaunchProjectView> {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: const Color(0xFF3FD2FF).withOpacity(0.15)),
+        borderSide: BorderSide(color: const Color(0xFF1080E0).withOpacity(0.15)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF3FD2FF)),
+        borderSide: const BorderSide(color: Color(0xFF1080E0)),
       ),
     );
   }
@@ -795,7 +795,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
   // 3D State
   double _particleSpeed = 1.0;
   double _particleCount = 60.0;
-  Color _particleColor = const Color(0xFF3FD2FF);
+  Color _particleColor = const Color(0xFF1080E0);
 
   // SaaS State
   int _saasUsers = 12450;
@@ -835,8 +835,8 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
     
     // Spawn initial physics balls
     _balls.addAll([
-      PhysicsBall(x: 100, y: 150, vx: 3, vy: 2, radius: 15, color: const Color(0xFF3FD2FF)),
-      PhysicsBall(x: 250, y: 80, vx: -2, vy: 4, radius: 20, color: const Color(0xFFAD00FF)),
+      PhysicsBall(x: 100, y: 150, vx: 3, vy: 2, radius: 15, color: const Color(0xFF1080E0)),
+      PhysicsBall(x: 250, y: 80, vx: -2, vy: 4, radius: 20, color: const Color(0xFF0060B0)),
     ]);
   }
 
@@ -1039,10 +1039,10 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
             CustomCursorHover(
               child: TextButton.icon(
                 onPressed: widget.onBack,
-                icon: const Icon(Icons.arrow_back, color: Color(0xFF3FD2FF)),
+                icon: const Icon(Icons.arrow_back, color: Color(0xFF1080E0)),
                 label: Text(
                   tr('العودة للرئيسية', 'Back to Home'),
-                  style: const TextStyle(color: Color(0xFF3FD2FF), fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: Color(0xFF1080E0), fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -1059,21 +1059,21 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: const Color(0xFF141A29).withOpacity(0.5),
-                    border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.15)),
+                    border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.15)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         tr("المواصفات والتقنيات", "Technical Specs"),
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF3FD2FF)),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1080E0)),
                       ),
                       const SizedBox(height: 16),
                       ...specs.map((spec) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 6.0),
                         child: Row(
                           children: [
-                            const Icon(Icons.verified, color: Color(0xFF3FD2FF), size: 18),
+                            const Icon(Icons.verified, color: Color(0xFF1080E0), size: 18),
                             const SizedBox(width: 10),
                             Expanded(child: Text(spec, style: const TextStyle(color: Color(0xFFA6ABB6), fontSize: 14))),
                           ],
@@ -1091,7 +1091,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
                       style: const TextStyle(
                         fontFamily: 'monospace',
                         fontSize: 14,
-                        color: Color(0xFF3FD2FF),
+                        color: Color(0xFF1080E0),
                         letterSpacing: 2.0,
                       ),
                     ),
@@ -1150,9 +1150,9 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
       decoration: BoxDecoration(
         color: const Color(0xFF0C101B),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.2)),
         boxShadow: [
-          BoxShadow(color: const Color(0xFF3FD2FF).withOpacity(0.05), blurRadius: 32)
+          BoxShadow(color: const Color(0xFF1080E0).withOpacity(0.05), blurRadius: 32)
         ]
       ),
       child: Column(
@@ -1203,7 +1203,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
             style: const TextStyle(color: Colors.white, fontSize: 14),
             decoration: InputDecoration(
               labelText: tr("اختر نموذج المهمة", "Select Preset Prompt Task"),
-              labelStyle: const TextStyle(color: Color(0xFF3FD2FF)),
+              labelStyle: const TextStyle(color: Color(0xFF1080E0)),
               filled: true,
               fillColor: const Color(0xFF090D16),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -1228,7 +1228,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
               child: TextButton.icon(
                 onPressed: _aiRunning ? null : _runAiPipeline,
                 style: TextButton.styleFrom(
-                  backgroundColor: _aiRunning ? Colors.white12 : const Color(0xFF3FD2FF),
+                  backgroundColor: _aiRunning ? Colors.white12 : const Color(0xFF1080E0),
                   foregroundColor: const Color(0xFF090D16),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
@@ -1244,7 +1244,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
               child: LinearProgressIndicator(
                 value: _aiProgress,
                 backgroundColor: Colors.white10,
-                color: const Color(0xFF3FD2FF),
+                color: const Color(0xFF1080E0),
               ),
             ),
             const SizedBox(height: 16),
@@ -1264,7 +1264,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Text(
                       _aiConsoleLogs[idx],
-                      style: const TextStyle(fontFamily: 'monospace', color: Color(0xFF3FD2FF), fontSize: 13),
+                      style: const TextStyle(fontFamily: 'monospace', color: Color(0xFF1080E0), fontSize: 13),
                     ),
                   );
                 },
@@ -1286,7 +1286,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
       decoration: BoxDecoration(
         color: const Color(0xFF0C101B),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.2)),
       ),
       child: Column(
         children: [
@@ -1296,9 +1296,9 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
               Text(tr("تخصيص الرسوم ثلاثية الأبعاد التفاعلية", "Real-Time 3D Interactive Mesh"), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
               Row(
                 children: [
-                  _colorDot(const Color(0xFF3FD2FF)),
+                  _colorDot(const Color(0xFF1080E0)),
                   const SizedBox(width: 8),
-                  _colorDot(const Color(0xFFAD00FF)),
+                  _colorDot(const Color(0xFF0060B0)),
                   const SizedBox(width: 8),
                   _colorDot(const Color(0xFFFF3F80)),
                 ],
@@ -1333,7 +1333,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
                   value: _particleSpeed,
                   min: 0.1,
                   max: 3.0,
-                  activeColor: const Color(0xFF3FD2FF),
+                  activeColor: const Color(0xFF1080E0),
                   inactiveColor: Colors.white10,
                   onChanged: (val) => setState(() => _particleSpeed = val),
                 ),
@@ -1348,7 +1348,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
                   value: _particleCount,
                   min: 10,
                   max: 120,
-                  activeColor: const Color(0xFF3FD2FF),
+                  activeColor: const Color(0xFF1080E0),
                   inactiveColor: Colors.white10,
                   onChanged: (val) => setState(() => _particleCount = val),
                 ),
@@ -1390,7 +1390,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
       decoration: BoxDecoration(
         color: const Color(0xFF0C101B),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.2)),
       ),
       child: Column(
         children: [
@@ -1460,17 +1460,17 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(tr("تم بيع اشتراك جديد بقيمة 49\$/شهرياً!", "New subscription sold for \$49/mo!")),
-                          backgroundColor: const Color(0xFF3FD2FF),
+                          backgroundColor: const Color(0xFF1080E0),
                           duration: const Duration(seconds: 1),
                         )
                       );
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: const Color(0xFF3FD2FF).withOpacity(0.1),
-                      foregroundColor: const Color(0xFF3FD2FF),
+                      backgroundColor: const Color(0xFF1080E0).withOpacity(0.1),
+                      foregroundColor: const Color(0xFF1080E0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
-                        side: const BorderSide(color: Color(0xFF3FD2FF))
+                        side: const BorderSide(color: Color(0xFF1080E0))
                       ),
                     ),
                     child: Text(tr("+ بيع اشتراك SaaS", "+ Acquire SaaS Tenant")),
@@ -1520,7 +1520,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
         children: [
           Row(
             children: [
-              Icon(icon, color: const Color(0xFF3FD2FF), size: 18),
+              Icon(icon, color: const Color(0xFF1080E0), size: 18),
               const SizedBox(width: 8),
               Text(label, style: const TextStyle(color: Color(0xFFA6ABB6), fontSize: 12)),
             ],
@@ -1542,7 +1542,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
       decoration: BoxDecoration(
         color: const Color(0xFF0C101B),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1557,7 +1557,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
                   icon: const Icon(Icons.security, size: 18),
                   label: Text(_scanningActive ? tr("جاري الفحص...", "Scanning...") : tr("فحص الأمان الوقائي", "Audit Security Status")),
                   style: TextButton.styleFrom(
-                    backgroundColor: const Color(0xFF3FD2FF),
+                    backgroundColor: const Color(0xFF1080E0),
                     foregroundColor: const Color(0xFF090D16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
@@ -1597,7 +1597,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
                   alignment: Alignment.center,
                   child: RotationTransition(
                     turns: AlwaysStoppedAnimation(_radarAngle),
-                    child: const Icon(Icons.radar, color: Color(0xFF3FD2FF), size: 48),
+                    child: const Icon(Icons.radar, color: Color(0xFF1080E0), size: 48),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -1607,7 +1607,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
                   _scanningActive 
                       ? tr("جاري مسح المنافذ وفحص سلامة التشفير...", "Auditing ingress routes & scanning endpoints...")
                       : tr("الحالة الأمنية: محمي 100% (جميع جدران الحماية فعالة)", "SOC Status: Active Defense. Firewall systems green."),
-                  style: TextStyle(color: _scanningActive ? const Color(0xFF3FD2FF) : Colors.greenAccent, fontSize: 13),
+                  style: TextStyle(color: _scanningActive ? const Color(0xFF1080E0) : Colors.greenAccent, fontSize: 13),
                 ),
               )
             ],
@@ -1669,7 +1669,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
       decoration: BoxDecoration(
         color: const Color(0xFF0C101B),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1759,7 +1759,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
                 onPressed: _toggleStressTest,
                 icon: const Icon(Icons.bolt),
                 style: TextButton.styleFrom(
-                  backgroundColor: _stressTestRunning ? Colors.redAccent.withOpacity(0.2) : const Color(0xFF3FD2FF),
+                  backgroundColor: _stressTestRunning ? Colors.redAccent.withOpacity(0.2) : const Color(0xFF1080E0),
                   foregroundColor: _stressTestRunning ? Colors.redAccent : const Color(0xFF090D16),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
@@ -1812,7 +1812,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
       decoration: BoxDecoration(
         color: const Color(0xFF0C101B),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFF3FD2FF).withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFF1080E0).withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1824,7 +1824,7 @@ class _CapabilityDetailViewState extends State<CapabilityDetailView> with Single
               CustomCursorHover(
                 child: TextButton(
                   onPressed: () => setState(() => _balls.clear()),
-                  style: TextButton.styleFrom(foregroundColor: const Color(0xFF3FD2FF)),
+                  style: TextButton.styleFrom(foregroundColor: const Color(0xFF1080E0)),
                   child: Text(tr("تفريغ الشاشة", "Clear Canvas")),
                 ),
               )
@@ -2126,7 +2126,7 @@ class PhysicsSandboxPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final attColor = const Color(0xFFAD00FF);
+    final attColor = const Color(0xFF0060B0);
 
     // Draw gravity node (black hole)
     if (gravityNode != null) {
@@ -2213,7 +2213,7 @@ class AiNeuralNetworkPainter extends CustomPainter {
     final cx = size.width / 2;
     final cy = size.height / 2;
     final paint = Paint()
-      ..color = const Color(0xFF3FD2FF).withOpacity(0.2)
+      ..color = const Color(0xFF1080E0).withOpacity(0.2)
       ..strokeWidth = 1.0;
 
     final nodes = [
@@ -2241,7 +2241,7 @@ class AiNeuralNetworkPainter extends CustomPainter {
 
     if (isRunning) {
       final signalPaint = Paint()
-        ..color = const Color(0xFF3FD2FF)
+        ..color = const Color(0xFF1080E0)
         ..style = PaintingStyle.fill;
       for (var conn in connections) {
         final start = nodes[conn[0]];
@@ -2256,17 +2256,17 @@ class AiNeuralNetworkPainter extends CustomPainter {
     for (int i = 0; i < nodes.length; i++) {
       final n = nodes[i];
       final nodeGlow = Paint()
-        ..color = const Color(0xFF3FD2FF).withOpacity(0.25)
+        ..color = const Color(0xFF1080E0).withOpacity(0.25)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5);
       canvas.drawCircle(n, 6 + sin(animationValue * 6.28 + i) * 1.5, nodeGlow);
 
       final nodePaint = Paint()
-        ..color = isRunning ? const Color(0xFF3FD2FF) : const Color(0xFF141A29)
+        ..color = isRunning ? const Color(0xFF1080E0) : const Color(0xFF141A29)
         ..style = PaintingStyle.fill;
       canvas.drawCircle(n, 4.5, nodePaint);
 
       final borderPaint = Paint()
-        ..color = const Color(0xFF3FD2FF)
+        ..color = const Color(0xFF1080E0)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.2;
       canvas.drawCircle(n, 4.5, borderPaint);
@@ -2292,8 +2292,8 @@ class SaasTransactionFlowPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
-    final color = const Color(0xFF3FD2FF);
-    final accent = const Color(0xFFAD00FF);
+    final color = const Color(0xFF1080E0);
+    final accent = const Color(0xFF0060B0);
 
     final gridPaint = Paint()
       ..color = Colors.white.withOpacity(0.015)
@@ -2384,7 +2384,7 @@ class SecurityRadarDefensePainter extends CustomPainter {
     final h = size.height;
     final cx = w / 2;
     final cy = h / 2;
-    final activeColor = const Color(0xFF3FD2FF);
+    final activeColor = const Color(0xFF1080E0);
 
     final linePaint = Paint()
       ..color = activeColor.withOpacity(0.06)
@@ -2475,7 +2475,7 @@ class K8sClusterPainter extends CustomPainter {
       ..color = const Color(0xFF141A29)
       ..style = PaintingStyle.fill;
     final podBorder = Paint()
-      ..color = stressTest ? Colors.orangeAccent : const Color(0xFF3FD2FF)
+      ..color = stressTest ? Colors.orangeAccent : const Color(0xFF1080E0)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
 
@@ -2487,7 +2487,7 @@ class K8sClusterPainter extends CustomPainter {
       final podPos = Offset(px, py);
 
       final connPaint = Paint()
-        ..color = (stressTest ? Colors.orangeAccent : const Color(0xFF3FD2FF)).withOpacity(0.15)
+        ..color = (stressTest ? Colors.orangeAccent : const Color(0xFF1080E0)).withOpacity(0.15)
         ..strokeWidth = 1.0;
       canvas.drawLine(lbPos, podPos, connPaint);
 
@@ -2497,14 +2497,14 @@ class K8sClusterPainter extends CustomPainter {
       canvas.drawCircle(
         Offset(packetX, packetY),
         2.5,
-        Paint()..color = stressTest ? Colors.redAccent : const Color(0xFF3FD2FF),
+        Paint()..color = stressTest ? Colors.redAccent : const Color(0xFF1080E0),
       );
 
       canvas.drawCircle(
         podPos,
         8,
         Paint()
-          ..color = (stressTest ? Colors.orangeAccent : const Color(0xFF3FD2FF)).withOpacity(0.2)
+          ..color = (stressTest ? Colors.orangeAccent : const Color(0xFF1080E0)).withOpacity(0.2)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
       );
       canvas.drawCircle(podPos, 5.5, podPaint);
