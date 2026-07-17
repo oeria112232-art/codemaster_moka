@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       builder: (context, _) {
         final isAr = LanguageManager.instance.isArabic;
         return MaterialApp(
-          title: tr('CodeMaster - نبني المستقبل الرقمي', 'CodeMaster - Building the Digital Future'),
+          title: tr('Code Mster | أفضل شركة حلول تقنية وتصميم تطبيقات في العراق', 'Code Mster | Best Software & App Development in Iraq'),
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             brightness: Brightness.dark,
@@ -148,6 +148,10 @@ class _HomePageState extends State<HomePage> {
                     scrollController: _scrollController,
                     child: const ValuesSection(),
                   ),
+                ),
+                _ScrollReveal(
+                  scrollController: _scrollController,
+                  child: const FAQSection(),
                 ),
                 Container(
                   key: _ctaKey,
@@ -371,7 +375,7 @@ class HeroSection extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      tr('شريكك التقني المتكامل', 'Your Integrated Tech Partner'),
+                      tr('شريكك التقني المتكامل في العراق', 'Your Integrated Tech Partner in Iraq'),
                       style: const TextStyle(
                         color: Color(0xFF3FD2FF),
                         fontSize: 14,
@@ -381,43 +385,49 @@ class HeroSection extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  ShaderMask(
-                    shaderCallback: (bounds) => const LinearGradient(
-                      colors: [Color(0xFF3FD2FF), Color(0xFFA78BFA)],
-                    ).createShader(bounds),
-                    child: Text(
-                      'CodeMaster',
-                      style: TextStyle(
-                        fontSize: size.width > 600 ? 80 : 48,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white,
-                        letterSpacing: 4,
+                  Semantics(
+                    header: true,
+                    child: ShaderMask(
+                      shaderCallback: (bounds) => const LinearGradient(
+                        colors: [Color(0xFF3FD2FF), Color(0xFFA78BFA)],
+                      ).createShader(bounds),
+                      child: Text(
+                        'Code Mster',
+                        style: TextStyle(
+                          fontSize: size.width > 600 ? 80 : 48,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          letterSpacing: 4,
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   Text(
-                    tr('حلول برمجية متكاملة', 'Integrated Software Solutions'),
+                    tr(
+                      'أفضل شركة حلول تقنية وتصميم تطبيقات في العراق',
+                      'Best Software Solutions & App Development Company in Iraq',
+                    ),
                     style: TextStyle(
                       fontSize: size.width > 600 ? 22 : 16,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                       color: const Color(0xFFA78BFA),
-                      letterSpacing: 2,
+                      letterSpacing: 1,
                     ),
                   ),
                   const SizedBox(height: 24),
                   ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 600),
+                    constraints: const BoxConstraints(maxWidth: 640),
                     child: Text(
                       tr(
-                        'نطور منصات رقمية مبتكرة تمنح الشركات القدرة على التفوق في عالم التكنولوجيا المتسارع',
-                        'We develop innovative digital platforms that empower companies to excel in the rapidly evolving world of technology',
+                        'مرحباً بك في منصة Code Mster للحلول البرمجية المتكاملة. نحن نبتكر ونطور أحدث الحلول التقنية للشركات في العراق، ونمكّن أصحاب الأعمال والشركات الناشئة من امتلاك بنية رقمية قوية عبر تصميم مواقع إلكترونية احترافية وتطوير تطبيقات الموبايل الذكية. هدفنا هو نقل مشروعك التجاري إلى مستويات جديدة من النمو والانتشار وفق أعلى معايير الأمان والسرعة التقنية.',
+                        'Welcome to Code Mster, your integrated software solutions platform. We innovate and develop the latest tech solutions for businesses in Iraq, empowering entrepreneurs and startups with a strong digital presence through professional website design and smart mobile app development.',
                       ),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: size.width > 600 ? 18 : 15,
+                        fontSize: size.width > 600 ? 16 : 14,
                         color: const Color(0xFFA6ABB6),
-                        height: 1.8,
+                        height: 1.9,
                       ),
                     ),
                   ),
@@ -621,8 +631,8 @@ class VisionSection extends StatelessWidget {
           _SectionHeader(
             title: tr('رؤيتنا ورسالتنا', 'Our Vision & Mission'),
             subtitle: tr(
-              'نلتزم بقيادة التحول الرقمي وتمكين الشركات من النجاح',
-              'Committed to leading digital transformation and empowering companies to succeed',
+              'نلتزم بقيادة التحول الرقمي للشركات والمؤسسات في العراق',
+              'Committed to leading digital transformation for businesses in Iraq',
             ),
           ),
           const SizedBox(height: 48),
@@ -693,7 +703,7 @@ class VisionSection extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 tr(
-                  'أن نكون الشريك التقني الأول في المنطقة، من خلال تقديم حلول مبتكرة تتجاوز توقعات عملائنا وتساهم في تحولهم الرقمي.',
+                  'أن نكون الشريك التقني الأول في العراق والمنطقة، من خلال تقديم حلول برمجية مبتكرة تتجاوز توقعات عملائنا وتساهم في تحولهم الرقمي.',
                   'To be the leading tech partner in the region by delivering innovative solutions that exceed our clients\' expectations and contribute to their digital transformation.',
                 ),
                 style: const TextStyle(
@@ -748,7 +758,7 @@ class VisionSection extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 tr(
-                  'تمكين الشركات والمؤسسات من خلال منتجات رقمية متكاملة عالية الجودة، مبنية على أسس هندسية صلبة ومصممة لتحقيق أقصى عائد على استثمارهم التقني.',
+                  'تمكين الشركات والمؤسسات في العراق من خلال منتجات رقمية متكاملة عالية الجودة، مبنية على أسس هندسية صلبة ومصممة لتحقيق أقصى عائد على استثمارهم التقني.',
                   'Empowering companies through high-quality integrated digital products, built on solid engineering principles and designed to maximize their technology ROI.',
                 ),
                 style: const TextStyle(
@@ -791,7 +801,7 @@ class VisionSection extends StatelessWidget {
               const SizedBox(height: 24),
               _GoalItem(
                 icon: Icons.trending_up,
-                text: tr('التوسع الإقليمي في خدماتنا التقنية', 'Regional expansion of our tech services'),
+                text:                 tr('التوسع في خدماتنا التقنية داخل العراق والمنطقة', 'Expanding our tech services across Iraq and the region'),
               ),
               const SizedBox(height: 16),
               _GoalItem(
@@ -857,63 +867,33 @@ class ServicesSection extends StatelessWidget {
     final services = [
       _ServiceData(
         number: '01',
-        titleEn: 'Web Development',
-        titleAr: 'تطوير المواقع',
-        descriptionEn: 'Custom websites built with cutting-edge technologies, responsive design, and optimized performance.',
-        descriptionAr: 'مواقع مخصصة مبنية بأحدث التقنيات، تصميم متجاوب وأداء محسّن.',
-        icon: Icons.language,
+        titleEn: 'Mobile App Development',
+        titleAr: 'تصميم وتطوير تطبيقات الموبايل',
+        descriptionEn: 'We specialize in programming and designing professional mobile apps for iPhone and Android. Using Flutter framework for fast, modern UIs that adapt to all screen sizes.',
+        descriptionAr: 'نحن متخصصون في برمجة وتصميم تطبيقات احترافية للهواتف الذكية بنظامي آيفون وأندرويد. نعتمد على أحدث التقنيات البرمجية العالمية مثل إطار عمل فلاتر لنمنحك تطبيقاً سريعاً، ذا واجهة مستخدم عصرية، ومتوافقاً مع كافة الشاشات ليلبي تطلعات عملائك في السوق العراقي.',
+        icon: Icons.phone_android,
         color: const Color(0xFF3FD2FF),
-        tags: ['React', 'Next.js', 'Flutter', 'Node.js'],
+        tags: ['Flutter', 'iOS', 'Android', 'UI/UX'],
       ),
       _ServiceData(
         number: '02',
-        titleEn: 'App Development',
-        titleAr: 'تطوير التطبيقات',
-        descriptionEn: 'Native and cross-platform mobile applications with seamless user experiences.',
-        descriptionAr: 'تطبيقات موبايل أصلية ومتعددة المنصات مع تجارب مستخدم سلسة.',
-        icon: Icons.phone_android,
+        titleEn: 'E-Commerce & Digital Stores',
+        titleAr: 'حلول التجارة الإلكترونية والمتاجر الرقمية',
+        descriptionEn: 'Complete e-commerce stores with smart dashboards for product management. Local payment gateway integration including Zain Cash, Asia Hawala, and credit cards.',
+        descriptionAr: 'نوفر خدمات تصميم متجر إلكتروني متكامل في العراق مع لوحة تحكم ذكية وشاملة لإدارة المنتجات والمبيعات. الميزة الأهم لدينا هي دعم وتسهيل ربط بوابات الدفع المحلية مثل زين كاش وآسيا حوالة بداخل التطبيقات والمواقع، مما يضمن لعملائك تجربة تسوق محلية وسلسة تزيد من نسب أرباحك.',
+        icon: Icons.shopping_cart,
         color: const Color(0xFFA78BFA),
-        tags: ['Flutter', 'iOS', 'Android', 'Kotlin'],
+        tags: ['Zain Cash', 'Asia Hawala', 'Store', 'Payment'],
       ),
       _ServiceData(
         number: '03',
-        titleEn: 'System Development',
-        titleAr: 'تطوير الأنظمة',
-        descriptionEn: 'Enterprise-level systems, APIs, and backend architecture for scalable solutions.',
-        descriptionAr: 'أنظمة مؤسسية، واجهات برمجية، وبنية تحتية قابلة للتوسع.',
-        icon: Icons.settings_suggest,
+        titleEn: 'Enterprise Systems & ERP',
+        titleAr: 'الأنظمة الإدارية وأتمتة الأعمال للشركات',
+        descriptionEn: 'Custom database development, ERP systems, sales & inventory management, and process automation to boost efficiency.',
+        descriptionAr: 'نساعدك على تنظيم وإدارة شركتك من خلال برمجة وتطوير قواعد بيانات مخصصة وأنظمة إدارة المؤسسات ERP. نوفر حلولاً ذكية تشمل برمجة نظام مبيعات ومخازن، تتبع حركة الموظفين والعملاء، وأتمتة العمليات اليومية لرفع الكفاءة التشغيلية وتقليل الأخطاء البشرية.',
+        icon: Icons.business_center,
         color: const Color(0xFF25D366),
-        tags: ['Python', 'Django', 'AWS', 'Docker'],
-      ),
-      _ServiceData(
-        number: '04',
-        titleEn: 'Cybersecurity',
-        titleAr: 'الأمن السيبراني',
-        descriptionEn: 'Comprehensive security audits, penetration testing, and protection solutions.',
-        descriptionAr: 'تدقيق أمني شامل، اختبار اختراق، وحلول حماية متقدمة.',
-        icon: Icons.shield,
-        color: const Color(0xFFFF6B6B),
-        tags: ['Pen Testing', 'SOC', 'ISO 27001', 'Encryption'],
-      ),
-      _ServiceData(
-        number: '05',
-        titleEn: 'UI/UX Design',
-        titleAr: 'تصميم واجهات المستخدم',
-        descriptionEn: 'User-centered design with modern aesthetics and intuitive interactions.',
-        descriptionAr: 'تصميم يركّز على المستخدم مع جماليات حديثة وتفاعلات بديهية.',
-        icon: Icons.design_services,
-        color: const Color(0xFFFFD93D),
-        tags: ['Figma', 'Prototyping', 'Research', 'Design System'],
-      ),
-      _ServiceData(
-        number: '06',
-        titleEn: 'Digital Products',
-        titleAr: 'المنتجات الرقمية',
-        descriptionEn: 'End-to-end product development from concept to launch and beyond.',
-        descriptionAr: 'تطوير منتجات رقمية شامل من المفهوم إلى الإطلاق وما بعده.',
-        icon: Icons.inventory_2,
-        color: const Color(0xFF06D6A0),
-        tags: ['MVP', 'SaaS', 'Analytics', 'Growth'],
+        tags: ['ERP', 'CRM', 'Database', 'Automation'],
       ),
     ];
 
@@ -922,10 +902,10 @@ class ServicesSection extends StatelessWidget {
       child: Column(
         children: [
           _SectionHeader(
-            title: tr('خدماتنا', 'Our Services'),
+            title: tr('خدماتنا البرمجية', 'Our Software Services'),
             subtitle: tr(
-              'حلول تقنية شاملة لنجاح أعمالك',
-              'Comprehensive tech solutions for your business success',
+              'حلول تقنية شاملة مصممة خصيصاً للشركات والمؤسسات في العراق',
+              'Comprehensive tech solutions designed specifically for businesses in Iraq',
             ),
           ),
           const SizedBox(height: 48),
@@ -1337,6 +1317,166 @@ class _ValueCardState extends State<_ValueCard> {
   }
 }
 
+class FAQSection extends StatefulWidget {
+  const FAQSection({super.key});
+
+  @override
+  State<FAQSection> createState() => _FAQSectionState();
+}
+
+class _FAQSectionState extends State<FAQSection> {
+  int _expandedIndex = -1;
+
+  final _faqs = [
+    {
+      'questionAr': 'هل تدعم المتاجر والأنظمة المبرمجة بواسطة Code Mster طرق الدفع المحلية في العراق؟',
+      'questionEn': 'Does Code Mster support local payment methods in Iraq for stores and systems?',
+      'answerAr': 'نعم بكل تأكيد. نحن ندرك أهمية البيئة المالية المحلية، لذا نتولى بشكل كامل ربط بوابة دفع زين كاش، وآسيا حوالة، وبطاقات الائتمان بداخل موقعك أو تطبيقك. هذا يتيح للمستخدمين في بغداد، العمارة، البصرة، وكافة المحافظات العراقية إتمام عمليات الشراء والدفع بأمان وسهولة فائقة.',
+      'answerEn': 'Absolutely. We fully integrate Zain Cash, Asia Hawala, and credit card payment gateways into your website or app. This enables users in Baghdad, Al-Amarah, Basra, and all Iraqi governorates to complete purchases securely and easily.',
+    },
+    {
+      'questionAr': 'ما الذي يجعل Code Mster أفضل شركة حلول تقنية برمجية في العراق؟',
+      'questionEn': 'What makes Code Mster the best software solutions company in Iraq?',
+      'answerAr': 'تميزنا يكمن في تقديم حلول تقنية متكاملة ومخصصة لكل عميل؛ فنحن لا نكتفي بكتابة كود برمجي، بل نؤمن مشروعك باستضافة فائقة السرعة مدعومة بتقنيات توزيع المحتوى والـ Cloudflare لتقليل زمن الاستجابة داخل العراق، بالإضافة إلى توفير حماية مشددة لقواعد البيانات، ودعم فني متواصل على مدار الساعة يضمن استقرار عمل أنظمتك وموقعك دون أي انقطاع.',
+      'answerEn': 'Our distinction lies in delivering integrated, customized tech solutions for every client. We go beyond coding — we provision high-speed hosting powered by Cloudflare CDN for minimal latency within Iraq, provide robust database protection, and offer 24/7 technical support to ensure your systems and website run without interruption.',
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
+      child: Column(
+        children: [
+          _SectionHeader(
+            title: tr('الأسئلة الشائعة', 'Frequently Asked Questions'),
+            subtitle: tr(
+              'إجابات على أكثر الاستفسارات شيوعاً حول خدماتنا',
+              'Answers to the most common questions about our services',
+            ),
+          ),
+          const SizedBox(height: 48),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Column(
+              children: List.generate(_faqs.length, (i) {
+                final faq = _faqs[i];
+                final isExpanded = _expandedIndex == i;
+                final question = LanguageManager.instance.isArabic
+                    ? faq['questionAr']!
+                    : faq['questionEn']!;
+                final answer = LanguageManager.instance.isArabic
+                    ? faq['answerAr']!
+                    : faq['answerEn']!;
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _expandedIndex = isExpanded ? -1 : i;
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF141A29),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: isExpanded
+                                ? const Color(0xFF3FD2FF).withValues(alpha: 0.4)
+                                : const Color(0xFF3FD2FF).withValues(alpha: 0.08),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(24),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF3FD2FF).withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Icon(
+                                      Icons.question_answer,
+                                      color: Color(0xFF3FD2FF),
+                                      size: 20,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Text(
+                                      question,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        height: 1.5,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  AnimatedRotation(
+                                    turns: isExpanded ? 0.5 : 0,
+                                    duration: const Duration(milliseconds: 300),
+                                    child: const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Color(0xFF3FD2FF),
+                                      size: 24,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            AnimatedCrossFade(
+                              firstChild: const SizedBox.shrink(),
+                              secondChild: Padding(
+                                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF0F1320),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: const Color(0xFF3FD2FF).withValues(alpha: 0.08),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    answer,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      color: Color(0xFFA6ABB6),
+                                      height: 1.8,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              crossFadeState: isExpanded
+                                  ? CrossFadeState.showSecond
+                                  : CrossFadeState.showFirst,
+                              duration: const Duration(milliseconds: 300),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class CTASection extends StatelessWidget {
   const CTASection({super.key});
 
@@ -1625,10 +1765,18 @@ class FooterSection extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            '${tr('© 2025', '© 2025')} CodeMaster. ${tr('جميع الحقوق محفوظة', 'All rights reserved')}',
+            '${tr('© 2026', '© 2026')} Code Mster. ${tr('جميع الحقوق محفوظة - العراق', 'All rights reserved - Iraq')}',
             style: const TextStyle(
               fontSize: 13,
               color: Color(0xFFA6ABB6),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            tr('العمارة، ميسان، العراق | +964 777 163 2241', 'Al-Amarah, Maysan, Iraq | +964 777 163 2241'),
+            style: const TextStyle(
+              fontSize: 12,
+              color: Color(0xFF6B7280),
             ),
           ),
         ],
