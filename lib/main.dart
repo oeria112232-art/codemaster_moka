@@ -1063,8 +1063,33 @@ class _GoalItem extends StatelessWidget {
   }
 }
 
-class ServicesSection extends StatelessWidget {
+class ServicesSection extends StatefulWidget {
   const ServicesSection({super.key});
+
+  @override
+  State<ServicesSection> createState() => _ServicesSectionState();
+}
+
+class _ServicesSectionState extends State<ServicesSection>
+    with TickerProviderStateMixin {
+  late final AnimationController _entranceCtrl;
+  late final AnimationController _particlesCtrl;
+  int _hoveredIndex = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    _entranceCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+    _particlesCtrl = AnimationController(vsync: this, duration: const Duration(seconds: 20))..repeat();
+    _entranceCtrl.forward();
+  }
+
+  @override
+  void dispose() {
+    _entranceCtrl.dispose();
+    _particlesCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1073,31 +1098,40 @@ class ServicesSection extends StatelessWidget {
         number: '01',
         titleEn: 'Mobile App Development',
         titleAr: 'تصميم وتطوير تطبيقات الموبايل',
-        descriptionEn: 'We specialize in programming and designing professional mobile apps for iPhone and Android. Using Flutter framework for fast, modern UIs that adapt to all screen sizes.',
-        descriptionAr: 'نحن متخصصون في برمجة وتصميم تطبيقات احترافية للهواتف الذكية بنظامي آيفون وأندرويد. نعتمد على أحدث التقنيات البرمجية العالمية مثل إطار عمل فلاتر لنمنحك تطبيقاً سريعاً، ذا واجهة مستخدم عصرية، ومتوافقاً مع كافة الشاشات ليلبي تطلعات عملائك في السوق العراقي.',
+        descriptionEn: 'We build blazing-fast, pixel-perfect mobile apps for iOS & Android using Flutter. Every tap, swipe, and animation is crafted to feel premium.',
+        descriptionAr: 'نبني تطبيقات موبايل فائقة السرعة ودقيقة التصميم لنظامي iOS و Android باستخدام Flutter. كل لمسة وتمريرة وحركة مصممة لتشعر بالفخامة.',
         icon: Icons.phone_android,
         color: const Color(0xFF1080E0),
         tags: ['Flutter', 'iOS', 'Android', 'UI/UX'],
+        features: ['تصميم UI/UX احترافي', 'أداء فائق السرعة', 'توافق شامل', 'دعم فني مستمر'],
+        progress: 95,
+        projects: 25,
       ),
       _ServiceData(
         number: '02',
         titleEn: 'E-Commerce & Digital Stores',
         titleAr: 'حلول التجارة الإلكترونية والمتاجر الرقمية',
-        descriptionEn: 'Complete e-commerce stores with smart dashboards for product management. Local payment gateway integration including Zain Cash, Asia Hawala, and credit cards.',
-        descriptionAr: 'نوفر خدمات تصميم متجر إلكتروني متكامل في العراق مع لوحة تحكم ذكية وشاملة لإدارة المنتجات والمبيعات. الميزة الأهم لدينا هي دعم وتسهيل ربط بوابات الدفع المحلية مثل زين كاش وآسيا حوالة بداخل التطبيقات والمواقع، مما يضمن لعملائك تجربة تسوق محلية وسلسة تزيد من نسب أرباحك.',
+        descriptionEn: 'Complete e-commerce ecosystems with smart dashboards, inventory tracking, and seamless local payment integration including Zain Cash & Asia Hawala.',
+        descriptionAr: 'نظام تجارة إلكترونية متكامل مع لوحة تحكم ذكية وتتبع المخزون وربط سلس مع بوابات الدفع المحلية including زين كاش و آسيا حوالة.',
         icon: Icons.shopping_cart,
         color: const Color(0xFF2090FF),
         tags: ['Zain Cash', 'Asia Hawala', 'Store', 'Payment'],
+        features: ['ربط بوابات الدفع المحلية', 'لوحة تحكم شاملة', 'تتبع المخزون', 'تقارير مبيعات ذكية'],
+        progress: 90,
+        projects: 18,
       ),
       _ServiceData(
         number: '03',
         titleEn: 'Enterprise Systems & ERP',
-        titleAr: 'الأنظمة الإدارية وأتمتة الأعمال للشركات',
-        descriptionEn: 'Custom database development, ERP systems, sales & inventory management, and process automation to boost efficiency.',
-        descriptionAr: 'نساعدك على تنظيم وإدارة شركتك من خلال برمجة وتطوير قواعد بيانات مخصصة وأنظمة إدارة المؤسسات ERP. نوفر حلولاً ذكية تشمل برمجة نظام مبيعات ومخازن، تتبع حركة الموظفين والعملاء، وأتمتة العمليات اليومية لرفع الكفاءة التشغيلية وتقليل الأخطاء البشرية.',
+        titleAr: 'الأنظمة الإدارية وأتمتة الأعمال',
+        descriptionEn: 'Custom ERP systems, database architecture, and process automation that transform chaotic workflows into streamlined, data-driven operations.',
+        descriptionAr: 'أنظمة ERP مخصصة وهندسة قواعد بيانات وأتمتة عمليات تحول أعمالك الفوضوية إلى عمليات مُنظمة ومدفوعة بالبيانات.',
         icon: Icons.business_center,
-        color: const Color(0xFF25D366),
+        color: const Color(0xFF40A0FF),
         tags: ['ERP', 'CRM', 'Database', 'Automation'],
+        features: ['أتمتة العمليات', 'قواعد بيانات مخصصة', 'تقارير لحظية', 'تكامل مؤسسي'],
+        progress: 88,
+        projects: 15,
       ),
     ];
 
@@ -1112,15 +1146,170 @@ class ServicesSection extends StatelessWidget {
               'Comprehensive tech solutions designed specifically for businesses in Iraq',
             ),
           ),
-          const SizedBox(height: 48),
-          ...services.map((s) => Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: _ServiceCard(data: s),
+          const SizedBox(height: 20),
+          // Trust badges
+          AnimatedBuilder(
+            animation: _entranceCtrl,
+            builder: (_, __) => Opacity(
+              opacity: _entranceCtrl.value,
+              child: Wrap(
+                spacing: 12,
+                runSpacing: 8,
+                alignment: WrapAlignment.center,
+                children: [
+                  _TrustBadge(icon: Icons.verified, label: tr('جودة مضمونة', 'Quality Assured')),
+                  _TrustBadge(icon: Icons.support_agent, label: tr('دعم 24/7', '24/7 Support')),
+                  _TrustBadge(icon: Icons.speed, label: tr('تسليم سريع', 'Fast Delivery')),
+                  _TrustBadge(icon: Icons.lock, label: tr('أمان متقدم', 'Advanced Security')),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 40),
+          // Animated floating particles background
+          AnimatedBuilder(
+            animation: _particlesCtrl,
+            builder: (_, __) => SizedBox(
+              height: 0,
+              width: double.infinity,
+              child: CustomPaint(painter: _ServiceParticlesPainter(
+                time: _particlesCtrl.value * 20,
               )),
+            ),
+          ),
+          // Service cards with staggered entrance
+          ...List.generate(services.length, (i) {
+            final delay = (i * 0.2).clamp(0.0, 1.0);
+            final animInterval = Interval(delay, (delay + 0.6).clamp(0.0, 1.0), curve: Curves.easeOutCubic);
+            return AnimatedBuilder(
+              animation: _entranceCtrl,
+              builder: (_, child) {
+                final animValue = animInterval.transform(_entranceCtrl.value.clamp(0.0, 1.0));
+                return Opacity(
+                  opacity: animValue,
+                  child: Transform.translate(
+                    offset: Offset(0, 40 * (1 - animValue)),
+                    child: Transform.scale(
+                      scale: 0.95 + 0.05 * animValue,
+                      child: child,
+                    ),
+                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 24),
+                child: _ProfessionalServiceCard(
+                  data: services[i],
+                  isHovered: _hoveredIndex == i,
+                  onHover: (v) => setState(() => _hoveredIndex = v ? i : -1),
+                ),
+              ),
+            );
+          }),
+          const SizedBox(height: 32),
+          // Bottom stats bar
+          AnimatedBuilder(
+            animation: _entranceCtrl,
+            builder: (_, __) => Opacity(
+              opacity: _entranceCtrl.value,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    const Color(0xFF1080E0).withValues(alpha: 0.08),
+                    const Color(0xFF2090FF).withValues(alpha: 0.04),
+                  ]),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _ServiceMiniStat(value: '58+', label: tr('مشروع منجز', 'Completed')),
+                    Container(width: 1, height: 28, color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
+                    _ServiceMiniStat(value: '99%', label: tr('رضا العملاء', 'Satisfaction')),
+                    Container(width: 1, height: 28, color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
+                    _ServiceMiniStat(value: '<48h', label: tr('استجابة', 'Response')),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
+}
+
+class _TrustBadge extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  const _TrustBadge({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1080E0).withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: const Color(0xFF1080E0), size: 14),
+          const SizedBox(width: 6),
+          Text(label, style: const TextStyle(color: Color(0xFF1080E0), fontSize: 12, fontWeight: FontWeight.w600)),
+        ],
+      ),
+    );
+  }
+}
+
+class _ServiceMiniStat extends StatelessWidget {
+  final String value;
+  final String label;
+  const _ServiceMiniStat({required this.value, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Color(0xFF1080E0), Color(0xFF40A0FF)],
+          ).createShader(bounds),
+          child: Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.white)),
+        ),
+        const SizedBox(height: 4),
+        Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFFA6ABB6))),
+      ],
+    );
+  }
+}
+
+class _ServiceParticlesPainter extends CustomPainter {
+  final double time;
+  _ServiceParticlesPainter({required this.time});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rng = Random(42);
+    final p = Paint()..style = PaintingStyle.fill;
+    for (int i = 0; i < 20; i++) {
+      final x = rng.nextDouble() * size.width;
+      final y = rng.nextDouble() * 600;
+      final r = 1.0 + rng.nextDouble() * 2;
+      final dy = sin(time * 0.3 + i * 1.5) * 15;
+      p.color = const Color(0xFF1080E0).withValues(alpha: 0.06 + sin(time * 0.5 + i) * 0.03);
+      canvas.drawCircle(Offset(x, y + dy), r, p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _ServiceParticlesPainter old) => old.time != time;
 }
 
 class _ServiceData {
@@ -1132,6 +1321,9 @@ class _ServiceData {
   final IconData icon;
   final Color color;
   final List<String> tags;
+  final List<String> features;
+  final int progress;
+  final int projects;
 
   const _ServiceData({
     required this.number,
@@ -1142,20 +1334,46 @@ class _ServiceData {
     required this.icon,
     required this.color,
     required this.tags,
+    required this.features,
+    required this.progress,
+    required this.projects,
   });
 }
 
-class _ServiceCard extends StatefulWidget {
+class _ProfessionalServiceCard extends StatefulWidget {
   final _ServiceData data;
+  final bool isHovered;
+  final ValueChanged<bool> onHover;
 
-  const _ServiceCard({required this.data});
+  const _ProfessionalServiceCard({required this.data, required this.isHovered, required this.onHover});
 
   @override
-  State<_ServiceCard> createState() => _ServiceCardState();
+  State<_ProfessionalServiceCard> createState() => _ProfessionalServiceCardState();
 }
 
-class _ServiceCardState extends State<_ServiceCard> {
-  bool _isHovered = false;
+class _ProfessionalServiceCardState extends State<_ProfessionalServiceCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _expandCtrl;
+  late final Animation<double> _expandAnim;
+  bool _expanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _expandCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _expandAnim = CurvedAnimation(parent: _expandCtrl, curve: Curves.easeInOutCubic);
+  }
+
+  @override
+  void dispose() {
+    _expandCtrl.dispose();
+    super.dispose();
+  }
+
+  void _toggleExpand() {
+    setState(() => _expanded = !_expanded);
+    _expanded ? _expandCtrl.forward() : _expandCtrl.reverse();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1164,154 +1382,309 @@ class _ServiceCardState extends State<_ServiceCard> {
     final desc = LanguageManager.instance.isArabic ? d.descriptionAr : d.descriptionEn;
 
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(
-          color: const Color(0xFF141A29),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: _isHovered
-                ? d.color.withValues(alpha: 0.5)
-                : d.color.withValues(alpha: 0.08),
-            width: _isHovered ? 1.5 : 1,
+      onEnter: (_) => widget.onHover(true),
+      onExit: (_) => widget.onHover(false),
+      child: GestureDetector(
+        onTap: _toggleExpand,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOutCubic,
+          decoration: BoxDecoration(
+            color: const Color(0xFF141A29),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: widget.isHovered
+                  ? d.color.withValues(alpha: 0.6)
+                  : d.color.withValues(alpha: 0.08),
+              width: widget.isHovered ? 2 : 1,
+            ),
+            boxShadow: widget.isHovered
+                ? [
+                    BoxShadow(color: d.color.withValues(alpha: 0.2), blurRadius: 40, spreadRadius: 0),
+                    BoxShadow(color: d.color.withValues(alpha: 0.08), blurRadius: 80, spreadRadius: 0),
+                  ]
+                : [],
           ),
-          boxShadow: _isHovered
-              ? [
-                  BoxShadow(color: d.color.withValues(alpha: 0.12), blurRadius: 35, spreadRadius: 0),
-                  BoxShadow(color: d.color.withValues(alpha: 0.05), blurRadius: 60, spreadRadius: 0),
-                ]
-              : [],
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isWide = constraints.maxWidth > 600;
-            if (isWide) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Number + Icon column
-                  Column(
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 350),
-                        padding: const EdgeInsets.all(18),
-                        decoration: BoxDecoration(
-                          gradient: _isHovered
-                              ? LinearGradient(colors: [d.color.withValues(alpha: 0.2), d.color.withValues(alpha: 0.05)])
-                              : null,
-                          color: _isHovered ? null : d.color.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: _isHovered
-                              ? [BoxShadow(color: d.color.withValues(alpha: 0.15), blurRadius: 16)]
-                              : [],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Main card content
+              Padding(
+                padding: const EdgeInsets.all(32),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isWide = constraints.maxWidth > 600;
+                    if (isWide) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Left: Icon + Number + Progress
+                          SizedBox(
+                            width: 180,
+                            child: Column(
+                              children: [
+                                // Icon with animated glow
+                                AnimatedContainer(
+                                  duration: const Duration(milliseconds: 400),
+                                  padding: const EdgeInsets.all(22),
+                                  decoration: BoxDecoration(
+                                    gradient: widget.isHovered
+                                        ? LinearGradient(colors: [
+                                            d.color.withValues(alpha: 0.25),
+                                            d.color.withValues(alpha: 0.08),
+                                          ])
+                                        : null,
+                                    color: widget.isHovered ? null : d.color.withValues(alpha: 0.08),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: widget.isHovered
+                                        ? [BoxShadow(color: d.color.withValues(alpha: 0.25), blurRadius: 24)]
+                                        : [],
+                                  ),
+                                  child: Icon(d.icon, color: d.color, size: 40),
+                                ),
+                                const SizedBox(height: 16),
+                                // Service number
+                                Text(d.number, style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w800,
+                                  color: d.color.withValues(alpha: 0.4), fontFamily: 'monospace',
+                                )),
+                                const SizedBox(height: 20),
+                                // Skill progress bar
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(tr('الإتقان', 'Mastery'), style: TextStyle(fontSize: 11, color: d.color.withValues(alpha: 0.6))),
+                                        Text('${d.progress}%', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: d.color)),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 6),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: LinearProgressIndicator(
+                                        value: d.progress / 100,
+                                        minHeight: 5,
+                                        backgroundColor: d.color.withValues(alpha: 0.08),
+                                        valueColor: AlwaysStoppedAnimation(d.color.withValues(alpha: 0.8)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                // Projects count
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: d.color.withValues(alpha: 0.08),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.folder_open, size: 14, color: d.color),
+                                      const SizedBox(width: 6),
+                                      Text('${d.projects} ${tr('مشاريع', 'Projects')}', style: TextStyle(fontSize: 12, color: d.color, fontWeight: FontWeight.w600)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 32),
+                          // Right: Title, Description, Features, Tags
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(title, style: const TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.w700, color: Colors.white, height: 1.3,
+                                )),
+                                const SizedBox(height: 12),
+                                Text(desc, style: const TextStyle(
+                                  fontSize: 15, color: Color(0xFFA6ABB6), height: 1.7,
+                                )),
+                                const SizedBox(height: 20),
+                                // Feature list
+                                Wrap(
+                                  spacing: 10,
+                                  runSpacing: 8,
+                                  children: d.features.map((f) => Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.check_circle, size: 15, color: d.color.withValues(alpha: 0.8)),
+                                      const SizedBox(width: 5),
+                                      Text(f, style: TextStyle(fontSize: 13, color: d.color.withValues(alpha: 0.9), fontWeight: FontWeight.w500)),
+                                    ],
+                                  )).toList(),
+                                ),
+                                const SizedBox(height: 16),
+                                // Tags
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: d.tags.map((tag) => Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                                    decoration: BoxDecoration(
+                                      color: d.color.withValues(alpha: widget.isHovered ? 0.14 : 0.06),
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(color: d.color.withValues(alpha: widget.isHovered ? 0.35 : 0.12)),
+                                    ),
+                                    child: Text(tag, style: TextStyle(fontSize: 12, color: d.color, fontWeight: FontWeight.w600)),
+                                  )).toList(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    // Mobile layout
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 400),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                gradient: widget.isHovered
+                                    ? LinearGradient(colors: [d.color.withValues(alpha: 0.25), d.color.withValues(alpha: 0.08)])
+                                    : null,
+                                color: widget.isHovered ? null : d.color.withValues(alpha: 0.08),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Icon(d.icon, color: d.color, size: 32),
+                            ),
+                            const SizedBox(width: 16),
+                            Text(d.number, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: d.color.withValues(alpha: 0.3), fontFamily: 'monospace')),
+                            const Spacer(),
+                            // Mini progress
+                            SizedBox(
+                              width: 50, height: 50,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                    value: d.progress / 100,
+                                    strokeWidth: 4,
+                                    backgroundColor: d.color.withValues(alpha: 0.1),
+                                    valueColor: AlwaysStoppedAnimation(d.color),
+                                  ),
+                                  Text('${d.progress}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: d.color)),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        child: Icon(d.icon, color: d.color, size: 34),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        d.number,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: d.color.withValues(alpha: 0.5),
-                          fontFamily: 'monospace',
+                        const SizedBox(height: 18),
+                        Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white)),
+                        const SizedBox(height: 10),
+                        Text(desc, style: const TextStyle(fontSize: 14, color: Color(0xFFA6ABB6), height: 1.7)),
+                        const SizedBox(height: 16),
+                        Wrap(
+                          spacing: 10, runSpacing: 6,
+                          children: d.features.map((f) => Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.check_circle, size: 14, color: d.color.withValues(alpha: 0.8)),
+                              const SizedBox(width: 4),
+                              Text(f, style: TextStyle(fontSize: 12, color: d.color.withValues(alpha: 0.9), fontWeight: FontWeight.w500)),
+                            ],
+                          )).toList(),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(width: 28),
-                  // Content
-                  Expanded(
+                        const SizedBox(height: 14),
+                        Wrap(
+                          spacing: 8, runSpacing: 8,
+                          children: d.tags.map((tag) => Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: d.color.withValues(alpha: 0.06),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: d.color.withValues(alpha: 0.12)),
+                            ),
+                            child: Text(tag, style: TextStyle(fontSize: 11, color: d.color, fontWeight: FontWeight.w600)),
+                          )).toList(),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              // Expandable details section
+              SizeTransition(
+                sizeFactor: _expandAnim,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(32, 0, 32, 32),
+                  child: Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0F1524),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: d.color.withValues(alpha: 0.1)),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 21,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                            height: 1.3,
-                          ),
+                        Row(
+                          children: [
+                            Icon(Icons.auto_awesome, color: d.color, size: 18),
+                            const SizedBox(width: 8),
+                            Text(tr('لماذا نحن؟', 'Why Choose Us?'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: d.color)),
+                          ],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 16),
                         Text(
-                          desc,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFFA6ABB6),
-                            height: 1.7,
+                          tr(
+                            'فريقنا من المطورين المحترفين يمتلك خبرة تزيد عن 5 سنوات في هذا المجال. نستخدم أحدث التقنيات وأفضل الممارسات لضمان تحصل على منتج رقمي متميز يفوق توقعاتك.',
+                            'Our team of professional developers has over 5 years of experience. We use the latest technologies and best practices to ensure you get a digital product that exceeds your expectations.',
                           ),
+                          style: const TextStyle(fontSize: 14, color: Color(0xFFA6ABB6), height: 1.8),
                         ),
-                        const SizedBox(height: 18),
+                        const SizedBox(height: 16),
+                        // Tech icons row
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
-                          children: d.tags.map((tag) => Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                          children: d.tags.map((t) => Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
-                              color: d.color.withValues(alpha: _isHovered ? 0.12 : 0.06),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: d.color.withValues(alpha: _isHovered ? 0.3 : 0.12)),
+                              color: d.color.withValues(alpha: 0.06),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Text(tag, style: TextStyle(fontSize: 12, color: d.color, fontWeight: FontWeight.w600)),
+                            child: Text(t, style: TextStyle(fontSize: 11, color: d.color, fontWeight: FontWeight.w600, fontFamily: 'monospace')),
                           )).toList(),
                         ),
                       ],
                     ),
                   ),
-                ],
-              );
-            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 350),
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        gradient: _isHovered
-                            ? LinearGradient(colors: [d.color.withValues(alpha: 0.2), d.color.withValues(alpha: 0.05)])
-                            : null,
-                        color: _isHovered ? null : d.color.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              // Tap hint
+              AnimatedOpacity(
+                opacity: _expanded ? 0 : 0.5,
+                duration: const Duration(milliseconds: 200),
+                child: Container(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AnimatedRotation(
+                        turns: _expanded ? 0.5 : 0,
+                        duration: const Duration(milliseconds: 300),
+                        child: Icon(Icons.keyboard_arrow_down, color: d.color.withValues(alpha: 0.4), size: 20),
                       ),
-                      child: Icon(d.icon, color: d.color, size: 30),
-                    ),
-                    const SizedBox(width: 16),
-                    Text(
-                      d.number,
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: d.color.withValues(alpha: 0.3), fontFamily: 'monospace'),
-                    ),
-                    const Spacer(),
-                  ],
+                      const SizedBox(width: 4),
+                      Text(tr('اضغط للمزيد', 'Tap for more'), style: TextStyle(fontSize: 11, color: d.color.withValues(alpha: 0.4))),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 18),
-                Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white)),
-                const SizedBox(height: 10),
-                Text(desc, style: const TextStyle(fontSize: 14, color: Color(0xFFA6ABB6), height: 1.7)),
-                const SizedBox(height: 18),
-                Wrap(
-                  spacing: 8, runSpacing: 8,
-                  children: d.tags.map((tag) => Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                    decoration: BoxDecoration(
-                      color: d.color.withValues(alpha: 0.06),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: d.color.withValues(alpha: 0.12)),
-                    ),
-                    child: Text(tag, style: TextStyle(fontSize: 12, color: d.color, fontWeight: FontWeight.w600)),
-                  )).toList(),
-                ),
-              ],
-            );
-          },
+              ),
+            ],
+          ),
         ),
       ),
     );
