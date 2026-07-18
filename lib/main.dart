@@ -59,7 +59,6 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey _homeKey = GlobalKey();
   final GlobalKey _servicesKey = GlobalKey();
   final GlobalKey _visionKey = GlobalKey();
-  final GlobalKey _valuesKey = GlobalKey();
   final GlobalKey _ctaKey = GlobalKey();
 
   @override
@@ -86,8 +85,6 @@ class _HomePageState extends State<HomePage> {
       _scrollToKey(_servicesKey);
     } else if (link == '#vision') {
       _scrollToKey(_visionKey);
-    } else if (link == '#values') {
-      _scrollToKey(_valuesKey);
     } else if (link == '#cta') {
       _scrollToKey(_ctaKey);
     } else if (link == '#portal') {
@@ -166,13 +163,6 @@ class _HomePageState extends State<HomePage> {
                   child: _ScrollReveal(
                     scrollController: _scrollController,
                     child: const VisionSection(),
-                  ),
-                ),
-                Container(
-                  key: _valuesKey,
-                  child: _ScrollReveal(
-                    scrollController: _scrollController,
-                    child: const ValuesSection(),
                   ),
                 ),
                 _ScrollReveal(
@@ -356,6 +346,7 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
 
     return SizedBox(
       height: size.height,
@@ -394,7 +385,7 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
           ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -454,15 +445,15 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Text(
-                              tr('شريكك التقني المتكامل في العراق', 'Your Integrated Tech Partner in Iraq'),
-                              style: const TextStyle(
-                                color: Color(0xFF1080E0),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.2,
-                              ),
+                          Text(
+                            tr('شريكك التقني المتكامل في العراق', 'Your Integrated Tech Partner in Iraq'),
+                            style: TextStyle(
+                              color: const Color(0xFF1080E0),
+                              fontSize: isMobile ? 11 : 13,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.2,
                             ),
+                          ),
                           ],
                         ),
                       ),
@@ -570,6 +561,7 @@ class _HeroButtonState extends State<_HeroButton> {
   @override
   Widget build(BuildContext context) {
     final baseColor = const Color(0xFF1080E0);
+    final isMobile = MediaQuery.of(context).size.width < 600;
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _hover = true),
@@ -583,7 +575,7 @@ class _HeroButtonState extends State<_HeroButton> {
           curve: Curves.easeInOut,
           transform: Matrix4.identity()..scale(_pressed ? 0.95 : (_hover ? 1.04 : 1.0)),
           transformAlignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 24 : 32, vertical: isMobile ? 18 : 16),
           decoration: BoxDecoration(
             gradient: widget.isSolid
                 ? LinearGradient(colors: [
@@ -669,9 +661,12 @@ class _StatsSectionState extends State<StatsSection>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
-      padding: const EdgeInsets.all(40),
+      margin: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 24 : 40),
+      padding: EdgeInsets.all(isMobile ? 24 : 40),
       decoration: BoxDecoration(
         color: const Color(0xFF141A29).withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(24),
@@ -680,36 +675,36 @@ class _StatsSectionState extends State<StatsSection>
           BoxShadow(color: const Color(0xFF1080E0).withValues(alpha: 0.04), blurRadius: 40, spreadRadius: 0),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _AnimatedStat(
-            target: 50,
-            prefix: '+',
-            label: tr('مشروع مكتمل', 'Projects'),
-            animation: _counterCtrl,
-            icon: Icons.rocket_launch,
-          ),
-          Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
-          _AnimatedStat(
-            target: 30,
-            prefix: '+',
-            label: tr('عميل راضي', 'Clients'),
-            animation: _counterCtrl,
-            icon: Icons.people,
-          ),
-          Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
-          _AnimatedStat(
-            target: 5,
-            prefix: '+',
-            label: tr('سنوات خبرة', 'Years'),
-            animation: _counterCtrl,
-            icon: Icons.workspace_premium,
-          ),
-          Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
-          _StaticStat(value: '24/7', label: tr('دعم فني', 'Support'), icon: Icons.support_agent),
-        ],
-      ),
+      child: isMobile
+          ? Column(
+              children: [
+                _AnimatedStat(target: 50, prefix: '+', label: tr('مشروع مكتمل', 'Projects'), animation: _counterCtrl, icon: Icons.rocket_launch),
+                const SizedBox(height: 24),
+                Container(height: 1, width: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
+                const SizedBox(height: 24),
+                _AnimatedStat(target: 30, prefix: '+', label: tr('عميل راضي', 'Clients'), animation: _counterCtrl, icon: Icons.people),
+                const SizedBox(height: 24),
+                Container(height: 1, width: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
+                const SizedBox(height: 24),
+                _AnimatedStat(target: 5, prefix: '+', label: tr('سنوات خبرة', 'Years'), animation: _counterCtrl, icon: Icons.workspace_premium),
+                const SizedBox(height: 24),
+                Container(height: 1, width: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
+                const SizedBox(height: 24),
+                _StaticStat(value: '24/7', label: tr('دعم فني', 'Support'), icon: Icons.support_agent),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _AnimatedStat(target: 50, prefix: '+', label: tr('مشروع مكتمل', 'Projects'), animation: _counterCtrl, icon: Icons.rocket_launch),
+                Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
+                _AnimatedStat(target: 30, prefix: '+', label: tr('عميل راضي', 'Clients'), animation: _counterCtrl, icon: Icons.people),
+                Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
+                _AnimatedStat(target: 5, prefix: '+', label: tr('سنوات خبرة', 'Years'), animation: _counterCtrl, icon: Icons.workspace_premium),
+                Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
+                _StaticStat(value: '24/7', label: tr('دعم فني', 'Support'), icon: Icons.support_agent),
+              ],
+            ),
     );
   }
 }
@@ -731,6 +726,9 @@ class _AnimatedStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final numberSize = isMobile ? 30.0 : 36.0;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, _) {
@@ -744,7 +742,7 @@ class _AnimatedStat extends StatelessWidget {
                 color: const Color(0xFF1080E0).withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: const Color(0xFF1080E0), size: 22),
+              child: Icon(icon, color: const Color(0xFF1080E0), size: isMobile ? 20 : 22),
             ),
             const SizedBox(height: 12),
             ShaderMask(
@@ -753,8 +751,8 @@ class _AnimatedStat extends StatelessWidget {
               ).createShader(bounds),
               child: Text(
                 '$prefix$v',
-                style: const TextStyle(
-                  fontSize: 36,
+                style: TextStyle(
+                  fontSize: numberSize,
                   fontWeight: FontWeight.w800,
                   color: Colors.white,
                 ),
@@ -763,9 +761,9 @@ class _AnimatedStat extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 13,
-                color: Color(0xFFA6ABB6),
+              style: TextStyle(
+                fontSize: isMobile ? 12 : 13,
+                color: const Color(0xFFA6ABB6),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -784,6 +782,7 @@ class _StaticStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -793,7 +792,7 @@ class _StaticStat extends StatelessWidget {
             color: const Color(0xFF1080E0).withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: const Color(0xFF1080E0), size: 22),
+          child: Icon(icon, color: const Color(0xFF1080E0), size: isMobile ? 20 : 22),
         ),
         const SizedBox(height: 12),
         ShaderMask(
@@ -802,8 +801,8 @@ class _StaticStat extends StatelessWidget {
           ).createShader(bounds),
           child: Text(
             value,
-            style: const TextStyle(
-              fontSize: 36,
+            style: TextStyle(
+              fontSize: isMobile ? 30 : 36,
               fontWeight: FontWeight.w800,
               color: Colors.white,
             ),
@@ -812,9 +811,9 @@ class _StaticStat extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 13,
-            color: Color(0xFFA6ABB6),
+          style: TextStyle(
+            fontSize: isMobile ? 12 : 13,
+            color: const Color(0xFFA6ABB6),
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -828,8 +827,9 @@ class VisionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 36 : 60),
       child: Column(
         children: [
           _SectionHeader(
@@ -1212,26 +1212,45 @@ class _ServicesSectionState extends State<ServicesSection>
             animation: _entranceCtrl,
             builder: (_, __) => Opacity(
               opacity: _entranceCtrl.value,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    const Color(0xFF1080E0).withValues(alpha: 0.08),
-                    const Color(0xFF2090FF).withValues(alpha: 0.04),
-                  ]),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _ServiceMiniStat(value: '58+', label: tr('مشروع منجز', 'Completed')),
-                    Container(width: 1, height: 28, color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
-                    _ServiceMiniStat(value: '99%', label: tr('رضا العملاء', 'Satisfaction')),
-                    Container(width: 1, height: 28, color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
-                    _ServiceMiniStat(value: '<48h', label: tr('استجابة', 'Response')),
-                  ],
-                ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isMobile = constraints.maxWidth < 500;
+                  return Container(
+                    padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32, vertical: isMobile ? 16 : 20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                        const Color(0xFF1080E0).withValues(alpha: 0.08),
+                        const Color(0xFF2090FF).withValues(alpha: 0.04),
+                      ]),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
+                    ),
+                    child: isMobile
+                        ? Column(
+                            children: [
+                              _ServiceMiniStat(value: '58+', label: tr('مشروع منجز', 'Completed')),
+                              const SizedBox(height: 12),
+                              Container(height: 1, width: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
+                              const SizedBox(height: 12),
+                              _ServiceMiniStat(value: '99%', label: tr('رضا العملاء', 'Satisfaction')),
+                              const SizedBox(height: 12),
+                              Container(height: 1, width: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
+                              const SizedBox(height: 12),
+                              _ServiceMiniStat(value: '<48h', label: tr('استجابة', 'Response')),
+                            ],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _ServiceMiniStat(value: '58+', label: tr('مشروع منجز', 'Completed')),
+                              Container(width: 1, height: 28, color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
+                              _ServiceMiniStat(value: '99%', label: tr('رضا العملاء', 'Satisfaction')),
+                              Container(width: 1, height: 28, color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
+                              _ServiceMiniStat(value: '<48h', label: tr('استجابة', 'Response')),
+                            ],
+                          ),
+                  );
+                },
               ),
             ),
           ),
@@ -1310,6 +1329,257 @@ class _ServiceParticlesPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _ServiceParticlesPainter old) => old.time != time;
+}
+
+class _ServiceIcon3D extends StatefulWidget {
+  final IconData icon;
+  final Color color;
+  final bool isHovered;
+  const _ServiceIcon3D({required this.icon, required this.color, required this.isHovered});
+
+  @override
+  State<_ServiceIcon3D> createState() => _ServiceIcon3DState();
+}
+
+class _ServiceIcon3DState extends State<_ServiceIcon3D>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _floatCtrl;
+  late final Animation<double> _floatAnim;
+  late final AnimationController _glowCtrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _floatCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 3000))..repeat(reverse: true);
+    _floatAnim = Tween<double>(begin: -4, end: 4).animate(CurvedAnimation(parent: _floatCtrl, curve: Curves.easeInOut));
+    _glowCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 2000))..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _floatCtrl.dispose();
+    _glowCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final d = widget.color;
+    return AnimatedBuilder(
+      animation: Listenable.merge([_floatCtrl, _glowCtrl]),
+      builder: (_, __) {
+        final glow = 0.15 + _glowCtrl.value * 0.15;
+        return Transform.translate(
+          offset: Offset(0, _floatAnim.value),
+          child: Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.identity()
+              ..setEntry(3, 2, 0.001)
+              ..rotateX(widget.isHovered ? 0.08 : 0)
+              ..rotateY(widget.isHovered ? -0.08 : 0),
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                boxShadow: [
+                  BoxShadow(
+                    color: d.withValues(alpha: glow),
+                    blurRadius: widget.isHovered ? 36 : 20,
+                    spreadRadius: widget.isHovered ? 4 : 0,
+                    offset: const Offset(0, 8),
+                  ),
+                  BoxShadow(
+                    color: d.withValues(alpha: 0.08),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      d.withValues(alpha: widget.isHovered ? 0.3 : 0.18),
+                      d.withValues(alpha: widget.isHovered ? 0.12 : 0.06),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(color: d.withValues(alpha: widget.isHovered ? 0.5 : 0.2)),
+                ),
+                child: Center(
+                  child: Icon(widget.icon, color: d, size: 38),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _SampleProjectDialog extends StatelessWidget {
+  final String title;
+  final Color color;
+  final int serviceIndex;
+  const _SampleProjectDialog({required this.title, required this.color, required this.serviceIndex});
+
+  @override
+  Widget build(BuildContext context) {
+    final samples = _getSamples();
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    return Dialog(
+      backgroundColor: const Color(0xFF0F1320),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: isMobile ? screenWidth * 0.95 : 700,
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(isMobile ? 16 : 24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  color.withValues(alpha: 0.12),
+                  color.withValues(alpha: 0.04),
+                ]),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.visibility, color: color, size: 22),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      tr('عينة: $title', 'Sample: $title'),
+                      style: TextStyle(fontSize: isMobile ? 16 : 20, fontWeight: FontWeight.w700, color: Colors.white),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close, color: Color(0xFFA6ABB6)),
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              child: ListView.builder(
+                padding: EdgeInsets.all(isMobile ? 12 : 20),
+                itemCount: samples.length,
+                itemBuilder: (ctx, i) {
+                  final s = samples[i];
+                  return Container(
+                    margin: EdgeInsets.only(bottom: isMobile ? 12 : 16),
+                    height: isMobile ? 180 : 240,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [color.withValues(alpha: 0.15), const Color(0xFF0F1320)],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: color.withValues(alpha: 0.15)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: color.withValues(alpha: 0.08),
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(s['icon'] as IconData, color: color, size: 16),
+                              const SizedBox(width: 8),
+                              Text(
+                                s['title'] as String,
+                                style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600),
+                              ),
+                              const Spacer(),
+                              Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: color)),
+                              const SizedBox(width: 4),
+                              Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: color.withValues(alpha: 0.5))),
+                              const SizedBox(width: 4),
+                              Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: color.withValues(alpha: 0.25))),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ...List.generate(s['lines'] as int, (j) => Container(
+                                  margin: const EdgeInsets.only(bottom: 8),
+                                  height: 10,
+                                  width: (150.0 + (j * 40) % 100),
+                                  decoration: BoxDecoration(
+                                    color: color.withValues(alpha: 0.08 + (j * 0.02)),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                )),
+                                const Spacer(),
+                                Row(
+                                  children: List.generate(3, (k) => Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: color.withValues(alpha: 0.06 + k * 0.03),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  )),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Map<String, dynamic>> _getSamples() {
+    switch (serviceIndex) {
+      case 0:
+        return [
+          {'title': tr('تطبيق توصيل طعام', 'Food Delivery App'), 'icon': Icons.delivery_dining, 'lines': 5},
+          {'title': tr('تطبيق إدارة المهام', 'Task Management App'), 'icon': Icons.task_alt, 'lines': 4},
+          {'title': tr('تطبيق صحة لاسلكي', 'Health Tracking App'), 'icon': Icons.monitor_heart, 'lines': 6},
+        ];
+      case 1:
+        return [
+          {'title': tr('متجر إلكتروني للأزياء', 'Fashion E-Store'), 'icon': Icons.checkroom, 'lines': 5},
+          {'title': tr('منصة بيع الإلكترونيات', 'Electronics Marketplace'), 'icon': Icons.devices, 'lines': 4},
+          {'title': tr('متجر محلّي مع توصيل', 'Local Store with Delivery'), 'icon': Icons.store, 'lines': 5},
+        ];
+      case 2:
+        return [
+          {'title': tr('نظام إدارة مخزون', 'Inventory Management System'), 'icon': Icons.inventory_2, 'lines': 6},
+          {'title': tr('لوحة تحكم مالية', 'Financial Dashboard'), 'icon': Icons.analytics, 'lines': 5},
+          {'title': tr('نظام CRM للمبيعات', 'CRM Sales System'), 'icon': Icons.handshake, 'lines': 4},
+        ];
+      default:
+        return [];
+    }
+  }
 }
 
 class _ServiceData {
@@ -1440,7 +1710,7 @@ class _ProfessionalServiceCardState extends State<_ProfessionalServiceCard>
                                         ? [BoxShadow(color: d.color.withValues(alpha: 0.25), blurRadius: 24)]
                                         : [],
                                   ),
-                                  child: Icon(d.icon, color: d.color, size: 40),
+                                  child: _ServiceIcon3D(icon: d.icon, color: d.color, isHovered: widget.isHovered),
                                 ),
                                 const SizedBox(height: 16),
                                 // Service number
@@ -1556,7 +1826,7 @@ class _ProfessionalServiceCardState extends State<_ProfessionalServiceCard>
                                 color: widget.isHovered ? null : d.color.withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(16),
                               ),
-                              child: Icon(d.icon, color: d.color, size: 32),
+                              child: _ServiceIcon3D(icon: d.icon, color: d.color, isHovered: widget.isHovered),
                             ),
                             const SizedBox(width: 16),
                             Text(d.number, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: d.color.withValues(alpha: 0.3), fontFamily: 'monospace')),
@@ -1658,6 +1928,35 @@ class _ProfessionalServiceCardState extends State<_ProfessionalServiceCard>
                             child: Text(t, style: TextStyle(fontSize: 11, color: d.color, fontWeight: FontWeight.w600, fontFamily: 'monospace')),
                           )).toList(),
                         ),
+                        const SizedBox(height: 16),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (_) => _SampleProjectDialog(
+                                title: LanguageManager.instance.isArabic ? d.titleAr : d.titleEn,
+                                color: d.color,
+                                serviceIndex: int.parse(d.number) - 1,
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: d.color.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: d.color.withValues(alpha: 0.25)),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.remove_red_eye, color: d.color, size: 18),
+                                const SizedBox(width: 8),
+                                Text(tr('عرض عينات', 'View Samples'), style: TextStyle(color: d.color, fontSize: 14, fontWeight: FontWeight.w600)),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -1691,179 +1990,6 @@ class _ProfessionalServiceCardState extends State<_ProfessionalServiceCard>
   }
 }
 
-class ValuesSection extends StatelessWidget {
-  const ValuesSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final values = [
-      _ValueData(
-        icon: Icons.verified,
-        titleEn: 'Professionalism',
-        titleAr: 'الاحترافية',
-        descriptionEn: 'We uphold the highest professional standards in every project.',
-        descriptionAr: 'نلتزم بأعلى المعايير المهنية في كل مشروع.',
-        color: const Color(0xFF1080E0),
-      ),
-      _ValueData(
-        icon: Icons.stars,
-        titleEn: 'Quality',
-        titleAr: 'الجودة',
-        descriptionEn: 'Excellence is not negotiable. We deliver top-tier quality.',
-        descriptionAr: 'التميز غير قابل للتفاوض. نقدم جودة من الطراز الأول.',
-        color: const Color(0xFF2090FF),
-      ),
-      _ValueData(
-        icon: Icons.lightbulb,
-        titleEn: 'Innovation',
-        titleAr: 'الابتكار',
-        descriptionEn: 'We push boundaries with creative and forward-thinking solutions.',
-        descriptionAr: 'ندفع الحدود بحلول إبداعية ومبتكرة.',
-        color: const Color(0xFF25D366),
-      ),
-      _ValueData(
-        icon: Icons.people,
-        titleEn: 'Client Focus',
-        titleAr: 'التركيز على العميل',
-        descriptionEn: 'Your success is our mission. We put clients at the center.',
-        descriptionAr: 'نجاحك مهمتنا. نضع العميل في مركز اهتمامنا.',
-        color: const Color(0xFFFFB020),
-      ),
-      _ValueData(
-        icon: Icons.speed,
-        titleEn: 'Speed',
-        titleAr: 'السرعة',
-        descriptionEn: 'Fast delivery without compromising quality or attention to detail.',
-        descriptionAr: 'تسليم سريع دون المساس بالجودة أو الاهتمام بالتفاصيل.',
-        color: const Color(0xFF40A0FF),
-      ),
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
-      child: Column(
-        children: [
-          _SectionHeader(
-            title: tr('قيمنا', 'Our Values'),
-            subtitle: tr(
-              'المبادئ التي نؤمن بها ونعمل وفقها',
-              'The principles we believe in and work by',
-            ),
-          ),
-          const SizedBox(height: 48),
-          Wrap(
-            spacing: 20,
-            runSpacing: 20,
-            alignment: WrapAlignment.center,
-            children: values.map((v) => _ValueCard(data: v)).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ValueData {
-  final IconData icon;
-  final String titleEn;
-  final String titleAr;
-  final String descriptionEn;
-  final String descriptionAr;
-  final Color color;
-
-  const _ValueData({
-    required this.icon,
-    required this.titleEn,
-    required this.titleAr,
-    required this.descriptionEn,
-    required this.descriptionAr,
-    required this.color,
-  });
-}
-
-class _ValueCard extends StatefulWidget {
-  final _ValueData data;
-
-  const _ValueCard({required this.data});
-
-  @override
-  State<_ValueCard> createState() => _ValueCardState();
-}
-
-class _ValueCardState extends State<_ValueCard> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final d = widget.data;
-    final title = LanguageManager.instance.isArabic ? d.titleAr : d.titleEn;
-    final desc = LanguageManager.instance.isArabic ? d.descriptionAr : d.descriptionEn;
-
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
-        width: 220,
-        padding: const EdgeInsets.all(28),
-        decoration: BoxDecoration(
-          color: const Color(0xFF141A29),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: _isHovered ? d.color.withValues(alpha: 0.5) : d.color.withValues(alpha: 0.08),
-            width: _isHovered ? 1.5 : 1,
-          ),
-          boxShadow: _isHovered
-              ? [
-                  BoxShadow(color: d.color.withValues(alpha: 0.12), blurRadius: 28, spreadRadius: 0),
-                ]
-              : [],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 350),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: _isHovered
-                    ? LinearGradient(colors: [d.color.withValues(alpha: 0.2), d.color.withValues(alpha: 0.05)])
-                    : null,
-                color: _isHovered ? null : d.color.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: _isHovered
-                    ? [BoxShadow(color: d.color.withValues(alpha: 0.2), blurRadius: 14)]
-                    : [],
-              ),
-              child: Icon(d.icon, color: d.color, size: 32),
-            ),
-            const SizedBox(height: 18),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              desc,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 13,
-                color: Color(0xFFA6ABB6),
-                height: 1.6,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class FAQSection extends StatefulWidget {
   const FAQSection({super.key});
 
@@ -1891,8 +2017,9 @@ class _FAQSectionState extends State<FAQSection> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 36 : 60),
       child: Column(
         children: [
           _SectionHeader(
@@ -2060,14 +2187,15 @@ class _CTASectionState extends State<CTASection> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 36 : 60),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(52),
+            padding: EdgeInsets.all(isMobile ? 28 : 52),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -2123,8 +2251,8 @@ class _CTASectionState extends State<CTASection> {
                       child: Text(
                         tr('جاهز لبناء المستقبل الرقمي؟', 'Ready to Build the Digital Future?'),
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 32,
+                        style: TextStyle(
+                          fontSize: isMobile ? 24 : 32,
                           fontWeight: FontWeight.w800,
                           color: Colors.white,
                           height: 1.3,
@@ -2150,8 +2278,8 @@ class _CTASectionState extends State<CTASection> {
                       alignment: WrapAlignment.center,
                       children: [
                         _CTAButton(
-                          label: 'WhatsApp',
-                          icon: Icons.chat,
+                          label: 'واتساب | WhatsApp',
+                          customIcon: const _WhatsAppIcon(size: 20),
                           color: const Color(0xFF25D366),
                           url: 'https://wa.me/9647771632241',
                           isHovered: _hoverWA,
@@ -2168,30 +2296,6 @@ class _CTASectionState extends State<CTASection> {
                       ],
                     ),
                     const SizedBox(height: 36),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1080E0).withValues(alpha: 0.06),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.12)),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.phone, color: Color(0xFF1080E0), size: 18),
-                          const SizedBox(width: 10),
-                          Text(
-                            '+964 777 163 2241',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF1080E0),
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ],
@@ -2205,7 +2309,8 @@ class _CTASectionState extends State<CTASection> {
 
 class _CTAButton extends StatelessWidget {
   final String label;
-  final IconData icon;
+  final IconData? icon;
+  final Widget? customIcon;
   final Color color;
   final String url;
   final bool isHovered;
@@ -2213,7 +2318,8 @@ class _CTAButton extends StatelessWidget {
 
   const _CTAButton({
     required this.label,
-    required this.icon,
+    this.icon,
+    this.customIcon,
     required this.color,
     required this.url,
     this.isHovered = false,
@@ -2251,7 +2357,7 @@ class _CTAButton extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: Colors.white, size: 20),
+              customIcon ?? Icon(icon, color: Colors.white, size: 20),
               const SizedBox(width: 10),
               Text(
                 label,
@@ -2341,7 +2447,7 @@ class FooterSection extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            tr('العمارة، ميسان، العراق | +964 777 163 2241', 'Al-Amarah, Maysan, Iraq | +964 777 163 2241'),
+            tr('العمارة، ميسان، العراق', 'Al-Amarah, Maysan, Iraq'),
             style: const TextStyle(fontSize: 12, color: Color(0xFF4B5563)),
           ),
         ],
@@ -2374,7 +2480,6 @@ class FooterSection extends StatelessWidget {
       children: [
         _FooterLink(label: tr('الخدمات', 'Services'), onTap: () {}),
         _FooterLink(label: tr('رؤيتنا', 'Vision'), onTap: () {}),
-        _FooterLink(label: tr('قيمنا', 'Values'), onTap: () {}),
         _FooterLink(label: tr('اتصل بنا', 'Contact'), onTap: () {}),
       ],
     );
@@ -2384,7 +2489,7 @@ class FooterSection extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _SocialIcon(icon: Icons.chat, color: const Color(0xFF25D366), url: 'https://wa.me/9647771632241'),
+        _SocialIcon(customIcon: const _WhatsAppIcon(size: 20), color: const Color(0xFF25D366), url: 'https://wa.me/9647771632241'),
         const SizedBox(width: 12),
         _SocialIcon(icon: Icons.send, color: const Color(0xFF0088cc), url: 'https://t.me/codemaster6'),
       ],
@@ -2417,12 +2522,14 @@ class _FooterLink extends StatelessWidget {
 }
 
 class _SocialIcon extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
+  final Widget? customIcon;
   final Color color;
   final String url;
 
   const _SocialIcon({
-    required this.icon,
+    this.icon,
+    this.customIcon,
     required this.color,
     required this.url,
   });
@@ -2447,11 +2554,82 @@ class _SocialIcon extends StatelessWidget {
               color: color.withValues(alpha: 0.3),
             ),
           ),
-          child: Icon(icon, color: color, size: 20),
+          child: customIcon ?? Icon(icon, color: color, size: 20),
         ),
       ),
     );
   }
+}
+
+class _WhatsAppIcon extends StatelessWidget {
+  final double size;
+  const _WhatsAppIcon({this.size = 20});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: Size(size, size),
+      painter: _WhatsAppIconPainter(),
+    );
+  }
+}
+
+class _WhatsAppIconPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 24;
+    final center = Offset(size.width / 2, size.height / 2);
+
+    final bgPaint = Paint()..color = const Color(0xFF25D366);
+    canvas.drawOval(Rect.fromCenter(center: center, width: 22 * scale, height: 22 * scale), bgPaint);
+
+    final path = Path();
+    path.moveTo(12 * scale, 5.5 * scale);
+    path.cubicTo(8.4 * scale, 5.5 * scale, 5.5 * scale, 8.4 * scale, 5.5 * scale, 12 * scale);
+    path.cubicTo(5.5 * scale, 13.2 * scale, 5.8 * scale, 14.3 * scale, 6.4 * scale, 15.3 * scale);
+    path.lineTo(5.2 * scale, 18.8 * scale);
+    path.lineTo(8.9 * scale, 17.7 * scale);
+    path.cubicTo(9.9 * scale, 18.2 * scale, 10.9 * scale, 18.5 * scale, 12 * scale, 18.5 * scale);
+    path.cubicTo(15.6 * scale, 18.5 * scale, 18.5 * scale, 15.6 * scale, 18.5 * scale, 12 * scale);
+    path.cubicTo(18.5 * scale, 8.4 * scale, 15.6 * scale, 5.5 * scale, 12 * scale, 5.5 * scale);
+    path.close();
+
+    path.moveTo(10.2 * scale, 9.2 * scale);
+    path.lineTo(11.2 * scale, 9.2 * scale);
+    path.cubicTo(11.5 * scale, 9.2 * scale, 11.8 * scale, 9.5 * scale, 11.8 * scale, 9.8 * scale);
+    path.lineTo(11.8 * scale, 11 * scale);
+    path.cubicTo(11.8 * scale, 11.3 * scale, 11.5 * scale, 11.6 * scale, 11.2 * scale, 11.6 * scale);
+    path.lineTo(10.8 * scale, 11.6 * scale);
+    path.cubicTo(10.5 * scale, 12.1 * scale, 10.3 * scale, 12.6 * scale, 10.1 * scale, 13.2 * scale);
+    path.lineTo(10 * scale, 13.2 * scale);
+    path.cubicTo(9.7 * scale, 13.2 * scale, 9.4 * scale, 12.9 * scale, 9.4 * scale, 12.6 * scale);
+    path.lineTo(9.4 * scale, 11.8 * scale);
+    path.cubicTo(9.4 * scale, 11.2 * scale, 9.7 * scale, 10.7 * scale, 10.2 * scale, 10.3 * scale);
+    path.close();
+
+    path.moveTo(12.9 * scale, 13.2 * scale);
+    path.cubicTo(12.9 * scale, 13.2, 13.3 * scale, 14.8 * scale, 13.4 * scale, 15.2 * scale);
+    path.cubicTo(13.4 * scale, 15.3 * scale, 13.4 * scale, 15.4 * scale, 13.3 * scale, 15.5 * scale);
+    path.lineTo(13 * scale, 15.2 * scale);
+    path.cubicTo(12.8 * scale, 15.1 * scale, 12.6 * scale, 15 * scale, 12.3 * scale, 14.8 * scale);
+    path.cubicTo(11.3 * scale, 14.4 * scale, 10.4 * scale, 13.5 * scale, 10 * scale, 12.6 * scale);
+    path.cubicTo(9.8 * scale, 12.1 * scale, 10.1 * scale, 11.6 * scale, 10.6 * scale, 11.4 * scale);
+    path.lineTo(11 * scale, 11.3 * scale);
+    path.cubicTo(11.3 * scale, 11.2 * scale, 11.5 * scale, 11 * scale, 11.6 * scale, 10.7 * scale);
+    path.lineTo(12 * scale, 9.5 * scale);
+    path.cubicTo(12.1 * scale, 9.2 * scale, 12.4 * scale, 9 * scale, 12.7 * scale, 9 * scale);
+    path.lineTo(13.8 * scale, 9 * scale);
+    path.cubicTo(14.1 * scale, 9 * scale, 14.4 * scale, 9.3 * scale, 14.4 * scale, 9.6 * scale);
+    path.lineTo(14.4 * scale, 10.5 * scale);
+    path.cubicTo(14.4 * scale, 10.8 * scale, 14.2 * scale, 11 * scale, 13.9 * scale, 11.1 * scale);
+    path.close();
+
+    final fillPaint = Paint()..color = Colors.white..style = PaintingStyle.fill;
+    canvas.drawPath(path, fillPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class WidgetDirectionalityFix extends StatelessWidget {

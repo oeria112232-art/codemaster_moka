@@ -144,8 +144,6 @@ class _NavbarState extends State<Navbar> {
                       const SizedBox(width: 32),
                       _buildNavLink(tr('رؤيتنا', 'Vision'), '#vision'),
                       const SizedBox(width: 32),
-                      _buildNavLink(tr('قيمنا', 'Values'), '#values'),
-                      const SizedBox(width: 32),
                       _buildNavLink(tr('اتصل بنا', 'Contact'), '#cta'),
                     ],
                   ),
