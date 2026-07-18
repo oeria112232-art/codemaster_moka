@@ -29,7 +29,6 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
   void _onScroll() {
     if (mounted) {
       setState(() {
-        // Linear scroll mapping to depth range [0.0, 60.0]
         _scrollDepth = (_scrollCtrl.offset / 150).clamp(0.0, 60.0);
       });
     }
@@ -47,10 +46,9 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
     final isAr = LanguageManager.instance.isArabic;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF040814), // Dark Navy matching logo bg
+      backgroundColor: const Color(0xFF040814),
       body: Stack(
         children: [
-          // The main master cosmic painter with continuous scale-down zoom
           Positioned.fill(
             child: AnimatedBuilder(
               animation: _timeCtrl,
@@ -64,8 +62,6 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
               },
             ),
           ),
-          
-          // Smooth scroll area
           Positioned.fill(
             child: ListView.builder(
               controller: _scrollCtrl,
@@ -76,8 +72,6 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
               },
             ),
           ),
-          
-          // Back Button
           Positioned(
             top: 24,
             left: 24,
@@ -113,8 +107,6 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
               ),
             ),
           ),
-          
-          // Scroll Indicator / HUD (Desktop right side)
           Positioned(
             right: 24,
             top: 0,
@@ -147,8 +139,6 @@ class _InfinitePortalPageState extends State<InfinitePortalPage>
               ),
             ),
           ),
-          
-          // Interactive Status Card
           Positioned(
             right: 24,
             top: 24,
@@ -211,98 +201,66 @@ class _CosmicContinuousZoomPainter extends CustomPainter {
   final double time;
   final double depth;
 
-  _CosmicZoomUniverse? _universe;
-
-  _CosmicContinuousZoomPainter({required this.time, required this.depth}) {
-    // Universe structure is statically seeded so stars and planets stay consistent
-    _universe = _CosmicZoomUniverse(42);
-  }
+  _CosmicContinuousZoomPainter({required this.time, required this.depth});
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final maxRadius = math.min(size.width, size.height);
 
-    // Deep cosmic space background
     final bgPaint = Paint()
       ..shader = RadialGradient(
         colors: [
-          const Color(0xFF081426), // Logo blue-navy glow center
-          const Color(0xFF040814), // Pitch black navy edge
+          const Color(0xFF081426),
+          const Color(0xFF040814),
         ],
         radius: 1.5,
       ).createShader(Offset.zero & size);
     canvas.drawRect(Offset.zero & size, bgPaint);
 
-    // Continuous camera zoom factor (exponential decay representing smooth treading back)
-    // At depth 0: zoom = 1.0 (very close)
-    // At depth 60: zoom = 0.003 (infinitely zoomed out)
     final double zoom = math.pow(0.91, depth).toDouble();
 
-    // Draw ambient stardust/nebula glow
-    final nebulaPaint = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          const Color(0xFF1080E0).withValues(alpha: 0.12),
-          const Color(0xFF2090FF).withValues(alpha: 0.03),
-          Colors.transparent,
-        ],
-        stops: const [0.0, 0.4, 1.0],
-      ).createShader(Rect.fromCircle(center: center, radius: maxRadius * 0.8));
-    canvas.drawRect(Offset.zero & size, nebulaPaint);
+    _drawNebulaClouds(canvas, size, center, zoom);
+    _drawInfiniteStars(canvas, size, center, zoom);
 
-    if (_universe == null) return;
-
-    // Draw Background Stars (these don't zoom out as fast, simulating infinity background)
-    _drawInfiniteStars(canvas, size, zoom);
-
-    // --- ZOOM-OUT STAGE 1: Single Planet (Starts at 100% size, shrinks down) ---
-    // Smooth opacity: starts fully visible, fades out as we transition into Stage 2
     final double stage1Opacity = (1.0 - (depth / 12.0)).clamp(0.0, 1.0);
     if (stage1Opacity > 0.0) {
       final double planetR = maxRadius * 0.22 * zoom;
       _drawMotherPlanet(canvas, center, planetR, time, stage1Opacity);
     }
 
-    // --- ZOOM-OUT STAGE 2: The Solar System (Fades in, shrinks down) ---
-    // Fades in smoothly as Stage 1 fades out, shrinks continuously
     final double stage2Opacity = _getStageOpacity(depth, 8.0, 14.0, 24.0);
     if (stage2Opacity > 0.0) {
-      // The Solar System is centered. At depth 12, its radius should look natural.
-      // We scale its layout size with the global zoom.
-      final double systemScale = zoom * 3.5; // multiplier keeps it large when appearing
+      final double systemScale = zoom * 3.5;
       _drawCompleteSolarSystem(canvas, center, systemScale, time, stage2Opacity);
     }
 
-    // --- ZOOM-OUT STAGE 3: Multiple Solar Systems / Stellar Cluster ---
     final double stage3Opacity = _getStageOpacity(depth, 20.0, 26.0, 38.0);
     if (stage3Opacity > 0.0) {
-      final double clusterScale = zoom * 25.0; // scale multiplier for stage 3
+      final double clusterScale = zoom * 25.0;
       _drawStellarCluster(canvas, center, clusterScale, time, stage3Opacity);
     }
 
-    // --- ZOOM-OUT STAGE 4: Spiral Galaxy (Milky Way) ---
     final double stage4Opacity = _getStageOpacity(depth, 32.0, 38.0, 50.0);
     if (stage4Opacity > 0.0) {
       final double galaxyScale = zoom * 180.0;
       _drawSpiralGalaxy(canvas, center, galaxyScale, time, stage4Opacity);
     }
 
-    // --- ZOOM-OUT STAGE 5: Infinite Galaxy Field ---
     final double stage5Opacity = (depth - 44.0).clamp(0.0, 16.0) / 16.0;
     if (stage5Opacity > 0.0) {
       final double fieldScale = zoom * 1200.0;
       _drawGalaxyField(canvas, size, center, fieldScale, time, stage5Opacity);
     }
 
-    // Draw nice scroll hint at the very top of depth
+    _drawShootingStars(canvas, size, time);
+
     if (depth < 6.0) {
       final double hintOpacity = (1.0 - depth / 6.0).clamp(0.0, 1.0);
       _drawScrollHint(canvas, center, maxRadius * 0.25, hintOpacity);
     }
   }
 
-  // Beautiful bell-curve opacity for transitions between zoomed-out states
   double _getStageOpacity(double d, double startFadeIn, double fullyIn, double endFadeOut) {
     if (d < startFadeIn) return 0.0;
     if (d < fullyIn) return (d - startFadeIn) / (fullyIn - startFadeIn);
@@ -310,71 +268,115 @@ class _CosmicContinuousZoomPainter extends CustomPainter {
     return 0.0;
   }
 
-  void _drawInfiniteStars(Canvas canvas, Size size, double zoom) {
+  void _drawNebulaClouds(Canvas canvas, Size size, Offset center, double zoom) {
+    final rng = math.Random(42);
+    final paint = Paint();
+    for (int i = 0; i < 8; i++) {
+      final double nx = rng.nextDouble() * size.width;
+      final double ny = rng.nextDouble() * size.height;
+      final double nr = (80 + rng.nextDouble() * 200) * zoom;
+      if (nr < 2) continue;
+      final colors = [
+        [const Color(0xFF1080E0), const Color(0xFF081426)],
+        [const Color(0xFF2090FF), const Color(0xFF081426)],
+        [const Color(0xFF0060B0), const Color(0xFF040814)],
+      ];
+      final c = colors[i % colors.length];
+      paint.shader = RadialGradient(
+        colors: [
+          c[0].withValues(alpha: 0.06),
+          c[1].withValues(alpha: 0.01),
+          Colors.transparent,
+        ],
+        stops: const [0.0, 0.5, 1.0],
+      ).createShader(Rect.fromCircle(center: Offset(nx, ny), radius: nr));
+      canvas.drawCircle(Offset(nx, ny), nr, paint);
+    }
+  }
+
+  void _drawInfiniteStars(Canvas canvas, Size size, Offset center, double zoom) {
     final rng = math.Random(1337);
     final paint = Paint()..style = PaintingStyle.fill;
-    
-    // Background stars drift very slowly with zoom to create parallax
-    for (int i = 0; i < 150; i++) {
+    for (int i = 0; i < 250; i++) {
       final bx = rng.nextDouble() * size.width;
       final by = rng.nextDouble() * size.height;
-      // Parallax effect: stars move slowly towards center as we zoom out
       final dx = (bx - size.width / 2) * (0.95 + zoom * 0.05) + size.width / 2;
       final dy = (by - size.height / 2) * (0.95 + zoom * 0.05) + size.height / 2;
-      
-      final r = 0.4 + rng.nextDouble() * 1.0;
-      final twinkle = (0.2 + math.sin(time * 0.5 + i) * 0.15).clamp(0.05, 0.5);
-      
-      paint.color = Colors.white.withValues(alpha: twinkle);
+      final r = 0.3 + rng.nextDouble() * 1.2;
+      final twinkle = (0.15 + math.sin(time * (0.3 + rng.nextDouble() * 0.8) + i * 1.7) * 0.2).clamp(0.05, 0.55);
+      final colors = [Colors.white, const Color(0xFFB0C4DE), const Color(0xFF87CEEB), const Color(0xFFFFE4B5)];
+      paint.color = colors[rng.nextInt(colors.length)].withValues(alpha: twinkle);
       canvas.drawCircle(Offset(dx, dy), r, paint);
     }
   }
 
-  // Stage 1: Ultra-Professional Mother Planet
+  void _drawShootingStars(Canvas canvas, Size size, double t) {
+    final rng = math.Random(7777);
+    final paint = Paint()..strokeCap = StrokeCap.round;
+    for (int i = 0; i < 4; i++) {
+      final double cycle = (t * 0.15 + i * 31.7) % 30.0;
+      if (cycle > 2.0) continue;
+      final double progress = cycle / 2.0;
+      final double sx = rng.nextDouble() * size.width * 0.8;
+      final double sy = rng.nextDouble() * size.height * 0.5;
+      final double angle = -0.4 - rng.nextDouble() * 0.3;
+      final double len = 60 + rng.nextDouble() * 100;
+      final double ex = sx + math.cos(angle) * len * progress;
+      final double ey = sy + math.sin(angle) * len * progress;
+      final double alpha = (1.0 - progress) * 0.7;
+      final rect = Rect.fromPoints(Offset(sx, sy), Offset(ex, ey));
+      paint
+        ..shader = LinearGradient(
+          colors: [
+            Colors.white.withValues(alpha: alpha),
+            const Color(0xFF1080E0).withValues(alpha: alpha * 0.4),
+            Colors.transparent,
+          ],
+        ).createShader(rect)
+        ..strokeWidth = 1.5;
+      canvas.drawLine(Offset(sx, sy), Offset(ex, ey), paint);
+    }
+  }
+
   void _drawMotherPlanet(Canvas canvas, Offset center, double r, double t, double opacity) {
     if (r < 1.0) return;
 
-    // 1. Double layer atmosphere glow
     final glowPaint1 = Paint()
       ..shader = RadialGradient(colors: [
-        const Color(0xFF1080E0).withValues(alpha: opacity * 0.25),
-        const Color(0xFF2090FF).withValues(alpha: opacity * 0.08),
+        const Color(0xFF1080E0).withValues(alpha: opacity * 0.3),
+        const Color(0xFF2090FF).withValues(alpha: opacity * 0.1),
         Colors.transparent,
-      ], stops: const [0.0, 0.6, 1.0]).createShader(Rect.fromCircle(center: center, radius: r * 1.6));
-    canvas.drawCircle(center, r * 1.6, glowPaint1);
+      ], stops: const [0.0, 0.55, 1.0]).createShader(Rect.fromCircle(center: center, radius: r * 1.8));
+    canvas.drawCircle(center, r * 1.8, glowPaint1);
 
-    // 2. Solid spherical body with realistic 3D shadow gradient
     final bodyPaint = Paint()
       ..shader = RadialGradient(
-        center: const Alignment(-0.35, -0.35), // light source from top-left
+        center: const Alignment(-0.35, -0.35),
         colors: [
-          const Color(0xFF2090FF).withValues(alpha: opacity * 0.8), // Bright lit area
-          const Color(0xFF1080E0).withValues(alpha: opacity * 0.5), // Midtone
-          const Color(0xFF040814).withValues(alpha: opacity * 0.95), // Deep shadow
+          const Color(0xFF2090FF).withValues(alpha: opacity * 0.85),
+          const Color(0xFF1080E0).withValues(alpha: opacity * 0.5),
+          const Color(0xFF0060B0).withValues(alpha: opacity * 0.7),
+          const Color(0xFF040814).withValues(alpha: opacity * 0.95),
         ],
-        stops: const [0.0, 0.4, 1.0],
+        stops: const [0.0, 0.3, 0.65, 1.0],
       ).createShader(Rect.fromCircle(center: center, radius: r));
     canvas.drawCircle(center, r, bodyPaint);
 
-    // 3. Super elegant wireframe grid representing high-tech digital structure
     final gridPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = (r > 50) ? 1.0 : 0.5
       ..color = const Color(0xFF40A0FF).withValues(alpha: opacity * 0.25);
 
-    // Latitudes (Horizontal rings)
     for (int i = 1; i < 8; i++) {
       final latRatio = i / 8.0;
       final latR = r * math.sin(latRatio * math.pi);
       final latY = r * math.cos(latRatio * math.pi);
-      // Flat projection
       canvas.drawOval(
         Rect.fromCenter(center: Offset(center.dx, center.dy + latY * 0.2), width: latR * 2, height: latR * 0.35),
         gridPaint,
       );
     }
 
-    // Longitudes (Vertical rotating lines)
     for (int i = 0; i < 4; i++) {
       final angle = (i / 4.0) * math.pi + t * 0.15;
       final widthFactor = math.cos(angle).abs();
@@ -384,7 +386,6 @@ class _CosmicContinuousZoomPainter extends CustomPainter {
       );
     }
 
-    // 4. Planet Ring (Saturn-like futuristic circuit ring)
     final ringPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = (r > 60) ? 3.0 : 1.0
@@ -397,225 +398,512 @@ class _CosmicContinuousZoomPainter extends CustomPainter {
       Rect.fromCenter(center: center, width: r * 2.6, height: r * 0.56),
       ringPaint..strokeWidth = 0.5..color = const Color(0xFF40A0FF).withValues(alpha: opacity * 0.2),
     );
+
+    final rng = math.Random(555);
+    final starPaint = Paint()..style = PaintingStyle.fill;
+    for (int i = 0; i < 12; i++) {
+      final double sa = rng.nextDouble() * 2 * math.pi;
+      final double sd = r * 1.9 + rng.nextDouble() * r * 0.8;
+      final double sx = center.dx + math.cos(sa) * sd;
+      final double sy = center.dy + math.sin(sa) * sd * 0.3;
+      final double sr = 0.5 + rng.nextDouble() * 1.0;
+      starPaint.color = Colors.white.withValues(alpha: opacity * (0.3 + rng.nextDouble() * 0.4));
+      canvas.drawCircle(Offset(sx, sy), sr, starPaint);
+    }
   }
 
-  // Stage 2: Realistic Solar System (Centred Sun, 8 orbiting planets at real-scale proportions)
   void _drawCompleteSolarSystem(Canvas canvas, Offset center, double scale, double t, double opacity) {
     if (scale < 0.05) return;
 
-    // 1. The Sun (The central massive light source)
-    final sunR = 24.0 * scale;
+    final double sunR = 24.0 * scale;
     if (sunR > 0.5) {
-      canvas.drawCircle(center, sunR * 2.5, Paint()
+      canvas.drawCircle(center, sunR * 3.0, Paint()
         ..shader = RadialGradient(colors: [
-          const Color(0xFFFF9000).withValues(alpha: opacity * 0.35),
-          const Color(0xFFFFD000).withValues(alpha: 0.05),
+          const Color(0xFFFF9000).withValues(alpha: opacity * 0.4),
+          const Color(0xFFFFD000).withValues(alpha: opacity * 0.08),
           Colors.transparent,
-        ]).createShader(Rect.fromCircle(center: center, radius: sunR * 2.5)));
+        ], stops: const [0.0, 0.4, 1.0]).createShader(Rect.fromCircle(center: center, radius: sunR * 3.0)));
+
+      final coronaPaint = Paint();
+      for (int i = 0; i < 6; i++) {
+        final double ca = (i / 6.0) * 2 * math.pi + t * 0.08;
+        final double cl = sunR * (2.0 + 0.8 * math.sin(t * 2.0 + i));
+        final double cw = sunR * 0.15;
+        coronaPaint
+          ..shader = LinearGradient(
+            colors: [
+              const Color(0xFFFFE000).withValues(alpha: opacity * 0.12),
+              Colors.transparent,
+            ],
+          ).createShader(Rect.fromCenter(
+            center: Offset(center.dx + math.cos(ca) * sunR * 1.2, center.dy + math.sin(ca) * sunR * 1.2),
+            width: cw,
+            height: cl,
+          ));
+        canvas.save();
+        canvas.translate(center.dx + math.cos(ca) * sunR * 1.2, center.dy + math.sin(ca) * sunR * 1.2);
+        canvas.rotate(ca);
+        canvas.drawOval(Rect.fromCenter(center: Offset.zero, width: cw, height: cl), coronaPaint);
+        canvas.restore();
+      }
+
       canvas.drawCircle(center, sunR, Paint()
-        ..shader = RadialGradient(colors: [
-          const Color(0xFFFFE000).withValues(alpha: opacity * 0.95),
-          const Color(0xFFFF5000).withValues(alpha: opacity * 0.6),
-        ]).createShader(Rect.fromCircle(center: center, radius: sunR)));
+        ..shader = RadialGradient(
+          center: const Alignment(-0.2, -0.2),
+          colors: [
+            const Color(0xFFFFFFFF).withValues(alpha: opacity * 0.95),
+            const Color(0xFFFFE000).withValues(alpha: opacity * 0.9),
+            const Color(0xFFFF5000).withValues(alpha: opacity * 0.6),
+          ],
+          stops: const [0.0, 0.4, 1.0],
+        ).createShader(Rect.fromCircle(center: center, radius: sunR)));
     }
 
-    // Planet configs: [orbitRadius, speedScale, planetRadius, color, hasRings]
     final planets = [
-      _SolarPlanet(orbitR: 45.0, speed: 2.2, r: 2.2, color: const Color(0xFFA6ABB6)), // Mercury
-      _SolarPlanet(orbitR: 65.0, speed: 1.6, r: 4.5, color: const Color(0xFFFFD8A8)), // Venus
-      _SolarPlanet(orbitR: 90.0, speed: 1.2, r: 5.0, color: const Color(0xFF1080E0)), // Earth (Our Planet!)
-      _SolarPlanet(orbitR: 115.0, speed: 0.9, r: 3.5, color: const Color(0xFFE8590C)), // Mars
-      _SolarPlanet(orbitR: 155.0, speed: 0.6, r: 12.0, color: const Color(0xFFF1B070)), // Jupiter
-      _SolarPlanet(orbitR: 205.0, speed: 0.4, r: 9.5, color: const Color(0xFFFCC419), hasRings: true), // Saturn
-      _SolarPlanet(orbitR: 245.0, speed: 0.3, r: 7.0, color: const Color(0xFF74C0FC)), // Uranus
-      _SolarPlanet(orbitR: 280.0, speed: 0.2, r: 6.5, color: const Color(0xFF3b5bdb)), // Neptune
+      _SolarPlanet(orbitR: 45.0, speed: 2.2, r: 2.2, color: const Color(0xFFA6ABB6)),
+      _SolarPlanet(orbitR: 65.0, speed: 1.6, r: 4.5, color: const Color(0xFFFFD8A8)),
+      _SolarPlanet(orbitR: 90.0, speed: 1.2, r: 5.0, color: const Color(0xFF1080E0), hasMoon: true),
+      _SolarPlanet(orbitR: 115.0, speed: 0.9, r: 3.5, color: const Color(0xFFE8590C)),
+      _SolarPlanet(orbitR: 155.0, speed: 0.6, r: 12.0, color: const Color(0xFFF1B070), hasBands: true),
+      _SolarPlanet(orbitR: 205.0, speed: 0.4, r: 9.5, color: const Color(0xFFFCC419), hasRings: true),
+      _SolarPlanet(orbitR: 245.0, speed: 0.3, r: 7.0, color: const Color(0xFF74C0FC)),
+      _SolarPlanet(orbitR: 280.0, speed: 0.2, r: 6.5, color: const Color(0xFF3b5bdb)),
     ];
 
     final orbitPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5
-      ..color = const Color(0xFF1080E0).withValues(alpha: opacity * 0.08);
+      ..color = const Color(0xFF1080E0).withValues(alpha: opacity * 0.1);
 
     for (final p in planets) {
       final double r = p.orbitR * scale;
       if (r < 1.0) continue;
 
-      // Draw oval orbit to give 3D perspective
       canvas.drawOval(
         Rect.fromCenter(center: center, width: r * 2, height: r * 0.5),
         orbitPaint,
       );
 
-      // Planet position calculation
       final angle = t * p.speed * 0.4;
       final px = center.dx + r * math.cos(angle);
-      final py = center.dy + r * 0.25 * math.sin(angle); // Squashed Y for perspective
+      final py = center.dy + r * 0.25 * math.sin(angle);
       final pr = p.r * scale;
 
       if (pr > 0.2) {
-        // Body
         canvas.drawCircle(Offset(px, py), pr, Paint()
-          ..shader = RadialGradient(colors: [
-            p.color.withValues(alpha: opacity * 0.95),
-            const Color(0xFF040814).withValues(alpha: opacity * 0.9),
-          ], center: const Alignment(-0.3, -0.3)).createShader(Rect.fromCircle(center: Offset(px, py), radius: pr)));
+          ..shader = RadialGradient(
+            colors: [
+              p.color.withValues(alpha: opacity * 0.95),
+              p.color.withValues(alpha: opacity * 0.5),
+              const Color(0xFF040814).withValues(alpha: opacity * 0.9),
+            ],
+            stops: const [0.0, 0.5, 1.0],
+            center: const Alignment(-0.3, -0.3),
+          ).createShader(Rect.fromCircle(center: Offset(px, py), radius: pr)));
 
-        // Rings for Saturn
         if (p.hasRings) {
-          canvas.drawOval(
-            Rect.fromCenter(center: Offset(px, py), width: pr * 2.4, height: pr * 0.6),
-            Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 1.2 * scale
-              ..color = p.color.withValues(alpha: opacity * 0.5),
-          );
+          for (int ring = 0; ring < 3; ring++) {
+            final rw = pr * (2.2 + ring * 0.3);
+            canvas.drawOval(
+              Rect.fromCenter(center: Offset(px, py), width: rw, height: pr * (0.55 + ring * 0.05)),
+              Paint()
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = (1.2 - ring * 0.3) * scale
+                ..color = p.color.withValues(alpha: opacity * (0.5 - ring * 0.12)),
+            );
+          }
+        }
+
+        if (p.hasBands) {
+          final bandPaint = Paint()..style = PaintingStyle.stroke..strokeWidth = 0.4 * scale;
+          for (int b = 0; b < 4; b++) {
+            final by = py - pr * 0.5 + b * pr * 0.33;
+            bandPaint.color = const Color(0xFFE8590C).withValues(alpha: opacity * 0.3);
+            canvas.drawArc(
+              Rect.fromCenter(center: Offset(px, by), width: pr * 2, height: pr * 0.3),
+              0, math.pi, false, bandPaint,
+            );
+          }
+        }
+
+        if (p.hasMoon) {
+          final moonAngle = t * 4.0;
+          final moonDist = pr * 3.0;
+          final mx = px + math.cos(moonAngle) * moonDist;
+          final my = py + math.sin(moonAngle) * moonDist * 0.3;
+          final moonR = pr * 0.25;
+          canvas.drawCircle(Offset(mx, my), moonR, Paint()
+            ..shader = RadialGradient(
+              colors: [const Color(0xFFB0B0B0).withValues(alpha: opacity * 0.8), const Color(0xFF404040).withValues(alpha: opacity * 0.6)],
+              center: const Alignment(-0.3, -0.3),
+            ).createShader(Rect.fromCircle(center: Offset(mx, my), radius: moonR)));
         }
       }
     }
   }
 
-  // Stage 3: Stellar Cluster (Thousands of suns/solar systems shrinking into star dust)
   void _drawStellarCluster(Canvas canvas, Offset center, double scale, double t, double opacity) {
     if (scale < 0.02) return;
     final rng = math.Random(101);
     final paint = Paint()..style = PaintingStyle.fill;
 
-    for (int i = 0; i < 180; i++) {
-      final double angle = rng.nextDouble() * 2 * math.pi;
-      final double distance = (30.0 + rng.nextDouble() * 220.0) * scale;
-      if (distance < 1.0) continue;
+    final gasPaint = Paint();
+    for (int i = 0; i < 6; i++) {
+      final double ga = rng.nextDouble() * 2 * math.pi;
+      final double gd = (50 + rng.nextDouble() * 180) * scale;
+      if (gd < 1) continue;
+      final double gx = center.dx + math.cos(ga) * gd;
+      final double gy = center.dy + math.sin(ga) * gd * 0.6;
+      final double gr = (15 + rng.nextDouble() * 35) * scale;
+      if (gr < 0.5) continue;
+      final gasColors = [
+        [const Color(0xFF1080E0), const Color(0xFF081426)],
+        [const Color(0xFF0060B0), const Color(0xFF040814)],
+        [const Color(0xFF2090FF), const Color(0xFF081426)],
+      ];
+      final gc = gasColors[i % gasColors.length];
+      gasPaint.shader = RadialGradient(
+        colors: [
+          gc[0].withValues(alpha: opacity * 0.08),
+          gc[1].withValues(alpha: opacity * 0.01),
+          Colors.transparent,
+        ],
+        stops: const [0.0, 0.5, 1.0],
+      ).createShader(Rect.fromCircle(center: Offset(gx, gy), radius: gr));
+      canvas.drawCircle(Offset(gx, gy), gr, gasPaint);
+    }
 
-      final double px = center.dx + distance * math.cos(angle);
-      final double py = center.dy + distance * math.sin(angle) * 0.6; // flat cluster
-      final double r = (1.5 + rng.nextDouble() * 3.5) * scale;
+    for (int i = 0; i < 500; i++) {
+      final double sa = rng.nextDouble() * 2 * math.pi;
+      final double sd = (10 + rng.nextDouble() * 250.0) * scale;
+      if (sd < 0.5) continue;
 
-      if (r > 0.1) {
-        final color = rng.nextInt(3) == 0
-            ? const Color(0xFF1080E0)
-            : (rng.nextBool() ? const Color(0xFF2090FF) : const Color(0xFFFFD000));
-        
-        paint.color = color.withValues(alpha: opacity * (0.3 + rng.nextDouble() * 0.6));
-        canvas.drawCircle(Offset(px, py), r, paint);
-        
-        // Small orbit indicator for some stars in the cluster
-        if (rng.nextDouble() * scale > 0.15) {
-          canvas.drawCircle(Offset(px, py), r * 2.5, Paint()
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 0.3
-            ..color = const Color(0xFF1080E0).withValues(alpha: opacity * 0.12));
+      final double scatter = (rng.nextDouble() - 0.5) * 20 * scale;
+      final double px = center.dx + sd * math.cos(sa) + scatter;
+      final double py = center.dy + sd * math.sin(sa) * 0.55 + scatter * 0.3;
+      final double pr = (0.4 + rng.nextDouble() * 3.0) * scale;
+
+      if (pr > 0.08) {
+        final temp = rng.nextDouble();
+        Color starColor;
+        if (temp < 0.15) {
+          starColor = const Color(0xFF9BB0FF);
+        } else if (temp < 0.35) {
+          starColor = const Color(0xFFAACCFF);
+        } else if (temp < 0.6) {
+          starColor = Colors.white;
+        } else if (temp < 0.8) {
+          starColor = const Color(0xFFFFF4E0);
+        } else {
+          starColor = const Color(0xFFFFCC6F);
+        }
+
+        final twinkle = (0.4 + math.sin(t * (1.0 + rng.nextDouble() * 2.0) + i * 0.7) * 0.3).clamp(0.1, 0.9);
+        paint.color = starColor.withValues(alpha: opacity * twinkle);
+
+        if (pr > 0.5 * scale) {
+          canvas.drawCircle(Offset(px, py), pr * 2.5, Paint()
+            ..shader = RadialGradient(colors: [
+              starColor.withValues(alpha: opacity * 0.15),
+              Colors.transparent,
+            ]).createShader(Rect.fromCircle(center: Offset(px, py), radius: pr * 2.5)));
+        }
+
+        canvas.drawCircle(Offset(px, py), pr, paint);
+
+        if (rng.nextDouble() < 0.04 && sd < 120 * scale) {
+          final br = pr * 0.6;
+          final ba = sa + 0.3;
+          final bx = px + math.cos(ba) * br * 3;
+          final by = py + math.sin(ba) * br * 3 * 0.55;
+          paint.color = starColor.withValues(alpha: opacity * twinkle * 0.7);
+          canvas.drawCircle(Offset(bx, by), br, paint);
         }
       }
     }
   }
 
-  // Stage 4: Majestic Spiral Galaxy (Beautiful glowing core and detailed dust lane arms)
   void _drawSpiralGalaxy(Canvas canvas, Offset center, double scale, double t, double opacity) {
     if (scale < 0.02) return;
-    
-    // Core glow
-    final double coreR = 40 * scale;
-    if (coreR > 0.5) {
-      canvas.drawCircle(center, coreR * 3, Paint()
+
+    final double galaxyRotation = t * 0.012;
+
+    canvas.save();
+    canvas.translate(center.dx, center.dy);
+    canvas.rotate(galaxyRotation);
+
+    final tiltScaleY = 0.42;
+    canvas.scale(1.0, tiltScaleY);
+
+    final double bulgeR = 50 * scale;
+    if (bulgeR > 0.3) {
+      canvas.drawCircle(Offset.zero, bulgeR * 4.0, Paint()
         ..shader = RadialGradient(colors: [
-          const Color(0xFF2090FF).withValues(alpha: opacity * 0.25),
-          const Color(0xFF1080E0).withValues(alpha: opacity * 0.05),
+          const Color(0xFFFFE8C0).withValues(alpha: opacity * 0.08),
+          const Color(0xFF1080E0).withValues(alpha: opacity * 0.03),
           Colors.transparent,
-        ]).createShader(Rect.fromCircle(center: center, radius: coreR * 3)));
-      canvas.drawCircle(center, coreR, Paint()
+        ], stops: const [0.0, 0.4, 1.0]).createShader(Rect.fromCircle(center: Offset.zero, radius: bulgeR * 4.0)));
+
+      canvas.drawCircle(Offset.zero, bulgeR * 2.0, Paint()
+        ..shader = RadialGradient(colors: [
+          const Color(0xFFFFFFFF).withValues(alpha: opacity * 0.3),
+          const Color(0xFFFFE8C0).withValues(alpha: opacity * 0.15),
+          Colors.transparent,
+        ], stops: const [0.0, 0.3, 1.0]).createShader(Rect.fromCircle(center: Offset.zero, radius: bulgeR * 2.0)));
+
+      canvas.drawCircle(Offset.zero, bulgeR * 0.6, Paint()
         ..shader = RadialGradient(colors: [
           Colors.white.withValues(alpha: opacity * 0.95),
-          const Color(0xFF1080E0).withValues(alpha: opacity * 0.7),
-        ]).createShader(Rect.fromCircle(center: center, radius: coreR)));
+          const Color(0xFFFFE8C0).withValues(alpha: opacity * 0.8),
+          const Color(0xFF1080E0).withValues(alpha: opacity * 0.4),
+        ], stops: const [0.0, 0.4, 1.0]).createShader(Rect.fromCircle(center: Offset.zero, radius: bulgeR * 0.6)));
     }
 
-    final arms = 4;
+    final armCount = 4;
     final rng = math.Random(888);
     final paint = Paint()..style = PaintingStyle.fill;
 
-    // Draw spiral arms with logarithmic math
-    for (int arm = 0; arm < arms; arm++) {
-      final double armOffset = (arm / arms) * math.pi * 2;
-      for (int i = 0; i < 280; i++) {
-        final double factor = i / 280.0;
-        final double dist = factor * 220.0 * scale;
-        if (dist < 1.0) continue;
+    final dustPaint = Paint()..style = PaintingStyle.fill;
 
-        // Spiral spiral formula (theta = a + b * ln(r))
-        final double theta = armOffset + factor * 5.5 + t * 0.03;
-        final double wobble = (rng.nextDouble() - 0.5) * 14 * scale;
-        
-        final double px = center.dx + dist * math.cos(theta) + wobble;
-        final double py = center.dy + dist * math.sin(theta) * 0.45 + wobble * 0.3; // inclined view
-        final double r = (0.6 + rng.nextDouble() * 2.2) * scale;
+    for (int arm = 0; arm < armCount; arm++) {
+      final double armBaseAngle = (arm / armCount) * 2 * math.pi;
 
-        if (r > 0.1) {
-          final color = i % 4 == 0
-              ? const Color(0xFF1080E0)
-              : (i % 4 == 1 ? const Color(0xFF2090FF) : (i % 4 == 2 ? const Color(0xFF40A0FF) : Colors.white));
-          paint.color = color.withValues(alpha: opacity * (0.2 + rng.nextDouble() * 0.6) * (1.0 - factor * 0.5));
-          canvas.drawCircle(Offset(px, py), r, paint);
+      for (int layer = 0; layer < 3; layer++) {
+        final double layerWidth = (3.0 + layer * 2.5) * scale;
+        final int starCount = 350 - layer * 80;
+
+        for (int i = 0; i < starCount; i++) {
+          final double factor = (i + layer * 50.0) / starCount;
+          final double dist = (15 + factor * 200) * scale;
+          if (dist < 1.0) continue;
+
+          final double spiralAngle = armBaseAngle + factor * 6.5 + layer * 0.08;
+          final double scatter = (rng.nextDouble() - 0.5) * layerWidth * (1.0 + factor * 0.5);
+
+          final double px = dist * math.cos(spiralAngle) + scatter * math.cos(spiralAngle + 1.5);
+          final double py = dist * math.sin(spiralAngle) + scatter * math.sin(spiralAngle + 1.5);
+          final double pr = (0.3 + rng.nextDouble() * (2.5 - layer * 0.5)) * scale;
+
+          if (pr > 0.08) {
+            final distFade = (1.0 - factor * 0.6).clamp(0.2, 1.0);
+            final layerFade = [1.0, 0.7, 0.4][layer];
+
+            final tempRoll = rng.nextDouble();
+            Color starColor;
+            if (tempRoll < 0.08) {
+              starColor = const Color(0xFF6699FF);
+            } else if (tempRoll < 0.2) {
+              starColor = const Color(0xFF99CCFF);
+            } else if (tempRoll < 0.5) {
+              starColor = Colors.white;
+            } else if (tempRoll < 0.75) {
+              starColor = const Color(0xFFFFF0D0);
+            } else if (tempRoll < 0.9) {
+              starColor = const Color(0xFFFFD070);
+            } else {
+              starColor = const Color(0xFFFF8844);
+            }
+
+            final twinkle = (0.5 + math.sin(t * 0.5 + i * 0.3 + arm * 2.1) * 0.3).clamp(0.15, 0.85);
+            paint.color = starColor.withValues(alpha: opacity * twinkle * distFade * layerFade);
+
+            if (pr > 0.6 * scale && layer == 0) {
+              canvas.drawCircle(Offset(px, py), pr * 3.0, Paint()
+                ..shader = RadialGradient(colors: [
+                  starColor.withValues(alpha: opacity * 0.12 * distFade),
+                  Colors.transparent,
+                ]).createShader(Rect.fromCircle(center: Offset(px, py), radius: pr * 3.0)));
+            }
+
+            canvas.drawCircle(Offset(px, py), pr, paint);
+          }
+        }
+      }
+
+      final int dustCount = 120;
+      for (int i = 0; i < dustCount; i++) {
+        final double factor = i / dustCount;
+        final double dist = (20 + factor * 180) * scale;
+        if (dist < 1) continue;
+
+        final double spiralAngle = armBaseAngle + factor * 6.5 - 0.15;
+        final double scatter = (rng.nextDouble() - 0.5) * 6 * scale * (1.0 + factor * 0.3);
+
+        final double dx = dist * math.cos(spiralAngle) + scatter * math.cos(spiralAngle + 1.5);
+        final double dy = dist * math.sin(spiralAngle) + scatter * math.sin(spiralAngle + 1.5);
+        final double dr = (3 + rng.nextDouble() * 8) * scale;
+
+        if (dr > 0.3) {
+          final dustAlpha = opacity * 0.06 * (1.0 - factor * 0.5);
+          dustPaint.shader = RadialGradient(colors: [
+            const Color(0xFF8B6914).withValues(alpha: dustAlpha),
+            const Color(0xFF4A3000).withValues(alpha: dustAlpha * 0.5),
+            Colors.transparent,
+          ], stops: const [0.0, 0.5, 1.0]).createShader(Rect.fromCircle(center: Offset(dx, dy), radius: dr));
+          canvas.drawCircle(Offset(dx, dy), dr, dustPaint);
+        }
+      }
+
+      final int hiiCount = 15;
+      for (int i = 0; i < hiiCount; i++) {
+        final double factor = 0.15 + rng.nextDouble() * 0.6;
+        final double dist = (30 + factor * 150) * scale;
+        if (dist < 1) continue;
+
+        final double spiralAngle = armBaseAngle + factor * 6.5;
+        final double hx = dist * math.cos(spiralAngle);
+        final double hy = dist * math.sin(spiralAngle);
+        final double hr = (2 + rng.nextDouble() * 5) * scale;
+
+        if (hr > 0.2) {
+          final hAlpha = opacity * 0.15 * (1.0 - factor * 0.4);
+          canvas.drawCircle(Offset(hx, hy), hr, Paint()
+            ..shader = RadialGradient(colors: [
+              const Color(0xFFFF6B8A).withValues(alpha: hAlpha),
+              const Color(0xFFFF4060).withValues(alpha: hAlpha * 0.5),
+              Colors.transparent,
+            ]).createShader(Rect.fromCircle(center: Offset(hx, hy), radius: hr)));
         }
       }
     }
+
+    final int coreStars = 60;
+    for (int i = 0; i < coreStars; i++) {
+      final double sa = rng.nextDouble() * 2 * math.pi;
+      final double sd = rng.nextDouble() * bulgeR * 0.8;
+      final double sx = sd * math.cos(sa);
+      final double sy = sd * math.sin(sa);
+      final double sr = (0.3 + rng.nextDouble() * 1.5) * scale;
+
+      final tempRoll = rng.nextDouble();
+      Color sc;
+      if (tempRoll < 0.3) {
+        sc = const Color(0xFFFFF0D0);
+      } else if (tempRoll < 0.6) {
+        sc = const Color(0xFFFFD070);
+      } else {
+        sc = Colors.white;
+      }
+
+      paint.color = sc.withValues(alpha: opacity * (0.5 + rng.nextDouble() * 0.4));
+      canvas.drawCircle(Offset(sx, sy), sr, paint);
+    }
+
+    final ringPaint = Paint()..style = PaintingStyle.stroke;
+    for (int i = 0; i < 3; i++) {
+      final ringR = bulgeR * (3.5 + i * 0.6);
+      ringPaint
+        ..strokeWidth = (1.5 - i * 0.3) * scale
+        ..color = const Color(0xFF1080E0).withValues(alpha: opacity * (0.08 - i * 0.02));
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset.zero, width: ringR * 2, height: ringR * 2 * 0.05),
+        ringPaint,
+      );
+    }
+
+    canvas.restore();
   }
 
-  // Stage 5: Receding Galaxy Field (Billions of distant galaxies floating and shrinking)
   void _drawGalaxyField(Canvas canvas, Size size, Offset center, double scale, double t, double opacity) {
     if (scale < 0.005) return;
     final rng = math.Random(999);
     final paint = Paint()..style = PaintingStyle.fill;
 
-    // Seeded coordinates of other galaxies
-    for (int i = 0; i < 40; i++) {
+    for (int i = 0; i < 70; i++) {
       final double gx = rng.nextDouble() * size.width;
       final double gy = rng.nextDouble() * size.height;
-      // Shrink towards center to represent moving away
       final double dx = (gx - center.dx) * (scale * 0.02) + center.dx;
       final double dy = (gy - center.dy) * (scale * 0.02) + center.dy;
-      
-      final double gr = (12 + rng.nextDouble() * 25) * scale * 0.05;
-      if (gr < 0.5) continue;
 
-      final color = rng.nextBool() ? const Color(0xFF1080E0) : const Color(0xFF2090FF);
+      final int type = rng.nextInt(3);
+      final double gr = (8 + rng.nextDouble() * 30) * scale * 0.05;
+      if (gr < 0.3) continue;
 
-      // Radial galaxy envelope glow
-      canvas.drawCircle(Offset(dx, dy), gr * 1.8, Paint()
+      final double galT = t * 0.03 + i * 1.7;
+      final color1 = rng.nextBool() ? const Color(0xFF1080E0) : const Color(0xFF2090FF);
+      final color2 = rng.nextBool() ? const Color(0xFFFFE8C0) : const Color(0xFF40A0FF);
+
+      canvas.drawCircle(Offset(dx, dy), gr * 2.0, Paint()
         ..shader = RadialGradient(colors: [
-          color.withValues(alpha: opacity * 0.15),
+          color1.withValues(alpha: opacity * 0.12),
           Colors.transparent,
-        ]).createShader(Rect.fromCircle(center: Offset(dx, dy), radius: gr * 1.8)));
+        ]).createShader(Rect.fromCircle(center: Offset(dx, dy), radius: gr * 2.0)));
 
-      // Tiny rotating spiral structure inside each galaxy
       canvas.save();
       canvas.translate(dx, dy);
-      canvas.rotate(t * 0.05 + i);
-      
-      final armCount = 2 + rng.nextInt(2);
-      for (int arm = 0; arm < armCount; arm++) {
-        final double armAngle = (arm / armCount) * math.pi * 2;
+      canvas.rotate(galT);
+
+      if (type == 0) {
+        final int arms = 2 + rng.nextInt(2);
+        for (int arm = 0; arm < arms; arm++) {
+          final path = Path();
+          final double armAngle = (arm / arms) * math.pi * 2;
+          for (int j = 0; j < 25; j++) {
+            final double dist = (j / 25.0) * gr;
+            final double angle = armAngle + dist * 0.15 + galT * 0.05;
+            final px = math.cos(angle) * dist;
+            final py = math.sin(angle) * dist * 0.4;
+            if (j == 0) path.moveTo(px, py);
+            else path.lineTo(px, py);
+          }
+          canvas.drawPath(path, Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = gr * 0.08
+            ..strokeCap = StrokeCap.round
+            ..color = color1.withValues(alpha: opacity * 0.35));
+
+          final int miniStars = 8;
+          for (int s = 0; s < miniStars; s++) {
+            final double sf = (s + 1) / miniStars;
+            final double sd = sf * gr;
+            final double sa = armAngle + sf * 1.2;
+            final double mx = math.cos(sa) * sd + (rng.nextDouble() - 0.5) * gr * 0.15;
+            final double my = math.sin(sa) * sd * 0.4 + (rng.nextDouble() - 0.5) * gr * 0.08;
+            paint.color = color2.withValues(alpha: opacity * (0.3 + rng.nextDouble() * 0.3));
+            canvas.drawCircle(Offset(mx, my), gr * 0.03, paint);
+          }
+        }
+      } else if (type == 1) {
+        for (int j = 0; j < 20; j++) {
+          final double ea = rng.nextDouble() * 2 * math.pi;
+          final double ed = rng.nextDouble() * gr * 0.8;
+          final double ex = math.cos(ea) * ed;
+          final double ey = math.sin(ea) * ed * 0.6;
+          paint.color = color2.withValues(alpha: opacity * (0.2 + rng.nextDouble() * 0.3));
+          canvas.drawCircle(Offset(ex, ey), gr * 0.04, paint);
+        }
+      } else {
         final path = Path();
         for (int j = 0; j < 15; j++) {
-          final double dist = (j / 15.0) * gr;
-          final double angle = armAngle + dist * 0.12;
-          final px = math.cos(angle) * dist;
-          final py = math.sin(angle) * dist * 0.4;
-          if (j == 0) path.moveTo(px, py);
-          else path.lineTo(px, py);
+          final double ir = (j / 15.0) * gr;
+          final double ia = rng.nextDouble() * 2 * math.pi;
+          final double ix = math.cos(ia) * ir * (0.5 + rng.nextDouble() * 0.5);
+          final double iy = math.sin(ia) * ir * (0.3 + rng.nextDouble() * 0.4);
+          if (j == 0) path.moveTo(ix, iy);
+          else path.lineTo(ix, iy);
         }
-        canvas.drawPath(path, Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.4
-          ..color = color.withValues(alpha: opacity * 0.3));
+        path.close();
+        canvas.drawPath(path, paint
+          ..color = color1.withValues(alpha: opacity * 0.15));
       }
-      canvas.drawCircle(Offset.zero, gr * 0.15, paint..color = Colors.white.withValues(alpha: opacity * 0.8));
+
+      paint.color = Colors.white.withValues(alpha: opacity * 0.85);
+      canvas.drawCircle(Offset.zero, gr * 0.12, paint);
+
+      final nucleusPaint = Paint()
+        ..shader = RadialGradient(colors: [
+          color2.withValues(alpha: opacity * 0.4),
+          Colors.transparent,
+        ]).createShader(Rect.fromCircle(center: Offset.zero, radius: gr * 0.3));
+      canvas.drawCircle(Offset.zero, gr * 0.3, nucleusPaint);
+
       canvas.restore();
     }
   }
 
   void _drawScrollHint(Canvas canvas, Offset center, double offset, double opacity) {
     if (opacity <= 0.0) return;
-    
-    // Draw an elegant pulsing scroll down arrow/indicator
+
     final double pulse = 5.0 * math.sin(time * 3.0);
     final hintPaint = Paint()
       ..style = PaintingStyle.stroke
@@ -656,61 +944,15 @@ class _SolarPlanet {
   final double r;
   final Color color;
   final bool hasRings;
-  const _SolarPlanet({required this.orbitR, required this.speed, required this.r, required this.color, this.hasRings = false});
-}
-
-class _PCfg {
-  final Offset offset;
-  final double radius;
-  final Color body;
-  final Color wire;
-  final double speed;
-  const _PCfg({required this.offset, required this.radius, required this.body, required this.wire, required this.speed});
-}
-
-class _OrbitCfg {
-  final double radius;
-  final double speed;
-  final double planetR;
-  final Color color;
-  const _OrbitCfg({required this.radius, required this.speed, required this.planetR, required this.color});
-}
-
-class _SectionParticles extends CustomPainter {
-  final double time;
-  final int index;
-  final double depth;
-
-  _SectionParticles({required this.time, required this.index, required this.depth});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // Elegant particle layer adds texture to empty space
-    final rng = math.Random(index * 7919 + depth.floor() * 13);
-    final t = time;
-    final paint = Paint()..style = PaintingStyle.fill;
-    
-    final double zoom = math.pow(0.91, depth).toDouble();
-    if (zoom < 0.02) return;
-
-    for (int i = 0; i < 5; i++) {
-      final x = size.width * (0.1 + rng.nextDouble() * 0.8) + math.sin(t * 0.3 + i * 1.5) * 8 * zoom;
-      final y = size.height * (0.1 + rng.nextDouble() * 0.8) + math.cos(t * 0.25 + i * 1.2) * 5 * zoom;
-      final r = (1.0 + rng.nextDouble() * 2.5) * zoom;
-      final alpha = (0.02 + math.sin(t * 0.4 + i) * 0.01).clamp(0.005, 0.05);
-      
-      paint.color = const Color(0xFF2090FF).withValues(alpha: alpha);
-      canvas.drawCircle(Offset(x, y), r, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _SectionParticles old) =>
-      old.time != time || old.index != index || old.depth != depth;
-}
-
-// Statically seeded universe items to ensure smooth, non-glitchy visual continuity
-class _CosmicZoomUniverse {
-  final int seed;
-  _CosmicZoomUniverse(this.seed);
+  final bool hasMoon;
+  final bool hasBands;
+  const _SolarPlanet({
+    required this.orbitR,
+    required this.speed,
+    required this.r,
+    required this.color,
+    this.hasRings = false,
+    this.hasMoon = false,
+    this.hasBands = false,
+  });
 }
