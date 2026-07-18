@@ -676,21 +676,27 @@ class _StatsSectionState extends State<StatsSection>
         ],
       ),
       child: isMobile
-          ? Column(
+          ? Wrap(
+              spacing: 16,
+              runSpacing: 24,
+              alignment: WrapAlignment.spaceEvenly,
               children: [
-                _AnimatedStat(target: 50, prefix: '+', label: tr('مشروع مكتمل', 'Projects'), animation: _counterCtrl, icon: Icons.rocket_launch),
-                const SizedBox(height: 24),
-                Container(height: 1, width: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
-                const SizedBox(height: 24),
-                _AnimatedStat(target: 30, prefix: '+', label: tr('عميل راضي', 'Clients'), animation: _counterCtrl, icon: Icons.people),
-                const SizedBox(height: 24),
-                Container(height: 1, width: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
-                const SizedBox(height: 24),
-                _AnimatedStat(target: 5, prefix: '+', label: tr('سنوات خبرة', 'Years'), animation: _counterCtrl, icon: Icons.workspace_premium),
-                const SizedBox(height: 24),
-                Container(height: 1, width: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
-                const SizedBox(height: 24),
-                _StaticStat(value: '24/7', label: tr('دعم فني', 'Support'), icon: Icons.support_agent),
+                SizedBox(
+                  width: (screenWidth - 80) / 2,
+                  child: _AnimatedStat(target: 50, prefix: '+', label: tr('مشروع مكتمل', 'Projects'), animation: _counterCtrl, icon: Icons.rocket_launch),
+                ),
+                SizedBox(
+                  width: (screenWidth - 80) / 2,
+                  child: _AnimatedStat(target: 200, prefix: '+', label: tr('عميل', 'Clients'), animation: _counterCtrl, icon: Icons.people),
+                ),
+                SizedBox(
+                  width: (screenWidth - 80) / 2,
+                  child: _AnimatedStat(target: 5, prefix: '+', label: tr('سنوات خبرة', 'Years'), animation: _counterCtrl, icon: Icons.workspace_premium),
+                ),
+                SizedBox(
+                  width: (screenWidth - 80) / 2,
+                  child: _StaticStat(value: '24/7', label: tr('دعم فني', 'Support'), icon: Icons.support_agent),
+                ),
               ],
             )
           : Row(
@@ -698,7 +704,7 @@ class _StatsSectionState extends State<StatsSection>
               children: [
                 _AnimatedStat(target: 50, prefix: '+', label: tr('مشروع مكتمل', 'Projects'), animation: _counterCtrl, icon: Icons.rocket_launch),
                 Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
-                _AnimatedStat(target: 30, prefix: '+', label: tr('عميل راضي', 'Clients'), animation: _counterCtrl, icon: Icons.people),
+                _AnimatedStat(target: 200, prefix: '+', label: tr('عميل', 'Clients'), animation: _counterCtrl, icon: Icons.people),
                 Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
                 _AnimatedStat(target: 5, prefix: '+', label: tr('سنوات خبرة', 'Years'), animation: _counterCtrl, icon: Icons.workspace_premium),
                 Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
@@ -1421,11 +1427,56 @@ class _ServiceIcon3DState extends State<_ServiceIcon3D>
   }
 }
 
-class _SampleProjectDialog extends StatelessWidget {
+class _SampleProjectDialog extends StatefulWidget {
   final String title;
   final Color color;
   final int serviceIndex;
   const _SampleProjectDialog({required this.title, required this.color, required this.serviceIndex});
+
+  @override
+  State<_SampleProjectDialog> createState() => _SampleProjectDialogState();
+}
+
+class _SampleProjectDialogState extends State<_SampleProjectDialog>
+    with SingleTickerProviderStateMixin {
+  int _selectedIndex = -1;
+  int _descIndex = -1;
+  late final AnimationController _descAnimCtrl;
+  late final Animation<double> _descFade;
+
+  @override
+  void initState() {
+    super.initState();
+    _descAnimCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 350));
+    _descFade = CurvedAnimation(parent: _descAnimCtrl, curve: Curves.easeOut);
+  }
+
+  @override
+  void dispose() {
+    _descAnimCtrl.dispose();
+    super.dispose();
+  }
+
+  void _toggleDesc(int index) {
+    if (_descIndex == index) {
+      _descAnimCtrl.reverse().then((_) => setState(() => _descIndex = -1));
+    } else {
+      setState(() => _descIndex = index);
+      _descAnimCtrl.forward(from: 0);
+    }
+  }
+
+  void _openFullView(int index) {
+    final samples = _getSamples();
+    Navigator.push(context, PageRouteBuilder(
+      pageBuilder: (_, __, ___) => _FullSampleView(
+        sample: samples[index],
+        color: widget.color,
+      ),
+      transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
+      transitionDuration: const Duration(milliseconds: 400),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1438,7 +1489,7 @@ class _SampleProjectDialog extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: isMobile ? screenWidth * 0.95 : 700,
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
+          maxHeight: MediaQuery.of(context).size.height * 0.85,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1447,18 +1498,18 @@ class _SampleProjectDialog extends StatelessWidget {
               padding: EdgeInsets.all(isMobile ? 16 : 24),
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
-                  color.withValues(alpha: 0.12),
-                  color.withValues(alpha: 0.04),
+                  widget.color.withValues(alpha: 0.12),
+                  widget.color.withValues(alpha: 0.04),
                 ]),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.visibility, color: color, size: 22),
+                  Icon(Icons.visibility, color: widget.color, size: 22),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      tr('عينة: $title', 'Sample: $title'),
+                      tr('عينة: ${widget.title}', 'Sample: ${widget.title}'),
                       style: TextStyle(fontSize: isMobile ? 16 : 20, fontWeight: FontWeight.w700, color: Colors.white),
                     ),
                   ),
@@ -1475,76 +1526,120 @@ class _SampleProjectDialog extends StatelessWidget {
                 itemCount: samples.length,
                 itemBuilder: (ctx, i) {
                   final s = samples[i];
-                  return Container(
+                  final isSelected = _selectedIndex == i;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOutCubic,
                     margin: EdgeInsets.only(bottom: isMobile ? 12 : 16),
-                    height: isMobile ? 180 : 240,
+                    height: isSelected ? (isMobile ? 280 : 380) : (isMobile ? 160 : 210),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: [color.withValues(alpha: 0.15), const Color(0xFF0F1320)],
+                        colors: [widget.color.withValues(alpha: isSelected ? 0.25 : 0.15), const Color(0xFF0F1320)],
                       ),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: color.withValues(alpha: 0.15)),
+                      border: Border.all(
+                        color: widget.color.withValues(alpha: isSelected ? 0.5 : 0.15),
+                        width: isSelected ? 2 : 1,
+                      ),
+                      boxShadow: isSelected
+                          ? [BoxShadow(color: widget.color.withValues(alpha: 0.2), blurRadius: 24, spreadRadius: 0)]
+                          : [],
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: color.withValues(alpha: 0.08),
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(s['icon'] as IconData, color: color, size: 16),
-                              const SizedBox(width: 8),
-                              Text(
-                                s['title'] as String,
-                                style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600),
-                              ),
-                              const Spacer(),
-                              Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: color)),
-                              const SizedBox(width: 4),
-                              Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: color.withValues(alpha: 0.5))),
-                              const SizedBox(width: 4),
-                              Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: color.withValues(alpha: 0.25))),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                    child: GestureDetector(
+                      onTap: () => _openFullView(i),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: widget.color.withValues(alpha: 0.08),
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                            ),
+                            child: Row(
                               children: [
-                                ...List.generate(s['lines'] as int, (j) => Container(
-                                  margin: const EdgeInsets.only(bottom: 8),
-                                  height: 10,
-                                  width: (150.0 + (j * 40) % 100),
-                                  decoration: BoxDecoration(
-                                    color: color.withValues(alpha: 0.08 + (j * 0.02)),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                )),
-                                const Spacer(),
-                                Row(
-                                  children: List.generate(3, (k) => Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      color: color.withValues(alpha: 0.06 + k * 0.03),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  )),
+                                Icon(s['icon'] as IconData, color: widget.color, size: 16),
+                                const SizedBox(width: 8),
+                                Text(
+                                  s['title'] as String,
+                                  style: TextStyle(color: widget.color, fontSize: 12, fontWeight: FontWeight.w600),
                                 ),
+                                const Spacer(),
+                                Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: widget.color)),
+                                const SizedBox(width: 4),
+                                Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: widget.color.withValues(alpha: 0.5))),
+                                const SizedBox(width: 4),
+                                Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: widget.color.withValues(alpha: 0.25))),
                               ],
                             ),
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ...List.generate(s['lines'] as int, (j) => Container(
+                                    margin: const EdgeInsets.only(bottom: 8),
+                                    height: 10,
+                                    width: (150.0 + (j * 40) % 100),
+                                    decoration: BoxDecoration(
+                                      color: widget.color.withValues(alpha: 0.08 + (j * 0.02)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  )),
+                                  const Spacer(),
+                                  Row(
+                                    children: List.generate(3, (k) => Container(
+                                      margin: const EdgeInsets.only(right: 8),
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: widget.color.withValues(alpha: 0.06 + k * 0.03),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0A0E1A),
+                              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+                            ),
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () => _toggleDesc(i),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: widget.color.withValues(alpha: _descIndex == i ? 0.2 : 0.08),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: widget.color.withValues(alpha: 0.2)),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.info_outline, color: widget.color, size: 14),
+                                        const SizedBox(width: 6),
+                                        Text(tr('شرح', 'Details'), style: TextStyle(color: widget.color, fontSize: 12, fontWeight: FontWeight.w600)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
+                                Icon(Icons.open_in_full, color: widget.color.withValues(alpha: 0.5), size: 16),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -1557,28 +1652,166 @@ class _SampleProjectDialog extends StatelessWidget {
   }
 
   List<Map<String, dynamic>> _getSamples() {
-    switch (serviceIndex) {
+    switch (widget.serviceIndex) {
       case 0:
         return [
-          {'title': tr('تطبيق توصيل طعام', 'Food Delivery App'), 'icon': Icons.delivery_dining, 'lines': 5},
-          {'title': tr('تطبيق إدارة المهام', 'Task Management App'), 'icon': Icons.task_alt, 'lines': 4},
-          {'title': tr('تطبيق صحة لاسلكي', 'Health Tracking App'), 'icon': Icons.monitor_heart, 'lines': 6},
+          {'title': tr('تطبيق توصيل طعام', 'Food Delivery App'), 'icon': Icons.delivery_dining, 'lines': 5,
+           'descAr': 'تطبيق متكامل لتوصيل الطعام يدعم تتبع الطلب لحظياً، نظام تقييم، وربط مع المطاعم المحلية مع دفع إلكتروني.',
+           'descEn': 'Full food delivery app with real-time order tracking, rating system, local restaurant integration and electronic payment.'},
+          {'title': tr('تطبيق إدارة المهام', 'Task Management App'), 'icon': Icons.task_alt, 'lines': 4,
+           'descAr': 'تطبيق ذكي لإدارة المهام والمشاريع مع تقويم تفاعلي، إشعارات فورية، ومشاركة الفريق.',
+           'descEn': 'Smart task management app with interactive calendar, instant notifications, and team collaboration.'},
+          {'title': tr('تطبيق صحة لاسلكي', 'Health Tracking App'), 'icon': Icons.monitor_heart, 'lines': 6,
+           'descAr': 'تطبيق متابعة صحية يتتبع العادات اليومية، الخطوات، جودة النوم، ويوفر تقارير طبية قابلة للمشاركة.',
+           'descEn': 'Health tracking app that monitors daily habits, steps, sleep quality, and provides shareable medical reports.'},
         ];
       case 1:
         return [
-          {'title': tr('متجر إلكتروني للأزياء', 'Fashion E-Store'), 'icon': Icons.checkroom, 'lines': 5},
-          {'title': tr('منصة بيع الإلكترونيات', 'Electronics Marketplace'), 'icon': Icons.devices, 'lines': 4},
-          {'title': tr('متجر محلّي مع توصيل', 'Local Store with Delivery'), 'icon': Icons.store, 'lines': 5},
+          {'title': tr('متجر إلكتروني للأزياء', 'Fashion E-Store'), 'icon': Icons.checkroom, 'lines': 5,
+           'descAr': 'متجر إلكتروني احترافي مع كتالوج منتجات، سلة شراء ذكية، وربط مع بوابات الدفع المحلية.',
+           'descEn': 'Professional e-store with product catalog, smart cart, and local payment gateway integration.'},
+          {'title': tr('منصة بيع الإلكترونيات', 'Electronics Marketplace'), 'icon': Icons.devices, 'lines': 4,
+           'descAr': 'منصة تسوق إلكترونية للإلكترونيات مع فلتر ذكي، مقارنة أسعار، ونظام مراجعة المنتجات.',
+           'descEn': 'Electronics marketplace with smart filtering, price comparison, and product review system.'},
+          {'title': tr('متجر محلّي مع توصيل', 'Local Store with Delivery'), 'icon': Icons.store, 'lines': 5,
+           'descAr': 'متجر محلي متكامل مع نظام توصيل، إدارة طلبات، وربط مع زين كاش وآسيا حوالة.',
+           'descEn': 'Integrated local store with delivery system, order management, and Zain Cash/Asia Hawala integration.'},
         ];
       case 2:
         return [
-          {'title': tr('نظام إدارة مخزون', 'Inventory Management System'), 'icon': Icons.inventory_2, 'lines': 6},
-          {'title': tr('لوحة تحكم مالية', 'Financial Dashboard'), 'icon': Icons.analytics, 'lines': 5},
-          {'title': tr('نظام CRM للمبيعات', 'CRM Sales System'), 'icon': Icons.handshake, 'lines': 4},
+          {'title': tr('نظام إدارة مخزون', 'Inventory Management System'), 'icon': Icons.inventory_2, 'lines': 6,
+           'descAr': 'نظام ERP لإدارة المخزون مع تنبيهات إعادة الطلب، تقارير المبيعات اللحظية، ونظام صلاحيات متعدد.',
+           'descEn': 'ERP inventory management system with reorder alerts, real-time sales reports, and multi-level permissions.'},
+          {'title': tr('لوحة تحكم مالية', 'Financial Dashboard'), 'icon': Icons.analytics, 'lines': 5,
+           'descAr': 'لوحة تحكم مالية تفاعلية تعرض الإيرادات والمصروفات مع رسوم بيانية تفاعلية وتصدير التقارير.',
+           'descEn': 'Interactive financial dashboard showing revenue and expenses with interactive charts and report export.'},
+          {'title': tr('نظام CRM للمبيعات', 'CRM Sales System'), 'icon': Icons.handshake, 'lines': 4,
+           'descAr': 'نظام إدارة علاقات العملاء مع تتبع المبيعات، إدارة pipelines، وأتمتة المتابعة.',
+           'descEn': 'CRM system with sales tracking, pipeline management, and automated follow-ups.'},
         ];
       default:
         return [];
     }
+  }
+}
+
+class _FullSampleView extends StatelessWidget {
+  final Map<String, dynamic> sample;
+  final Color color;
+  const _FullSampleView({required this.sample, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+    return Scaffold(
+      backgroundColor: const Color(0xFF090D16),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF0F1320),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(sample['title'] as String, style: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w700)),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(isMobile ? 16 : 32),
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              height: isMobile ? 350 : 500,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [color.withValues(alpha: 0.2), const Color(0xFF0F1320)],
+                ),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: color.withValues(alpha: 0.3)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.08),
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(sample['icon'] as IconData, color: color, size: 20),
+                        const SizedBox(width: 10),
+                        Text(sample['title'] as String, style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...List.generate((sample['lines'] as int) + 4, (j) => Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            height: j == 0 ? 16 : 12,
+                            width: j == 0 ? 250.0 : (120.0 + (j * 50) % 180),
+                            decoration: BoxDecoration(
+                              color: color.withValues(alpha: 0.06 + (j * 0.015)),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          )),
+                          const Spacer(),
+                          Row(
+                            children: List.generate(4, (k) => Container(
+                              margin: const EdgeInsets.only(right: 12),
+                              width: 56,
+                              height: 56,
+                              decoration: BoxDecoration(
+                                color: color.withValues(alpha: 0.05 + k * 0.03),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            )),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(isMobile ? 20 : 32),
+              decoration: BoxDecoration(
+                color: const Color(0xFF141A29),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: color.withValues(alpha: 0.15)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.description, color: color, size: 22),
+                      const SizedBox(width: 10),
+                      Text(tr('شرح النموذج', 'Project Description'), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white)),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    LanguageManager.instance.isArabic ? sample['descAr'] as String : sample['descEn'] as String,
+                    style: const TextStyle(fontSize: 16, color: Color(0xFFA6ABB6), height: 1.9),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -1626,11 +1859,12 @@ class _ProfessionalServiceCardState extends State<_ProfessionalServiceCard>
   late final AnimationController _expandCtrl;
   late final Animation<double> _expandAnim;
   bool _expanded = false;
+  final GlobalKey _cardKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    _expandCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _expandCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
     _expandAnim = CurvedAnimation(parent: _expandCtrl, curve: Curves.easeInOutCubic);
   }
 
@@ -1643,6 +1877,19 @@ class _ProfessionalServiceCardState extends State<_ProfessionalServiceCard>
   void _toggleExpand() {
     setState(() => _expanded = !_expanded);
     _expanded ? _expandCtrl.forward() : _expandCtrl.reverse();
+    if (_expanded) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final ctx = _cardKey.currentContext;
+        if (ctx != null) {
+          Scrollable.ensureVisible(
+            ctx,
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeInOutCubic,
+            alignment: 0.2,
+          );
+        }
+      });
+    }
   }
 
   @override
@@ -1657,7 +1904,8 @@ class _ProfessionalServiceCardState extends State<_ProfessionalServiceCard>
       child: GestureDetector(
         onTap: _toggleExpand,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 400),
+          key: _cardKey,
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOutCubic,
           decoration: BoxDecoration(
             color: const Color(0xFF141A29),
