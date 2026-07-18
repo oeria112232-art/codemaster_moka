@@ -7,6 +7,7 @@ import 'portal/clean_hero_bg.dart';
 import 'pages.dart';
 import 'pages/portal_entry.dart';
 import 'pages/infinite_portal.dart';
+import 'pages/tumbleweed_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -89,6 +90,8 @@ class _HomePageState extends State<HomePage> {
       _scrollToKey(_ctaKey);
     } else if (link == '#portal') {
       _openPortal();
+    } else if (link == '#tumbleweed') {
+      _openTumbleweed();
     } else if (link == '#tech') {
       Navigator.push(
         context,
@@ -124,6 +127,17 @@ class _HomePageState extends State<HomePage> {
           },
           onBack: () => Navigator.pop(context),
         ),
+        transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
+    );
+  }
+
+  void _openTumbleweed() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => TumbleweedPage(onBack: () => Navigator.pop(context)),
         transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
         transitionDuration: const Duration(milliseconds: 500),
       ),
@@ -1257,6 +1271,45 @@ class _ServicesSectionState extends State<ServicesSection>
                           ),
                   );
                 },
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Easter egg button
+          AnimatedBuilder(
+            animation: _entranceCtrl,
+            builder: (_, __) => Opacity(
+              opacity: _entranceCtrl.value,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => TumbleweedPage(onBack: () => Navigator.pop(context)),
+                      transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
+                      transitionDuration: const Duration(milliseconds: 500),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A0E05).withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFF8B5A2B).withValues(alpha: 0.2)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.grass, color: Color(0xFF8B5A2B), size: 16),
+                      const SizedBox(width: 8),
+                      Text(
+                        tr('المشاريع التي لا نستطيع تنفيذها 🌵', 'Projects We Cannot Do 🌵'),
+                        style: const TextStyle(color: Color(0xFF8B5A2B), fontSize: 13, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
