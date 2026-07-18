@@ -22,7 +22,7 @@ class _PortalEntryPageState extends State<PortalEntryPage>
   bool _isHovering = false;
   late final AnimationController _planetCtrl;
   late final AnimationController _pulseCtrl;
-  late final List<AnimationController> _wordCtrls;
+  late final AnimationController _titleCtrl;
   late final AnimationController _buttonCtrl;
 
   @override
@@ -37,14 +37,14 @@ class _PortalEntryPageState extends State<PortalEntryPage>
       duration: const Duration(milliseconds: 2000),
     )..repeat(reverse: true);
 
-    _wordCtrls = List.generate(5, (_) => AnimationController(
+    _titleCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
-    ));
+      duration: const Duration(milliseconds: 1200),
+    );
 
     _buttonCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _startSequence();
@@ -54,13 +54,12 @@ class _PortalEntryPageState extends State<PortalEntryPage>
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     _planetCtrl.forward();
-    await Future.delayed(const Duration(milliseconds: 1200));
+    
+    await Future.delayed(const Duration(milliseconds: 1000));
     if (!mounted) return;
-    for (final ctrl in _wordCtrls) {
-      ctrl.forward();
-      await Future.delayed(const Duration(milliseconds: 200));
-    }
-    await Future.delayed(const Duration(milliseconds: 300));
+    _titleCtrl.forward();
+    
+    await Future.delayed(const Duration(milliseconds: 1000));
     if (!mounted) return;
     _buttonCtrl.forward();
   }
@@ -69,9 +68,7 @@ class _PortalEntryPageState extends State<PortalEntryPage>
   void dispose() {
     _planetCtrl.dispose();
     _pulseCtrl.dispose();
-    for (final c in _wordCtrls) {
-      c.dispose();
-    }
+    _titleCtrl.dispose();
     _buttonCtrl.dispose();
     super.dispose();
   }
@@ -121,124 +118,99 @@ class _PortalEntryPageState extends State<PortalEntryPage>
             ),
           ),
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FadeTransition(
-                  opacity: CurvedAnimation(parent: _planetCtrl, curve: Curves.easeIn),
-                  child: ScaleTransition(
-                    scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                      CurvedAnimation(parent: _planetCtrl, curve: Curves.easeOut),
-                    ),
-                    child: _buildTitle(size),
-                  ),
-                ),
-                const SizedBox(height: 60),
-                FadeTransition(
-                  opacity: CurvedAnimation(parent: _buttonCtrl, curve: Curves.easeIn),
-                  child: SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, 0.3),
-                      end: Offset.zero,
-                    ).animate(CurvedAnimation(parent: _buttonCtrl, curve: Curves.easeOut)),
-                    child: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      onEnter: (_) => setState(() => _isHovering = true),
-                      onExit: (_) => setState(() => _isHovering = false),
-                      child: GestureDetector(
-                        onTap: widget.onEnter,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 400),
-                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                const Color(0xFF1080E0).withValues(alpha: _isHovering ? 0.25 : 0.12),
-                                const Color(0xFF2090FF).withValues(alpha: _isHovering ? 0.25 : 0.12),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: Color.lerp(
-                                const Color(0xFF1080E0),
-                                const Color(0xFF2090FF),
-                                _pulseCtrl.value,
-                              )!.withValues(alpha: _isHovering ? 0.6 : 0.3),
-                              width: _isHovering ? 2 : 1,
-                            ),
-                            boxShadow: _isHovering
-                                ? [
-                                    BoxShadow(
-                                      color: const Color(0xFF1080E0).withValues(alpha: 0.2),
-                                      blurRadius: 40,
-                                    ),
-                                  ]
-                                : null,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.play_arrow_rounded,
-                                color: Color(0xFF1080E0),
-                                size: 28,
-                              ),
-                              const SizedBox(width: 12),
-                              Text(
-                                tr('اضغط للتأكد من ذلك', 'Click to Verify'),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  color: _isHovering ? Colors.white : const Color(0xFF1080E0),
-                                ),
-                              ),
-                            ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Title Animation (No word splitting to guarantee 100% correct directionality & reading order)
+                  FadeTransition(
+                    opacity: CurvedAnimation(parent: _titleCtrl, curve: Curves.easeInOut),
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0, 0.2),
+                        end: Offset.zero,
+                      ).animate(CurvedAnimation(parent: _titleCtrl, curve: Curves.easeOutCubic)),
+                      child: ShaderMask(
+                        shaderCallback: (bounds) => const LinearGradient(
+                          colors: [Color(0xFF1080E0), Color(0xFF2090FF)],
+                        ).createShader(bounds),
+                        child: Text(
+                          tr('إبداعنا يفوق التخيلات', 'Our Creativity Exceeds Imagination'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: size.width > 600 ? 44 : 28,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 60),
+                  
+                  // Clean Button (no emojis/icons as requested)
+                  FadeTransition(
+                    opacity: CurvedAnimation(parent: _buttonCtrl, curve: Curves.easeInOut),
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0, 0.3),
+                        end: Offset.zero,
+                      ).animate(CurvedAnimation(parent: _buttonCtrl, curve: Curves.easeOutCubic)),
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        onEnter: (_) => setState(() => _isHovering = true),
+                        onExit: (_) => setState(() => _isHovering = false),
+                        child: GestureDetector(
+                          onTap: widget.onEnter,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 400),
+                            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 20),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  const Color(0xFF1080E0).withValues(alpha: _isHovering ? 0.25 : 0.12),
+                                  const Color(0xFF2090FF).withValues(alpha: _isHovering ? 0.25 : 0.12),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(999),
+                              border: Border.all(
+                                color: Color.lerp(
+                                  const Color(0xFF1080E0),
+                                  const Color(0xFF2090FF),
+                                  _pulseCtrl.value,
+                                )!.withValues(alpha: _isHovering ? 0.6 : 0.3),
+                                width: _isHovering ? 2 : 1,
+                              ),
+                              boxShadow: _isHovering
+                                  ? [
+                                      BoxShadow(
+                                        color: const Color(0xFF1080E0).withValues(alpha: 0.25),
+                                        blurRadius: 40,
+                                      ),
+                                    ]
+                                  : null,
+                            ),
+                            child: Text(
+                              tr('اضغط للتأكد من ذلك', 'Click to Verify'),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: _isHovering ? Colors.white : const Color(0xFF1080E0),
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildTitle(Size size) {
-    final words = tr(
-      'إبداعنا يفوق التخيلات',
-      'Our Creativity Exceeds Imagination',
-    ).split(' ');
-
-    return Wrap(
-      spacing: size.width > 600 ? 16 : 8,
-      runSpacing: 8,
-      alignment: WrapAlignment.center,
-      children: List.generate(words.length, (i) {
-        return FadeTransition(
-          opacity: CurvedAnimation(parent: _wordCtrls[i], curve: Curves.easeIn),
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 0.4),
-              end: Offset.zero,
-            ).animate(CurvedAnimation(parent: _wordCtrls[i], curve: Curves.easeOut)),
-            child: Text(
-              words[i],
-              style: TextStyle(
-                fontSize: size.width > 600 ? 44 : 28,
-                fontWeight: FontWeight.w900,
-                foreground: Paint()
-                  ..shader = const LinearGradient(
-                    colors: [Color(0xFF1080E0), Color(0xFF2090FF)],
-                  ).createShader(const Rect.fromLTWH(0, 0, 500, 60)),
-              ),
-            ),
-          ),
-        );
-      }),
     );
   }
 }

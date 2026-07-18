@@ -468,19 +468,16 @@ class HeroSection extends StatelessWidget {
                     children: [
                       MagneticButton(
                         label: tr('ابدأ مشروعك الآن', 'Start Your Project Now'),
-                        icon: const Icon(Icons.rocket_launch, size: 18),
                         isSolid: true,
                         onPressed: onGetStarted,
                       ),
                       MagneticButton(
                         label: tr('خدماتنا', 'Our Services'),
-                        icon: const Icon(Icons.arrow_downward, size: 18),
                         isSolid: false,
                         onPressed: onServices,
                       ),
                       MagneticButton(
                         label: tr('حدود إبداعنا', 'Creative Bounds'),
-                        icon: const Icon(Icons.explore, size: 18),
                         isSolid: false,
                         onPressed: onPortal,
                       ),
