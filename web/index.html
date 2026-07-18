@@ -74,5 +74,51 @@
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    function playSadTrombone() {
+      try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var notes = [
+          { freq: 233.08, dur: 0.35 },
+          { freq: 220.00, dur: 0.35 },
+          { freq: 207.65, dur: 0.35 },
+          { freq: 185.00, dur: 1.4  }
+        ];
+        var time = ctx.currentTime + 0.1;
+
+        notes.forEach(function(n) {
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(n.freq, time);
+
+          var lfo = ctx.createOscillator();
+          var lfoGain = ctx.createGain();
+          lfo.frequency.value = 5.5;
+          lfoGain.gain.value = 8;
+          lfo.connect(lfoGain);
+          lfoGain.connect(osc.frequency);
+          lfo.start(time);
+          lfo.stop(time + n.dur);
+
+          var filter = ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.value = 1200;
+          filter.Q.value = 3;
+
+          gain.gain.setValueAtTime(0.25, time);
+          gain.gain.linearRampToValueAtTime(0.18, time + n.dur * 0.3);
+          gain.gain.linearRampToValueAtTime(0.0, time + n.dur);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(time);
+          osc.stop(time + n.dur);
+          time += n.dur;
+        });
+      } catch(e) {}
+    }
+  </script>
 </body>
 </html>
