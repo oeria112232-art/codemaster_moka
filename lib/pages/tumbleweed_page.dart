@@ -70,8 +70,11 @@ class _TumbleweedPageState extends State<TumbleweedPage>
               ),
             ),
           ),
-          Positioned.fill(
-            child: CustomPaint(painter: _StarPainter()),
+          AnimatedBuilder(
+            animation: _shimmerCtrl,
+            builder: (_, __) => Positioned.fill(
+              child: CustomPaint(painter: _StarPainter(twinkle: _shimmerCtrl.value)),
+            ),
           ),
           AnimatedBuilder(
             animation: _shimmerCtrl,
@@ -226,21 +229,143 @@ class _TumbleweedPageState extends State<TumbleweedPage>
 }
 
 class _StarPainter extends CustomPainter {
+  final double twinkle;
+  _StarPainter({required this.twinkle});
+
   @override
   void paint(Canvas canvas, Size size) {
     final rng = Random(99);
     final p = Paint()..style = PaintingStyle.fill;
-    for (int i = 0; i < 80; i++) {
-      final x = rng.nextDouble() * size.width;
-      final y = rng.nextDouble() * size.height * 0.6;
-      final r = 0.5 + rng.nextDouble() * 1.5;
-      p.color = Color.fromRGBO(255, 255, 255, 0.1 + rng.nextDouble() * 0.25);
-      canvas.drawCircle(Offset(x, y), r, p);
+
+    // ── Twinkling stars ──
+    final starSeeds = List.generate(120, (i) => {
+      'x': rng.nextDouble() * size.width,
+      'y': rng.nextDouble() * size.height * 0.55,
+      'r': 0.6 + rng.nextDouble() * 2.0,
+      'phase': rng.nextDouble() * pi * 2,
+      'bright': 0.2 + rng.nextDouble() * 0.6,
+      'cross': rng.nextBool(),
+    });
+
+    for (final s in starSeeds) {
+      final x = s['x'] as double;
+      final y = s['y'] as double;
+      final r = s['r'] as double;
+      final phase = s['phase'] as double;
+      final bright = s['bright'] as double;
+      final isCross = s['cross'] as bool;
+
+      final alpha = (bright + sin(twinkle * pi * 2 + phase) * 0.25).clamp(0.1, 1.0);
+
+      if (isCross && r > 1.4) {
+        // Draw 4-pointed star (cross / diamond shape)
+        final sp = Paint()
+          ..color = Color.fromRGBO(220, 235, 255, alpha)
+          ..strokeWidth = 0.8
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke;
+        final len = r * 2.5;
+        canvas.drawLine(Offset(x, y - len), Offset(x, y + len), sp);
+        canvas.drawLine(Offset(x - len, y), Offset(x + len, y), sp);
+        // Center glow dot
+        p.color = Color.fromRGBO(255, 255, 255, alpha);
+        canvas.drawCircle(Offset(x, y), r * 0.6, p);
+      } else {
+        // Simple round star
+        p.color = Color.fromRGBO(220, 235, 255, alpha);
+        canvas.drawCircle(Offset(x, y), r, p);
+      }
+    }
+
+    // ── Crescent moon (top-right area) ──
+    final moonCx = size.width * 0.82;
+    final moonCy = size.height * 0.12;
+    final moonR = 36.0;
+
+    // Outer glow (3 layers)
+    for (int g = 3; g >= 1; g--) {
+      final glowR = moonR + g * 18.0;
+      final glowAlpha = 0.025 / g;
+      final glowPaint = Paint()
+        ..shader = RadialGradient(
+          colors: [
+            Color.fromRGBO(16, 128, 224, glowAlpha * 2),
+            Color.fromRGBO(16, 128, 224, glowAlpha),
+            Colors.transparent,
+          ],
+        ).createShader(Rect.fromCircle(center: Offset(moonCx, moonCy), radius: glowR));
+      canvas.drawCircle(Offset(moonCx, moonCy), glowR, glowPaint);
+    }
+
+    // Bright blue halo
+    final haloPaint = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          Color.fromRGBO(32, 144, 255, 0.12),
+          Color.fromRGBO(16, 128, 224, 0.04),
+          Colors.transparent,
+        ],
+      ).createShader(Rect.fromCircle(center: Offset(moonCx, moonCy), radius: moonR + 10));
+    canvas.drawCircle(Offset(moonCx, moonCy), moonR + 10, haloPaint);
+
+    // Moon body (bright circle)
+    final moonBodyPaint = Paint()
+      ..shader = RadialGradient(
+        center: const Alignment(-0.2, -0.3),
+        colors: [
+          const Color(0xFFD8E8FF),
+          const Color(0xFFB0C8E8),
+          const Color(0xFF8AAAD0),
+        ],
+      ).createShader(Rect.fromCircle(center: Offset(moonCx, moonCy), radius: moonR));
+    canvas.drawCircle(Offset(moonCx, moonCy), moonR, moonBodyPaint);
+
+    // Crescent cutout (darker circle overlapping to create crescent shape)
+    final cutPaint = Paint()..color = const Color(0xFF050810);
+    canvas.drawCircle(Offset(moonCx - moonR * 0.45, moonCy - moonR * 0.15), moonR * 0.88, cutPaint);
+
+    // Re-draw outer edge glow after cutout for clean look
+    final edgePaint = Paint()
+      ..color = Color.fromRGBO(180, 210, 245, 0.2)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+    final crescentPath = Path();
+    crescentPath.arcTo(
+      Rect.fromCircle(center: Offset(moonCx, moonCy), radius: moonR),
+      -pi * 0.7,
+      pi * 1.4,
+      true,
+    );
+    canvas.drawPath(crescentPath, edgePaint);
+
+    // Tiny crater details on visible crescent
+    final craterPaint = Paint()
+      ..color = Color.fromRGBO(160, 195, 230, 0.25)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(moonCx + moonR * 0.2, moonCy - moonR * 0.35), 2.5, craterPaint);
+    canvas.drawCircle(Offset(moonCx + moonR * 0.35, moonCy + moonR * 0.1), 1.8, craterPaint);
+    canvas.drawCircle(Offset(moonCx + moonR * 0.1, moonCy + moonR * 0.3), 2.0, craterPaint);
+    canvas.drawCircle(Offset(moonCx + moonR * 0.45, moonCy - moonR * 0.1), 1.2, craterPaint);
+
+    // Moon light rays (subtle radial lines)
+    final rayPaint = Paint()
+      ..color = Color.fromRGBO(16, 128, 224, 0.03)
+      ..strokeWidth = 1.0
+      ..strokeCap = StrokeCap.round;
+    for (int i = 0; i < 12; i++) {
+      final angle = (i / 12) * pi * 2 + twinkle * 0.3;
+      final inner = moonR + 4;
+      final outer = moonR + 14.0 + sin(twinkle * pi * 2 + i) * 5;
+      canvas.drawLine(
+        Offset(moonCx + cos(angle) * inner, moonCy + sin(angle) * inner),
+        Offset(moonCx + cos(angle) * outer, moonCy + sin(angle) * outer),
+        rayPaint,
+      );
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _StarPainter old) => old.twinkle != twinkle;
 }
 
 class _TerrainPainter extends CustomPainter {

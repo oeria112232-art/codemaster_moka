@@ -78,45 +78,97 @@
     function playSadTrombone() {
       try {
         var ctx = new (window.AudioContext || window.webkitAudioContext)();
-        var notes = [
-          { freq: 233.08, dur: 0.35 },
-          { freq: 220.00, dur: 0.35 },
-          { freq: 207.65, dur: 0.35 },
-          { freq: 185.00, dur: 1.4  }
-        ];
-        var time = ctx.currentTime + 0.1;
 
-        notes.forEach(function(n) {
-          var osc = ctx.createOscillator();
-          var gain = ctx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(n.freq, time);
+        function makeBrassNote(freq, start, dur, slide) {
+          // Fundamental oscillator
+          var osc1 = ctx.createOscillator();
+          osc1.type = 'sawtooth';
+          osc1.frequency.setValueAtTime(freq, start);
+          if (slide) {
+            osc1.frequency.linearRampToValueAtTime(freq * 0.7, start + dur);
+          }
 
+          // 2nd harmonic for brass timbre
+          var osc2 = ctx.createOscillator();
+          osc2.type = 'square';
+          osc2.frequency.setValueAtTime(freq * 2, start);
+          if (slide) {
+            osc2.frequency.linearRampToValueAtTime(freq * 2 * 0.7, start + dur);
+          }
+
+          // 3rd harmonic (quieter)
+          var osc3 = ctx.createOscillator();
+          osc3.type = 'sawtooth';
+          osc3.frequency.setValueAtTime(freq * 3, start);
+          if (slide) {
+            osc3.frequency.linearRampToValueAtTime(freq * 3 * 0.7, start + dur);
+          }
+
+          // Heavy vibrato (the "wah" effect) — LFO modulating frequency
           var lfo = ctx.createOscillator();
+          lfo.type = 'sine';
+          lfo.frequency.value = 5.0;
           var lfoGain = ctx.createGain();
-          lfo.frequency.value = 5.5;
-          lfoGain.gain.value = 8;
+          lfoGain.gain.value = 14;
           lfo.connect(lfoGain);
-          lfoGain.connect(osc.frequency);
-          lfo.start(time);
-          lfo.stop(time + n.dur);
+          lfoGain.connect(osc1.frequency);
+          lfoGain.connect(osc2.frequency);
 
+          // Filter sweep for "wah" vowel effect
           var filter = ctx.createBiquadFilter();
-          filter.type = 'lowpass';
-          filter.frequency.value = 1200;
-          filter.Q.value = 3;
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(900, start);
+          filter.frequency.linearRampToValueAtTime(500, start + dur * 0.5);
+          filter.frequency.linearRampToValueAtTime(800, start + dur);
+          filter.Q.value = 4;
 
-          gain.gain.setValueAtTime(0.25, time);
-          gain.gain.linearRampToValueAtTime(0.18, time + n.dur * 0.3);
-          gain.gain.linearRampToValueAtTime(0.0, time + n.dur);
+          // Lowpass for warmth
+          var lpf = ctx.createBiquadFilter();
+          lpf.type = 'lowpass';
+          lpf.frequency.value = 1400;
+          lpf.Q.value = 2;
 
-          osc.connect(filter);
-          filter.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(time);
-          osc.stop(time + n.dur);
-          time += n.dur;
-        });
+          // Gain envelope
+          var gainNode = ctx.createGain();
+          gainNode.gain.setValueAtTime(0.0, start);
+          gainNode.gain.linearRampToValueAtTime(0.18, start + 0.02);
+          gainNode.gain.setValueAtTime(0.18, start + dur * 0.7);
+          gainNode.gain.linearRampToValueAtTime(0.0, start + dur);
+
+          // Gain for harmonics
+          var gain2 = ctx.createGain();
+          gain2.gain.value = 0.07;
+          var gain3 = ctx.createGain();
+          gain3.gain.value = 0.03;
+
+          // Routing
+          osc1.connect(filter);
+          osc2.connect(gain2);
+          gain2.connect(filter);
+          osc3.connect(gain3);
+          gain3.connect(filter);
+          filter.connect(lpf);
+          lpf.connect(gainNode);
+          gainNode.connect(ctx.destination);
+
+          osc1.start(start);
+          osc1.stop(start + dur);
+          osc2.start(start);
+          osc2.stop(start + dur);
+          osc3.start(start);
+          osc3.stop(start + dur);
+          lfo.start(start);
+          lfo.stop(start + dur);
+        }
+
+        var t = ctx.currentTime + 0.1;
+
+        // Classic "wah wah wah waaaaaah"
+        makeBrassNote(233.08, t, 0.45, false);        // Bb3
+        makeBrassNote(220.00, t + 0.45, 0.45, false); // A3
+        makeBrassNote(207.65, t + 0.90, 0.45, false); // Ab3
+        makeBrassNote(185.00, t + 1.35, 1.8, true);   // Gb3 — long slide down
+
       } catch(e) {}
     }
   </script>
