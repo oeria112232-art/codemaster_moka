@@ -159,6 +159,7 @@ class _HomePageState extends State<HomePage> {
                     onGetStarted: () => _handleLinkTap('#cta'),
                     onServices: () => _handleLinkTap('#services'),
                     onPortal: _openPortal,
+                    onTumbleweed: _openTumbleweed,
                   ),
                 ),
                 _ScrollReveal(
@@ -323,12 +324,14 @@ class HeroSection extends StatefulWidget {
   final VoidCallback onGetStarted;
   final VoidCallback onServices;
   final VoidCallback onPortal;
+  final VoidCallback onTumbleweed;
 
   const HeroSection({
     super.key,
     required this.onGetStarted,
     required this.onServices,
     required this.onPortal,
+    required this.onTumbleweed,
   });
 
   @override
@@ -526,7 +529,7 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
                   ),
                   const SizedBox(height: 44),
                   // Buttons
-                  Wrap(
+                   Wrap(
                     spacing: 16,
                     runSpacing: 12,
                     alignment: WrapAlignment.center,
@@ -545,6 +548,11 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
                         label: tr('حدود إبداعنا', 'Creative Bounds'),
                         isSolid: false,
                         onPressed: widget.onPortal,
+                      ),
+                      _HeroButton(
+                        label: tr('المشاريع التي لا نستطيع تنفيذها 🌵', 'Projects We Cannot Do 🌵'),
+                        isSolid: false,
+                        onPressed: widget.onTumbleweed,
                       ),
                     ],
                   ),
@@ -1275,44 +1283,6 @@ class _ServicesSectionState extends State<ServicesSection>
             ),
           ),
           const SizedBox(height: 16),
-          // Easter egg button
-          AnimatedBuilder(
-            animation: _entranceCtrl,
-            builder: (_, __) => Opacity(
-              opacity: _entranceCtrl.value,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => TumbleweedPage(onBack: () => Navigator.pop(context)),
-                      transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
-                      transitionDuration: const Duration(milliseconds: 500),
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1A0E05).withValues(alpha: 0.5),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFF8B5A2B).withValues(alpha: 0.2)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.grass, color: Color(0xFF8B5A2B), size: 16),
-                      const SizedBox(width: 8),
-                      Text(
-                        tr('المشاريع التي لا نستطيع تنفيذها 🌵', 'Projects We Cannot Do 🌵'),
-                        style: const TextStyle(color: Color(0xFF8B5A2B), fontSize: 13, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
