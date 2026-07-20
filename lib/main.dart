@@ -8,6 +8,8 @@ import 'pages.dart';
 import 'pages/portal_entry.dart';
 import 'pages/infinite_portal.dart';
 import 'pages/tumbleweed_page.dart';
+import 'pages/support_page.dart';
+import 'pages/owner_secret_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -144,6 +146,28 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _openSupport() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => SupportPage(onBack: () => Navigator.pop(context)),
+        transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
+    );
+  }
+
+  void _openOwnerSecret() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => OwnerSecretPage(onBack: () => Navigator.pop(context)),
+        transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,6 +184,7 @@ class _HomePageState extends State<HomePage> {
                     onServices: () => _handleLinkTap('#services'),
                     onPortal: _openPortal,
                     onTumbleweed: _openTumbleweed,
+                    onOwnerSecret: _openOwnerSecret,
                   ),
                 ),
                 _ScrollReveal(
@@ -207,6 +232,12 @@ class _HomePageState extends State<HomePage> {
               onLogoTap: () => _scrollToKey(_homeKey),
               onLinkTap: _handleLinkTap,
             ),
+          ),
+          // Floating support button
+          Positioned(
+            bottom: 24,
+            right: 24,
+            child: _FloatingSupportButton(onTap: _openSupport),
           ),
         ],
       ),
@@ -325,6 +356,7 @@ class HeroSection extends StatefulWidget {
   final VoidCallback onServices;
   final VoidCallback onPortal;
   final VoidCallback onTumbleweed;
+  final VoidCallback onOwnerSecret;
 
   const HeroSection({
     super.key,
@@ -332,6 +364,7 @@ class HeroSection extends StatefulWidget {
     required this.onServices,
     required this.onPortal,
     required this.onTumbleweed,
+    required this.onOwnerSecret,
   });
 
   @override
@@ -477,21 +510,24 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
                     ),
                   ),
                   const SizedBox(height: 36),
-                  // Title — Code Master with gradient
-                  Semantics(
-                    header: true,
-                    child: ShaderMask(
-                      shaderCallback: (bounds) => const LinearGradient(
-                        colors: [Color(0xFF1080E0), Color(0xFF40A0FF), Color(0xFF2090FF)],
-                      ).createShader(bounds),
-                      child: Text(
-                        'Code Master',
-                        style: TextStyle(
-                          fontSize: size.width > 600 ? 82 : 46,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          letterSpacing: 5,
-                          height: 1.1,
+                  // Title — Code Master with gradient (clickable -> secret page)
+                  GestureDetector(
+                    onTap: widget.onOwnerSecret,
+                    child: Semantics(
+                      header: true,
+                      child: ShaderMask(
+                        shaderCallback: (bounds) => const LinearGradient(
+                          colors: [Color(0xFF1080E0), Color(0xFF40A0FF), Color(0xFF2090FF)],
+                        ).createShader(bounds),
+                        child: Text(
+                          'Code Master',
+                          style: TextStyle(
+                            fontSize: size.width > 600 ? 82 : 46,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            letterSpacing: 5,
+                            height: 1.1,
+                          ),
                         ),
                       ),
                     ),
@@ -550,7 +586,7 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
                         onPressed: widget.onPortal,
                       ),
                       _HeroButton(
-                        label: tr('المشاريع التي لا نستطيع تنفيذها 🌵', 'Projects We Cannot Do 🌵'),
+                        label: tr('المشاريع التي لا نستطيع تنفيذها', 'Projects We Cannot Do'),
                         isSolid: false,
                         onPressed: widget.onTumbleweed,
                       ),
@@ -2417,6 +2453,93 @@ class _FAQSectionState extends State<FAQSection> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _FloatingSupportButton extends StatefulWidget {
+  final VoidCallback onTap;
+  const _FloatingSupportButton({required this.onTap});
+
+  @override
+  State<_FloatingSupportButton> createState() => _FloatingSupportButtonState();
+}
+
+class _FloatingSupportButtonState extends State<_FloatingSupportButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulseCtrl;
+  bool _hover = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 2500))..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _pulseCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+    return AnimatedBuilder(
+      animation: _pulseCtrl,
+      builder: (_, __) => MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _hover = true),
+        onExit: (_) => setState(() => _hover = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            transform: Matrix4.identity()..scale(_hover ? 1.08 : 1.0),
+            transformAlignment: Alignment.center,
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 18 : 24,
+              vertical: isMobile ? 14 : 16,
+            ),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFF1080E0),
+                  if (_hover) const Color(0xFF2090FF) else const Color(0xFF1080E0),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF1080E0).withValues(
+                    alpha: _hover ? 0.4 : 0.15 + _pulseCtrl.value * 0.1,
+                  ),
+                  blurRadius: _hover ? 28 : 20,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.headset_mic, color: Colors.white, size: 22),
+                if (!isMobile) ...[
+                  const SizedBox(width: 10),
+                  Text(
+                    tr('الدعم', 'Support'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
