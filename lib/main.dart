@@ -7,7 +7,6 @@ import 'portal/clean_hero_bg.dart';
 import 'pages.dart';
 import 'pages/portal_entry.dart';
 import 'pages/infinite_portal.dart';
-import 'pages/tumbleweed_page.dart';
 import 'pages/support_page.dart';
 import 'pages/owner_secret_page.dart';
 
@@ -92,8 +91,6 @@ class _HomePageState extends State<HomePage> {
       _scrollToKey(_ctaKey);
     } else if (link == '#portal') {
       _openPortal();
-    } else if (link == '#tumbleweed') {
-      _openTumbleweed();
     } else if (link == '#tech') {
       Navigator.push(
         context,
@@ -129,17 +126,6 @@ class _HomePageState extends State<HomePage> {
           },
           onBack: () => Navigator.pop(context),
         ),
-        transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
-        transitionDuration: const Duration(milliseconds: 500),
-      ),
-    );
-  }
-
-  void _openTumbleweed() {
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (_, __, ___) => TumbleweedPage(onBack: () => Navigator.pop(context)),
         transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
         transitionDuration: const Duration(milliseconds: 500),
       ),
@@ -183,7 +169,6 @@ class _HomePageState extends State<HomePage> {
                     onGetStarted: () => _handleLinkTap('#cta'),
                     onServices: () => _handleLinkTap('#services'),
                     onPortal: _openPortal,
-                    onTumbleweed: _openTumbleweed,
                     onOwnerSecret: _openOwnerSecret,
                   ),
                 ),
@@ -355,7 +340,6 @@ class HeroSection extends StatefulWidget {
   final VoidCallback onGetStarted;
   final VoidCallback onServices;
   final VoidCallback onPortal;
-  final VoidCallback onTumbleweed;
   final VoidCallback onOwnerSecret;
 
   const HeroSection({
@@ -363,7 +347,6 @@ class HeroSection extends StatefulWidget {
     required this.onGetStarted,
     required this.onServices,
     required this.onPortal,
-    required this.onTumbleweed,
     required this.onOwnerSecret,
   });
 
@@ -552,8 +535,8 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
                     constraints: const BoxConstraints(maxWidth: 660),
                     child: Text(
                       tr(
-                        'مرحباً بك في منصة Code Master للحلول البرمجية المتكاملة. نحن نبتكر ونطور أحدث الحلول التقنية للشركات في العراق، ونمكّن أصحاب الأعمال والشركات الناشئة من امتلاك بنية رقمية قوية عبر تصميم مواقع إلكترونية احترافية وتطوير تطبيقات الموبايل الذكية.',
-                        'Welcome to Code Master. We innovate and develop the latest tech solutions for businesses in Iraq, empowering entrepreneurs with professional websites and smart mobile apps.',
+                        'مرحباً بك في منصة Code Master للحلول البرمجية المتكاملة. نحن نبتكر ونطور أحدث الحلول التقنية للشركات في العراق، ونمكّن أصحاب الأعمال والشركات الناشئة من امتلاك بنية رقمية قوية.',
+                        'Welcome to Code Master. We innovate and develop the latest tech solutions for businesses in Iraq, empowering entrepreneurs with a powerful digital infrastructure.',
                       ),
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -584,11 +567,6 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
                         label: tr('حدود إبداعنا', 'Creative Bounds'),
                         isSolid: false,
                         onPressed: widget.onPortal,
-                      ),
-                      _HeroButton(
-                        label: tr('المشاريع التي لا نستطيع تنفيذها', 'Projects We Cannot Do'),
-                        isSolid: false,
-                        onPressed: widget.onTumbleweed,
                       ),
                     ],
                   ),

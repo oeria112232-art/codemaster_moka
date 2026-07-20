@@ -1,31 +1,20 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (let registration of registrations) {
-          registration.unregister();
-        }
-      });
-    }
-    if (window.caches) {
-      caches.keys().then(function(names) {
-        for (let name of names) {
-          caches.delete(name);
-        }
-      });
-    }
-  </script>
   <base href="$FLUTTER_BASE_HREF">
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none';">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
+
   <title>Code Master | أفضل شركة حلول تقنية وتصميم تطبيقات في العراق</title>
   <meta name="description" content="Code Master أفضل شركة حلول تقنية في العراق. تصميم تطبيقات الموبايل، المتاجر الإلكترونية، أنظمة ERP، زين كاش، آسيا حوالة. شريكك التقني المتكامل.">
-  <meta name="keywords" content=" أفضل شركة حلول تقنية في العراق, تصميم تطبيقات, متجر إلكتروني, ERP, زين كاش, آسيا حوالة, Code Master, software company Iraq, app development, e-commerce">
+  <meta name="keywords" content="أفضل شركة حلول تقنية في العراق, تصميم تطبيقات, متجر إلكتروني, ERP, زين كاش, آسيا حوالة, Code Master, software company Iraq, app development, e-commerce">
   <meta name="author" content="Code Master">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <meta name="theme-color" content="#1080E0">
   <meta name="msapplication-TileColor" content="#1080E0">
   <link rel="canonical" href="https://codemaster.fun/">
@@ -37,6 +26,7 @@
   <meta property="og:url" content="https://codemaster.fun/">
   <meta property="og:site_name" content="Code Master">
   <meta property="og:locale" content="ar_IQ">
+  <meta property="og:image" content="https://codemaster.fun/assets/cm-logo.png">
 
   <!-- Geo -->
   <meta name="geo.region" content="IQ-15">
@@ -48,8 +38,12 @@
   <meta name="apple-mobile-web-app-title" content="Code Master">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/Icon-192.png">
   <link rel="manifest" href="manifest.json">
 
   <!-- Schema Markup -->
@@ -68,109 +62,14 @@
       "addressCountry": "IQ"
     },
     "areaServed": "IQ",
-    "priceRange": "$$"
+    "priceRange": "$$",
+    "sameAs": [
+      "https://t.me/codemaster6"
+    ]
   }
   </script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
-  <script>
-    function playSadTrombone() {
-      try {
-        var ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function makeBrassNote(freq, start, dur, slide) {
-          // Fundamental oscillator
-          var osc1 = ctx.createOscillator();
-          osc1.type = 'sawtooth';
-          osc1.frequency.setValueAtTime(freq, start);
-          if (slide) {
-            osc1.frequency.linearRampToValueAtTime(freq * 0.7, start + dur);
-          }
-
-          // 2nd harmonic for brass timbre
-          var osc2 = ctx.createOscillator();
-          osc2.type = 'square';
-          osc2.frequency.setValueAtTime(freq * 2, start);
-          if (slide) {
-            osc2.frequency.linearRampToValueAtTime(freq * 2 * 0.7, start + dur);
-          }
-
-          // 3rd harmonic (quieter)
-          var osc3 = ctx.createOscillator();
-          osc3.type = 'sawtooth';
-          osc3.frequency.setValueAtTime(freq * 3, start);
-          if (slide) {
-            osc3.frequency.linearRampToValueAtTime(freq * 3 * 0.7, start + dur);
-          }
-
-          // Heavy vibrato (the "wah" effect) — LFO modulating frequency
-          var lfo = ctx.createOscillator();
-          lfo.type = 'sine';
-          lfo.frequency.value = 5.0;
-          var lfoGain = ctx.createGain();
-          lfoGain.gain.value = 14;
-          lfo.connect(lfoGain);
-          lfoGain.connect(osc1.frequency);
-          lfoGain.connect(osc2.frequency);
-
-          // Filter sweep for "wah" vowel effect
-          var filter = ctx.createBiquadFilter();
-          filter.type = 'bandpass';
-          filter.frequency.setValueAtTime(900, start);
-          filter.frequency.linearRampToValueAtTime(500, start + dur * 0.5);
-          filter.frequency.linearRampToValueAtTime(800, start + dur);
-          filter.Q.value = 4;
-
-          // Lowpass for warmth
-          var lpf = ctx.createBiquadFilter();
-          lpf.type = 'lowpass';
-          lpf.frequency.value = 1400;
-          lpf.Q.value = 2;
-
-          // Gain envelope
-          var gainNode = ctx.createGain();
-          gainNode.gain.setValueAtTime(0.0, start);
-          gainNode.gain.linearRampToValueAtTime(0.18, start + 0.02);
-          gainNode.gain.setValueAtTime(0.18, start + dur * 0.7);
-          gainNode.gain.linearRampToValueAtTime(0.0, start + dur);
-
-          // Gain for harmonics
-          var gain2 = ctx.createGain();
-          gain2.gain.value = 0.07;
-          var gain3 = ctx.createGain();
-          gain3.gain.value = 0.03;
-
-          // Routing
-          osc1.connect(filter);
-          osc2.connect(gain2);
-          gain2.connect(filter);
-          osc3.connect(gain3);
-          gain3.connect(filter);
-          filter.connect(lpf);
-          lpf.connect(gainNode);
-          gainNode.connect(ctx.destination);
-
-          osc1.start(start);
-          osc1.stop(start + dur);
-          osc2.start(start);
-          osc2.stop(start + dur);
-          osc3.start(start);
-          osc3.stop(start + dur);
-          lfo.start(start);
-          lfo.stop(start + dur);
-        }
-
-        var t = ctx.currentTime + 0.1;
-
-        // Classic "wah wah wah waaaaaah"
-        makeBrassNote(233.08, t, 0.45, false);        // Bb3
-        makeBrassNote(220.00, t + 0.45, 0.45, false); // A3
-        makeBrassNote(207.65, t + 0.90, 0.45, false); // Ab3
-        makeBrassNote(185.00, t + 1.35, 1.8, true);   // Gb3 — long slide down
-
-      } catch(e) {}
-    }
-  </script>
 </body>
 </html>
