@@ -29,12 +29,12 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             brightness: Brightness.dark,
-            scaffoldBackgroundColor: const Color(0xFF090D16),
+            scaffoldBackgroundColor: const Color(0xFF080C16),
             primaryColor: const Color(0xFF1080E0),
             fontFamily: 'Inter',
             colorScheme: const ColorScheme.dark(
               primary: Color(0xFF1080E0),
-              surface: Color(0xFF090D16),
+              surface: Color(0xFF080C16),
             ),
           ),
           home: Directionality(
@@ -300,23 +300,16 @@ class _SectionHeader extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 48,
-          height: 3,
+          width: 56, height: 3,
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF1080E0), Color(0xFF2090FF)],
-            ),
+            gradient: const LinearGradient(colors: [Color(0xFF1080E0), Color(0xFF2090FF), Color(0xFF1080E0)]),
             borderRadius: BorderRadius.circular(2),
           ),
         ),
         const SizedBox(height: 24),
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
+          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: 0.5),
         ),
         const SizedBox(height: 12),
         ConstrainedBox(
@@ -324,11 +317,7 @@ class _SectionHeader extends StatelessWidget {
           child: Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Color(0xFFA6ABB6),
-              height: 1.6,
-            ),
+            style: const TextStyle(fontSize: 16, color: Color(0xFF8892A4), height: 1.6),
           ),
         ),
       ],
@@ -356,23 +345,21 @@ class HeroSection extends StatefulWidget {
 
 class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin {
   late final AnimationController _badgeCtrl;
-  late final AnimationController _glowCtrl;
+  late final AnimationController _terminalCtrl;
   late final Animation<double> _badgePulse;
-  late final Animation<double> _glowOpacity;
 
   @override
   void initState() {
     super.initState();
     _badgeCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 2500))..repeat(reverse: true);
-    _glowCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 3000))..repeat(reverse: true);
+    _terminalCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 3000))..repeat(reverse: true);
     _badgePulse = Tween<double>(begin: 0.85, end: 1.0).animate(CurvedAnimation(parent: _badgeCtrl, curve: Curves.easeInOut));
-    _glowOpacity = Tween<double>(begin: 0.05, end: 0.18).animate(CurvedAnimation(parent: _glowCtrl, curve: Curves.easeInOut));
   }
 
   @override
   void dispose() {
     _badgeCtrl.dispose();
-    _glowCtrl.dispose();
+    _terminalCtrl.dispose();
     super.dispose();
   }
 
@@ -380,6 +367,110 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isMobile = size.width < 600;
+    final isDesktop = size.width > 900;
+
+    final heroContent = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedBuilder(
+          animation: _badgePulse,
+          builder: (_, __) => Transform.scale(
+            scale: _badgePulse.value,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 11),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  const Color(0xFF1080E0).withValues(alpha: 0.15),
+                  const Color(0xFF2090FF).withValues(alpha: 0.08),
+                ]),
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.35)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 7, height: 7,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF2090FF),
+                      boxShadow: [BoxShadow(color: Color(0xFF2090FF), blurRadius: 6)],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    tr('شريكك التقني المتكامل', 'Your Integrated Tech Partner'),
+                    style: TextStyle(color: const Color(0xFF1080E0), fontSize: isMobile ? 11 : 13, fontWeight: FontWeight.w600, letterSpacing: 1.2),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: isMobile ? 28 : 36),
+        GestureDetector(
+          onTap: widget.onOwnerSecret,
+          child: Semantics(
+            header: true,
+            child: ShaderMask(
+              shaderCallback: (bounds) => const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF1080E0), Color(0xFF40A0FF), Color(0xFFFFFFFF), Color(0xFF1080E0)],
+                stops: [0.0, 0.3, 0.6, 1.0],
+              ).createShader(bounds),
+              child: Text(
+                'Code Master',
+                style: TextStyle(
+                  fontSize: isMobile ? 46 : (size.width > 1100 ? 88 : 72),
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  letterSpacing: isMobile ? 2 : 6,
+                  height: 1.05,
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: isMobile ? 10 : 16),
+        Text(
+          tr('أفضل شركة حلول تقنية وتصميم تطبيقات في العراق', 'Best Software Solutions & App Development in Iraq'),
+          style: TextStyle(
+            fontSize: isMobile ? 15 : 22,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF2090FF),
+            letterSpacing: 0.8,
+          ),
+        ),
+        SizedBox(height: isMobile ? 20 : 28),
+        ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: isDesktop ? 500 : 660),
+          child: Text(
+            tr(
+              'نبتكر ونطور أحدث الحلول التقنية للشركات في العراق. من تطبيقات الموبايل إلى المتاجر الإلكترونية وأنظمة ERP المتكاملة.',
+              'We innovate and develop cutting-edge tech solutions for businesses in Iraq. From mobile apps to e-commerce and integrated ERP systems.',
+            ),
+            textAlign: isDesktop ? TextAlign.start : TextAlign.center,
+            style: TextStyle(fontSize: isMobile ? 13.5 : 16, color: const Color(0xFF8892A4), height: 1.9),
+          ),
+        ),
+        SizedBox(height: isMobile ? 32 : 44),
+        Wrap(
+          spacing: 16,
+          runSpacing: 12,
+          alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
+          children: [
+            _HeroButton(label: tr('ابدأ مشروعك الآن', 'Start Your Project'), isSolid: true, onPressed: widget.onGetStarted),
+            _HeroButton(label: tr('خدماتنا', 'Our Services'), isSolid: false, onPressed: widget.onServices),
+            _HeroButton(label: tr('حدود إبداعنا', 'Creative Bounds'), isSolid: false, onPressed: widget.onPortal),
+          ],
+        ),
+      ],
+    );
+
+    final terminalWidget = _AnimatedTerminal();
 
     return SizedBox(
       height: size.height,
@@ -387,196 +478,256 @@ class _HeroSectionState extends State<HeroSection> with TickerProviderStateMixin
       child: Stack(
         children: [
           const Positioned.fill(child: CleanHeroBg()),
-          Positioned.fill(
-            child: AnimatedBuilder(
-              animation: _glowCtrl,
-              builder: (_, __) => Container(
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    center: const Alignment(0, -0.2),
-                    radius: 1.2,
-                    colors: [
-                      const Color(0xFF1080E0).withValues(alpha: _glowOpacity.value),
-                      const Color(0xFF2090FF).withValues(alpha: _glowOpacity.value * 0.3),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
           Positioned(
             bottom: 0, left: 0, right: 0, height: 200,
             child: Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter, end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Color(0xFF090D16)],
+                  colors: [Colors.transparent, Color(0xFF080C16)],
                 ),
               ),
             ),
           ),
           Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Animated glow dot
-                  AnimatedBuilder(
-                    animation: _badgePulse,
-                    builder: (_, __) => Container(
-                      width: 6 * _badgePulse.value,
-                      height: 6 * _badgePulse.value,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color(0xFF1080E0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF1080E0).withValues(alpha: 0.4 * _badgePulse.value),
-                            blurRadius: 20,
-                            spreadRadius: 4,
-                          ),
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 48),
+              child: isDesktop
+                  ? IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(flex: 5, child: heroContent),
+                          const SizedBox(width: 60),
+                          Expanded(flex: 4, child: Center(child: terminalWidget)),
                         ],
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-                  // Badge with animated pulse
-                  AnimatedBuilder(
-                    animation: _badgePulse,
-                    builder: (_, __) => Transform.scale(
-                      scale: _badgePulse.value,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 11),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              const Color(0xFF1080E0).withValues(alpha: 0.15),
-                              const Color(0xFF2090FF).withValues(alpha: 0.08),
-                            ],
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        heroContent,
+                        if (isMobile) ...[
+                          const SizedBox(height: 40),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 260,
+                            child: terminalWidget,
                           ),
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.35)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF1080E0).withValues(alpha: 0.08),
-                              blurRadius: 16,
-                              spreadRadius: 0,
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 7, height: 7,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: const Color(0xFF2090FF),
-                                boxShadow: [BoxShadow(color: const Color(0xFF2090FF).withValues(alpha: 0.6), blurRadius: 6)],
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                          Text(
-                            tr('شريكك التقني المتكامل في العراق', 'Your Integrated Tech Partner in Iraq'),
-                            style: TextStyle(
-                              color: const Color(0xFF1080E0),
-                              fontSize: isMobile ? 11 : 13,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                          ],
-                        ),
-                      ),
+                        ],
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 36),
-                  // Title — Code Master with gradient (clickable -> secret page)
-                  GestureDetector(
-                    onTap: widget.onOwnerSecret,
-                    child: Semantics(
-                      header: true,
-                      child: ShaderMask(
-                        shaderCallback: (bounds) => const LinearGradient(
-                          colors: [Color(0xFF1080E0), Color(0xFF40A0FF), Color(0xFF2090FF)],
-                        ).createShader(bounds),
-                        child: Text(
-                          'Code Master',
-                          style: TextStyle(
-                            fontSize: size.width > 600 ? 82 : 46,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
-                            letterSpacing: 5,
-                            height: 1.1,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  // Subtitle
-                  Text(
-                    tr(
-                      'أفضل شركة حلول تقنية وتصميم تطبيقات في العراق',
-                      'Best Software Solutions & App Development in Iraq',
-                    ),
-                    style: TextStyle(
-                      fontSize: size.width > 600 ? 21 : 15,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF2090FF),
-                      letterSpacing: 0.8,
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-                  // Description
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 660),
-                    child: Text(
-                      tr(
-                        'مرحباً بك في منصة Code Master للحلول البرمجية المتكاملة. نحن نبتكر ونطور أحدث الحلول التقنية للشركات في العراق، ونمكّن أصحاب الأعمال والشركات الناشئة من امتلاك بنية رقمية قوية.',
-                        'Welcome to Code Master. We innovate and develop the latest tech solutions for businesses in Iraq, empowering entrepreneurs with a powerful digital infrastructure.',
-                      ),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: size.width > 600 ? 16 : 13.5,
-                        color: const Color(0xFFA6ABB6),
-                        height: 1.95,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 44),
-                  // Buttons
-                   Wrap(
-                    spacing: 16,
-                    runSpacing: 12,
-                    alignment: WrapAlignment.center,
-                    children: [
-                      _HeroButton(
-                        label: tr('ابدأ مشروعك الآن', 'Start Your Project Now'),
-                        isSolid: true,
-                        onPressed: widget.onGetStarted,
-                      ),
-                      _HeroButton(
-                        label: tr('خدماتنا', 'Our Services'),
-                        isSolid: false,
-                        onPressed: widget.onServices,
-                      ),
-                      _HeroButton(
-                        label: tr('حدود إبداعنا', 'Creative Bounds'),
-                        isSolid: false,
-                        onPressed: widget.onPortal,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class _AnimatedTerminal extends StatefulWidget {
+  @override
+  State<_AnimatedTerminal> createState() => _AnimatedTerminalState();
+}
+
+class _AnimatedTerminalState extends State<_AnimatedTerminal> with TickerProviderStateMixin {
+  late final AnimationController _typeCtrl;
+  int _currentLine = 0;
+  int _currentChar = 0;
+  bool _showCursor = true;
+  final List<String> _lines = [];
+  late final AnimationController _cursorCtrl;
+
+  static const _codeLines = [
+    "import 'package:flutter/material.dart';",
+    "import 'dart:math';",
+    "",
+    "class CodeMasterApp extends StatelessWidget {",
+    "  @override",
+    "  Widget build(BuildContext context) {",
+    "    return MaterialApp(",
+    "      title: 'Code Master',",
+    "      theme: ThemeData.dark(),",
+    "      home: const HomePage(),",
+    "    );",
+    "  }",
+    "}",
+    "",
+    "// Building the future of digital Iraq",
+    "const List<String> services = [",
+    "  'Mobile Apps',",
+    "  'E-Commerce',",
+    "  'ERP Systems',",
+    "];",
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _cursorCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 600))..repeat(reverse: true);
+    _typeCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 80))..addListener(_onTick);
+    _startTyping();
+  }
+
+  void _startTyping() {
+    _typeCtrl.repeat();
+  }
+
+  void _onTick() {
+    if (_currentLine >= _codeLines.length) {
+      _typeCtrl.stop();
+      return;
+    }
+    final line = _codeLines[_currentLine];
+    if (_currentChar < line.length) {
+      setState(() {
+        _currentChar++;
+        _lines.removeRange(0, _lines.length);
+        for (int i = 0; i <= _currentLine; i++) {
+          if (i == _currentLine) {
+            _lines.add(_codeLines[i].substring(0, _currentChar));
+          } else {
+            _lines.add(_codeLines[i]);
+          }
+        }
+      });
+    } else {
+      setState(() {
+        _currentLine++;
+        _currentChar = 0;
+        if (_currentLine >= _codeLines.length) {
+          _typeCtrl.stop();
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _typeCtrl.dispose();
+    _cursorCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.2)),
+        boxShadow: [
+          BoxShadow(color: const Color(0xFF1080E0).withValues(alpha: 0.06), blurRadius: 40, spreadRadius: 0),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          // Terminal header
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: const BoxDecoration(
+              color: Color(0xFF0D1220),
+              border: Border(bottom: BorderSide(color: Color(0xFF1A2035))),
+            ),
+            child: Row(
+              children: [
+                Container(width: 12, height: 12, decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFFF5F57))),
+                const SizedBox(width: 7),
+                Container(width: 12, height: 12, decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFFFBD2E))),
+                const SizedBox(width: 7),
+                Container(width: 12, height: 12, decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF28CA42))),
+                const SizedBox(width: 16),
+                const Text('code_master.dart', style: TextStyle(fontSize: 12, color: Color(0xFF6B7280), fontFamily: 'monospace')),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1080E0).withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Text('Dart', style: TextStyle(fontSize: 10, color: Color(0xFF1080E0), fontWeight: FontWeight.w600)),
+                ),
+              ],
+            ),
+          ),
+          // Code content
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              color: const Color(0xFF080C16),
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                child: _buildCodeWidget(),
+              ),
+            ),
+          ),
+          // Bottom status bar
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: const BoxDecoration(
+              color: Color(0xFF0D1220),
+              border: Border(top: BorderSide(color: Color(0xFF1A2035))),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 8, height: 8,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFF28CA42),
+                    boxShadow: [BoxShadow(color: const Color(0xFF28CA42).withValues(alpha: 0.5), blurRadius: 4)],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Text('Ready', style: TextStyle(fontSize: 11, color: Color(0xFF6B7280))),
+                const Spacer(),
+                const Text('UTF-8', style: TextStyle(fontSize: 11, color: Color(0xFF4B5563))),
+                const SizedBox(width: 12),
+                const Text('Dart 3.4', style: TextStyle(fontSize: 11, color: Color(0xFF4B5563))),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCodeWidget() {
+    return RichText(
+      text: TextSpan(
+        style: const TextStyle(fontSize: 12, fontFamily: 'monospace', height: 1.7, color: Color(0xFF9CA3AF)),
+        children: [
+          for (int i = 0; i < _lines.length; i++)
+            TextSpan(children: [
+              TextSpan(
+                text: '${(i + 1).toString().padLeft(3)}  ',
+                style: TextStyle(color: const Color(0xFF3B4252).withValues(alpha: 0.6), fontSize: 11),
+              ),
+              TextSpan(text: _highlightLine(_lines[i])),
+              if (i == _lines.length - 1 && _currentLine < _codeLines.length)
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: AnimatedBuilder(
+                    animation: _cursorCtrl,
+                    builder: (_, __) => Container(
+                      width: 2,
+                      height: 14,
+                      color: Color(0xFF1080E0).withValues(alpha: _cursorCtrl.value),
+                    ),
+                  ),
+                ),
+            ]),
+          if (_currentLine >= _codeLines.length)
+            const TextSpan(text: '\n\n// ✅ Build successful', style: TextStyle(color: Color(0xFF28CA42))),
+        ],
+      ),
+    );
+  }
+
+  String _highlightLine(String line) {
+    if (line.trim().startsWith('//')) return line;
+    return line;
   }
 }
 
@@ -619,7 +770,7 @@ class _HeroButtonState extends State<_HeroButton> {
                     if (_hover) const Color(0xFF2090FF) else baseColor,
                   ])
                 : null,
-            color: widget.isSolid ? null : const Color(0xFF141A29),
+            color: widget.isSolid ? null : const Color(0xFF0D1220),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: _hover
@@ -669,10 +820,7 @@ class _StatsSectionState extends State<StatsSection>
   @override
   void initState() {
     super.initState();
-    _counterCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2000),
-    );
+    _counterCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 2000));
     widget.scrollController.addListener(_check);
     WidgetsBinding.instance.addPostFrameCallback((_) => _check());
   }
@@ -702,48 +850,33 @@ class _StatsSectionState extends State<StatsSection>
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 24 : 40),
-      padding: EdgeInsets.all(isMobile ? 24 : 40),
+      padding: EdgeInsets.all(isMobile ? 28 : 44),
       decoration: BoxDecoration(
-        color: const Color(0xFF141A29).withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.12)),
-        boxShadow: [
-          BoxShadow(color: const Color(0xFF1080E0).withValues(alpha: 0.04), blurRadius: 40, spreadRadius: 0),
-        ],
+        color: const Color(0xFF0B1018),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
       ),
       child: isMobile
-          ? Wrap(
-              spacing: 16,
-              runSpacing: 24,
-              alignment: WrapAlignment.spaceEvenly,
+          ? Column(
               children: [
-                SizedBox(
-                  width: (screenWidth - 80) / 2,
-                  child: _AnimatedStat(target: 50, prefix: '+', label: tr('مشروع مكتمل', 'Projects'), animation: _counterCtrl, icon: Icons.rocket_launch),
-                ),
-                SizedBox(
-                  width: (screenWidth - 80) / 2,
-                  child: _AnimatedStat(target: 200, prefix: '+', label: tr('عميل', 'Clients'), animation: _counterCtrl, icon: Icons.people),
-                ),
-                SizedBox(
-                  width: (screenWidth - 80) / 2,
-                  child: _AnimatedStat(target: 5, prefix: '+', label: tr('سنوات خبرة', 'Years'), animation: _counterCtrl, icon: Icons.workspace_premium),
-                ),
-                SizedBox(
-                  width: (screenWidth - 80) / 2,
-                  child: _StaticStat(value: '24/7', label: tr('دعم فني', 'Support'), icon: Icons.support_agent),
-                ),
+                _AnimatedStat(target: 50, prefix: '+', label: tr('مشروع مكتمل', 'Projects'), animation: _counterCtrl, icon: Icons.rocket_launch),
+                const SizedBox(height: 24),
+                _AnimatedStat(target: 200, prefix: '+', label: tr('عميل', 'Clients'), animation: _counterCtrl, icon: Icons.people),
+                const SizedBox(height: 24),
+                _AnimatedStat(target: 5, prefix: '+', label: tr('سنوات خبرة', 'Years'), animation: _counterCtrl, icon: Icons.workspace_premium),
+                const SizedBox(height: 24),
+                _StaticStat(value: '24/7', label: tr('دعم فني', 'Support'), icon: Icons.support_agent),
               ],
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _AnimatedStat(target: 50, prefix: '+', label: tr('مشروع مكتمل', 'Projects'), animation: _counterCtrl, icon: Icons.rocket_launch),
-                Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
+                Container(width: 1, height: 50, decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.transparent, const Color(0xFF1080E0).withValues(alpha: 0.2), Colors.transparent]))),
                 _AnimatedStat(target: 200, prefix: '+', label: tr('عميل', 'Clients'), animation: _counterCtrl, icon: Icons.people),
-                Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
+                Container(width: 1, height: 50, decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.transparent, const Color(0xFF1080E0).withValues(alpha: 0.2), Colors.transparent]))),
                 _AnimatedStat(target: 5, prefix: '+', label: tr('سنوات خبرة', 'Years'), animation: _counterCtrl, icon: Icons.workspace_premium),
-                Container(width: 1, height: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
+                Container(width: 1, height: 50, decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.transparent, const Color(0xFF1080E0).withValues(alpha: 0.2), Colors.transparent]))),
                 _StaticStat(value: '24/7', label: tr('دعم فني', 'Support'), icon: Icons.support_agent),
               ],
             ),
@@ -770,7 +903,7 @@ class _AnimatedStat extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
-    final numberSize = isMobile ? 30.0 : 36.0;
+    final numberSize = isMobile ? 32.0 : 40.0;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, _) {
@@ -779,35 +912,27 @@ class _AnimatedStat extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF1080E0).withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(12),
+                gradient: LinearGradient(colors: [const Color(0xFF1080E0).withValues(alpha: 0.1), const Color(0xFF1080E0).withValues(alpha: 0.03)]),
+                borderRadius: BorderRadius.circular(14),
               ),
-              child: Icon(icon, color: const Color(0xFF1080E0), size: isMobile ? 20 : 22),
+              child: Icon(icon, color: const Color(0xFF2090FF), size: isMobile ? 22 : 26),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             ShaderMask(
               shaderCallback: (bounds) => const LinearGradient(
                 colors: [Color(0xFF1080E0), Color(0xFF40A0FF)],
               ).createShader(bounds),
               child: Text(
                 '$prefix$v',
-                style: TextStyle(
-                  fontSize: numberSize,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: numberSize, fontWeight: FontWeight.w900, color: Colors.white),
               ),
             ),
             const SizedBox(height: 6),
             Text(
               label,
-              style: TextStyle(
-                fontSize: isMobile ? 12 : 13,
-                color: const Color(0xFFA6ABB6),
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(fontSize: isMobile ? 12 : 14, color: const Color(0xFF8892A4), fontWeight: FontWeight.w500),
             ),
           ],
         );
@@ -829,35 +954,27 @@ class _StaticStat extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: const Color(0xFF1080E0).withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(12),
+            gradient: LinearGradient(colors: [const Color(0xFF1080E0).withValues(alpha: 0.1), const Color(0xFF1080E0).withValues(alpha: 0.03)]),
+            borderRadius: BorderRadius.circular(14),
           ),
-          child: Icon(icon, color: const Color(0xFF1080E0), size: isMobile ? 20 : 22),
+          child: Icon(icon, color: const Color(0xFF2090FF), size: isMobile ? 22 : 26),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
         ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
             colors: [Color(0xFF1080E0), Color(0xFF40A0FF)],
           ).createShader(bounds),
           child: Text(
             value,
-            style: TextStyle(
-              fontSize: isMobile ? 30 : 36,
-              fontWeight: FontWeight.w800,
-              color: Colors.white,
-            ),
+            style: TextStyle(fontSize: isMobile ? 32 : 40, fontWeight: FontWeight.w900, color: Colors.white),
           ),
         ),
         const SizedBox(height: 6),
         Text(
           label,
-          style: TextStyle(
-            fontSize: isMobile ? 12 : 13,
-            color: const Color(0xFFA6ABB6),
-            fontWeight: FontWeight.w500,
-          ),
+          style: TextStyle(fontSize: isMobile ? 12 : 14, color: const Color(0xFF8892A4), fontWeight: FontWeight.w500),
         ),
       ],
     );
@@ -870,95 +987,86 @@ class VisionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 36 : 60),
-      child: Column(
-        children: [
-          _SectionHeader(
-            title: tr('رؤيتنا ورسالتنا', 'Our Vision & Mission'),
-            subtitle: tr(
-              'نلتزم بقيادة التحول الرقمي للشركات والمؤسسات في العراق',
-              'Committed to leading digital transformation for businesses in Iraq',
-            ),
+    return Column(
+      children: [
+        // Wave divider
+        _WaveDivider(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 48, vertical: isMobile ? 36 : 60),
+          child: Column(
+            children: [
+              _SectionHeader(
+                title: tr('رؤيتنا ورسالتنا', 'Our Vision & Mission'),
+                subtitle: tr('نلتزم بقيادة التحول الرقمي للشركات والمؤسسات في العراق', 'Committed to leading digital transformation in Iraq'),
+              ),
+              const SizedBox(height: 48),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final isWide = constraints.maxWidth > 800;
+                  return isWide
+                      ? IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(child: _buildVisionCard()),
+                              const SizedBox(width: 24),
+                              Expanded(child: _buildMissionCard()),
+                            ],
+                          ),
+                        )
+                      : Column(
+                          children: [
+                            _buildVisionCard(),
+                            const SizedBox(height: 24),
+                            _buildMissionCard(),
+                          ],
+                        );
+                },
+              ),
+              const SizedBox(height: 40),
+              _buildStrategicGoals(),
+            ],
           ),
-          const SizedBox(height: 48),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final isWide = constraints.maxWidth > 800;
-              return isWide
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: _buildVisionCard()),
-                        const SizedBox(width: 24),
-                        Expanded(child: _buildMissionCard()),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        _buildVisionCard(),
-                        const SizedBox(height: 24),
-                        _buildMissionCard(),
-                      ],
-                    );
-            },
-          ),
-          const SizedBox(height: 40),
-          _buildStrategicGoals(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildVisionCard() {
     return Builder(
       builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(32),
-          decoration: BoxDecoration(
-            color: const Color(0xFF141A29),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: const Color(0xFF1080E0).withValues(alpha: 0.3),
+        return _AnimatedGradientBorder(
+          color: const Color(0xFF1080E0),
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0B1018),
+              borderRadius: BorderRadius.circular(20),
             ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1080E0).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 56, height: 56,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF1080E0), Color(0xFF0060B0)]),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [BoxShadow(color: const Color(0xFF1080E0).withValues(alpha: 0.3), blurRadius: 16)],
+                  ),
+                  child: const Icon(Icons.visibility, color: Colors.white, size: 28),
                 ),
-                child: const Icon(
-                  Icons.visibility,
-                  color: Color(0xFF1080E0),
-                  size: 28,
+                const SizedBox(height: 24),
+                Text(tr('رؤيتنا', 'Our Vision'), style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: Colors.white)),
+                const SizedBox(height: 16),
+                Text(
+                  tr(
+                    'أن نكون الشريك التقني الأول في العراق والمنطقة، من خلال تقديم حلول برمجية مبتكرة تتجاوز توقعات عملائنا.',
+                    'To be the leading tech partner in the region by delivering innovative solutions that exceed expectations.',
+                  ),
+                  style: const TextStyle(fontSize: 15, color: Color(0xFF8892A4), height: 1.8),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                tr('رؤيتنا', 'Our Vision'),
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                tr(
-                  'أن نكون الشريك التقني الأول في العراق والمنطقة، من خلال تقديم حلول برمجية مبتكرة تتجاوز توقعات عملائنا وتساهم في تحولهم الرقمي.',
-                  'To be the leading tech partner in the region by delivering innovative solutions that exceed our clients\' expectations and contribute to their digital transformation.',
-                ),
-                style: const TextStyle(
-                  fontSize: 15,
-                  color: Color(0xFFA6ABB6),
-                  height: 1.7,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -968,52 +1076,38 @@ class VisionSection extends StatelessWidget {
   Widget _buildMissionCard() {
     return Builder(
       builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(32),
-          decoration: BoxDecoration(
-          color: const Color(0xFF141A29),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: const Color(0xFF2090FF).withValues(alpha: 0.3),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF2090FF).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.flag,
-                color: Color(0xFF2090FF),
-                size: 28,
-              ),
+        return _AnimatedGradientBorder(
+          color: const Color(0xFF2090FF),
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0B1018),
+              borderRadius: BorderRadius.circular(20),
             ),
-              const SizedBox(height: 20),
-              Text(
-                tr('مهمتنا', 'Our Mission'),
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 56, height: 56,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF2090FF), Color(0xFF0060B0)]),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [BoxShadow(color: const Color(0xFF2090FF).withValues(alpha: 0.3), blurRadius: 16)],
+                  ),
+                  child: const Icon(Icons.flag, color: Colors.white, size: 28),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                tr(
-                  'تمكين الشركات والمؤسسات في العراق من خلال منتجات رقمية متكاملة عالية الجودة، مبنية على أسس هندسية صلبة ومصممة لتحقيق أقصى عائد على استثمارهم التقني.',
-                  'Empowering companies through high-quality integrated digital products, built on solid engineering principles and designed to maximize their technology ROI.',
+                const SizedBox(height: 24),
+                Text(tr('مهمتنا', 'Our Mission'), style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: Colors.white)),
+                const SizedBox(height: 16),
+                Text(
+                  tr(
+                    'تمكين الشركات من خلال منتجات رقمية متكاملة عالية الجودة، مبنية على أسس هندسية صلبة ومصممة لتحقيق أقصى عائد.',
+                    'Empowering companies through high-quality digital products, built on solid engineering principles.',
+                  ),
+                  style: const TextStyle(fontSize: 15, color: Color(0xFF8892A4), height: 1.8),
                 ),
-                style: const TextStyle(
-                  fontSize: 15,
-                  color: Color(0xFFA6ABB6),
-                  height: 1.7,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -1023,48 +1117,29 @@ class VisionSection extends StatelessWidget {
   Widget _buildStrategicGoals() {
     return Builder(
       builder: (context) {
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(32),
-          decoration: BoxDecoration(
-            color: const Color(0xFF141A29),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: const Color(0xFF1080E0).withValues(alpha: 0.1),
+        return _AnimatedGradientBorder(
+          color: const Color(0xFF1080E0),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0B1018),
+              borderRadius: BorderRadius.circular(20),
             ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                tr('الأهداف الاستراتيجية', 'Strategic Goals'),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 24),
-              _GoalItem(
-                icon: Icons.trending_up,
-                text:                 tr('التوسع في خدماتنا التقنية داخل العراق والمنطقة', 'Expanding our tech services across Iraq and the region'),
-              ),
-              const SizedBox(height: 16),
-              _GoalItem(
-                icon: Icons.cloud_queue,
-                text: tr('تبني تقنيات الحوسبة السحابية المتقدمة', 'Adopting advanced cloud computing technologies'),
-              ),
-              const SizedBox(height: 16),
-              _GoalItem(
-                icon: Icons.public,
-                text: tr('بناء شراكات استراتيجية عالمية', 'Building global strategic partnerships'),
-              ),
-              const SizedBox(height: 16),
-              _GoalItem(
-                icon: Icons.star,
-                text: tr('تحقيق أعلى معايير جودة الخدمات', 'Achieving the highest service quality standards'),
-              ),
-            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(tr('الأهداف الاستراتيجية', 'Strategic Goals'), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Colors.white)),
+                const SizedBox(height: 28),
+                _GoalItem(icon: Icons.trending_up, text: tr('التوسع في خدماتنا التقنية داخل العراق والمنطقة', 'Expanding our tech services across Iraq and the region')),
+                const SizedBox(height: 16),
+                _GoalItem(icon: Icons.cloud_queue, text: tr('تبني تقنيات الحوسبة السحابية المتقدمة', 'Adopting advanced cloud computing technologies')),
+                const SizedBox(height: 16),
+                _GoalItem(icon: Icons.public, text: tr('بناء شراكات استراتيجية عالمية', 'Building global strategic partnerships')),
+                const SizedBox(height: 16),
+                _GoalItem(icon: Icons.star, text: tr('تحقيق أعلى معايير جودة الخدمات', 'Achieving the highest service quality standards')),
+              ],
+            ),
           ),
         );
       },
@@ -1083,24 +1158,118 @@ class _GoalItem extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: const Color(0xFF1080E0).withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
+            gradient: LinearGradient(colors: [const Color(0xFF1080E0).withValues(alpha: 0.12), const Color(0xFF1080E0).withValues(alpha: 0.04)]),
+            borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(icon, color: const Color(0xFF1080E0), size: 20),
+          child: Icon(icon, color: const Color(0xFF2090FF), size: 20),
         ),
         const SizedBox(width: 16),
         Expanded(
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 15,
-              color: Color(0xFFA6ABB6),
-            ),
-          ),
+          child: Text(text, style: const TextStyle(fontSize: 15, color: Color(0xFF8892A4), height: 1.5)),
         ),
       ],
+    );
+  }
+}
+
+class _WaveDivider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 80,
+      child: CustomPaint(
+        painter: _WaveDividerPainter(),
+        size: Size.infinite,
+      ),
+    );
+  }
+}
+
+class _WaveDividerPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5
+      ..shader = const LinearGradient(
+        colors: [Colors.transparent, Color(0xFF1080E0), Colors.transparent],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, 0));
+
+    final path = Path();
+    path.moveTo(0, size.height / 2);
+    for (double x = 0; x <= size.width; x += 1) {
+      final y = size.height / 2 + sin((x / size.width) * pi * 4) * 12;
+      path.lineTo(x, y);
+    }
+    paint.color = const Color(0xFF1080E0).withValues(alpha: 0.15);
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _AnimatedGradientBorder extends StatefulWidget {
+  final Widget child;
+  final Color color;
+  const _AnimatedGradientBorder({required this.child, required this.color});
+
+  @override
+  State<_AnimatedGradientBorder> createState() => _AnimatedGradientBorderState();
+}
+
+class _AnimatedGradientBorderState extends State<_AnimatedGradientBorder>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  bool _hovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: const Duration(seconds: 4))..repeat();
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedBuilder(
+        animation: _ctrl,
+        builder: (_, __) {
+          final angle = _ctrl.value * 2 * pi;
+          return Container(
+            padding: _hovered ? const EdgeInsets.all(2) : EdgeInsets.zero,
+            decoration: _hovered
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.circular(22),
+                    gradient: SweepGradient(
+                      center: Alignment.center,
+                      startAngle: angle,
+                      endAngle: angle + pi * 2,
+                      colors: [
+                        widget.color.withValues(alpha: 0.5),
+                        widget.color.withValues(alpha: 0.0),
+                        widget.color.withValues(alpha: 0.5),
+                        widget.color.withValues(alpha: 0.0),
+                        widget.color.withValues(alpha: 0.5),
+                      ],
+                    ),
+                  )
+                : null,
+            child: widget.child,
+          );
+        },
+      ),
     );
   }
 }
@@ -1115,21 +1284,17 @@ class ServicesSection extends StatefulWidget {
 class _ServicesSectionState extends State<ServicesSection>
     with TickerProviderStateMixin {
   late final AnimationController _entranceCtrl;
-  late final AnimationController _particlesCtrl;
   int _hoveredIndex = -1;
 
   @override
   void initState() {
     super.initState();
-    _entranceCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
-    _particlesCtrl = AnimationController(vsync: this, duration: const Duration(seconds: 20))..repeat();
-    _entranceCtrl.forward();
+    _entranceCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200))..forward();
   }
 
   @override
   void dispose() {
     _entranceCtrl.dispose();
-    _particlesCtrl.dispose();
     super.dispose();
   }
 
@@ -1140,8 +1305,8 @@ class _ServicesSectionState extends State<ServicesSection>
         number: '01',
         titleEn: 'Mobile App Development',
         titleAr: 'تصميم وتطوير تطبيقات الموبايل',
-        descriptionEn: 'We build blazing-fast, pixel-perfect mobile apps for iOS & Android using Flutter. Every tap, swipe, and animation is crafted to feel premium.',
-        descriptionAr: 'نبني تطبيقات موبايل فائقة السرعة ودقيقة التصميم لنظامي iOS و Android باستخدام Flutter. كل لمسة وتمريرة وحركة مصممة لتشعر بالفخامة.',
+        descriptionEn: 'We build blazing-fast, pixel-perfect mobile apps for iOS & Android using Flutter.',
+        descriptionAr: 'نبني تطبيقات موبايل فائقة السرعة ودقيقة التصميم لنظامي iOS و Android باستخدام Flutter.',
         icon: Icons.phone_android,
         color: const Color(0xFF1080E0),
         tags: ['Flutter', 'iOS', 'Android', 'UI/UX'],
@@ -1153,8 +1318,8 @@ class _ServicesSectionState extends State<ServicesSection>
         number: '02',
         titleEn: 'E-Commerce & Digital Stores',
         titleAr: 'حلول التجارة الإلكترونية والمتاجر الرقمية',
-        descriptionEn: 'Complete e-commerce ecosystems with smart dashboards, inventory tracking, and seamless local payment integration including Zain Cash & Asia Hawala.',
-        descriptionAr: 'نظام تجارة إلكترونية متكامل مع لوحة تحكم ذكية وتتبع المخزون وربط سلس مع بوابات الدفع المحلية including زين كاش و آسيا حوالة.',
+        descriptionEn: 'Complete e-commerce ecosystems with smart dashboards, inventory tracking, and local payment integration.',
+        descriptionAr: 'نظام تجارة إلكترونية متكامل مع لوحة تحكم ذكية وتتبع المخزون وربط مع بوابات الدفع المحلية.',
         icon: Icons.shopping_cart,
         color: const Color(0xFF2090FF),
         tags: ['Zain Cash', 'Asia Hawala', 'Store', 'Payment'],
@@ -1166,8 +1331,8 @@ class _ServicesSectionState extends State<ServicesSection>
         number: '03',
         titleEn: 'Enterprise Systems & ERP',
         titleAr: 'الأنظمة الإدارية وأتمتة الأعمال',
-        descriptionEn: 'Custom ERP systems, database architecture, and process automation that transform chaotic workflows into streamlined, data-driven operations.',
-        descriptionAr: 'أنظمة ERP مخصصة وهندسة قواعد بيانات وأتمتة عمليات تحول أعمالك الفوضوية إلى عمليات مُنظمة ومدفوعة بالبيانات.',
+        descriptionEn: 'Custom ERP systems, database architecture, and process automation for data-driven operations.',
+        descriptionAr: 'أنظمة ERP مخصصة وهندسة قواعد بيانات وأتمتة عمليات تحول أعمالك إلى عمليات مدفوعة بالبيانات.',
         icon: Icons.business_center,
         color: const Color(0xFF40A0FF),
         tags: ['ERP', 'CRM', 'Database', 'Automation'],
@@ -1177,88 +1342,68 @@ class _ServicesSectionState extends State<ServicesSection>
       ),
     ];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
-      child: Column(
-        children: [
-          _SectionHeader(
-            title: tr('خدماتنا البرمجية', 'Our Software Services'),
-            subtitle: tr(
-              'حلول تقنية شاملة مصممة خصيصاً للشركات والمؤسسات في العراق',
-              'Comprehensive tech solutions designed specifically for businesses in Iraq',
-            ),
-          ),
-          const SizedBox(height: 20),
-          // Trust badges
-          AnimatedBuilder(
-            animation: _entranceCtrl,
-            builder: (_, __) => Opacity(
-              opacity: _entranceCtrl.value,
-              child: Wrap(
-                spacing: 12,
-                runSpacing: 8,
-                alignment: WrapAlignment.center,
-                children: [
-                  _TrustBadge(icon: Icons.verified, label: tr('جودة مضمونة', 'Quality Assured')),
-                  _TrustBadge(icon: Icons.support_agent, label: tr('دعم 24/7', '24/7 Support')),
-                  _TrustBadge(icon: Icons.speed, label: tr('تسليم سريع', 'Fast Delivery')),
-                  _TrustBadge(icon: Icons.lock, label: tr('أمان متقدم', 'Advanced Security')),
-                ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isDesktop = constraints.maxWidth > 800;
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: isDesktop ? 48 : 16, vertical: 60),
+          child: Column(
+            children: [
+              _SectionHeader(
+                title: tr('خدماتنا البرمجية', 'Our Software Services'),
+                subtitle: tr('حلول تقنية شاملة للشركات والمؤسسات في العراق', 'Comprehensive tech solutions for businesses in Iraq'),
               ),
-            ),
-          ),
-          const SizedBox(height: 40),
-          // Animated floating particles background
-          AnimatedBuilder(
-            animation: _particlesCtrl,
-            builder: (_, __) => SizedBox(
-              height: 0,
-              width: double.infinity,
-              child: CustomPaint(painter: _ServiceParticlesPainter(
-                time: _particlesCtrl.value * 20,
-              )),
-            ),
-          ),
-          // Service cards with staggered entrance
-          ...List.generate(services.length, (i) {
-            final delay = (i * 0.2).clamp(0.0, 1.0);
-            final animInterval = Interval(delay, (delay + 0.6).clamp(0.0, 1.0), curve: Curves.easeOutCubic);
-            return AnimatedBuilder(
-              animation: _entranceCtrl,
-              builder: (_, child) {
-                final animValue = animInterval.transform(_entranceCtrl.value.clamp(0.0, 1.0));
-                return Opacity(
-                  opacity: animValue,
-                  child: Transform.translate(
-                    offset: Offset(0, 40 * (1 - animValue)),
-                    child: Transform.scale(
-                      scale: 0.95 + 0.05 * animValue,
-                      child: child,
-                    ),
+              const SizedBox(height: 24),
+              // Trust badges
+              AnimatedBuilder(
+                animation: _entranceCtrl,
+                builder: (_, __) => Opacity(
+                  opacity: _entranceCtrl.value,
+                  child: Wrap(
+                    spacing: 12, runSpacing: 8, alignment: WrapAlignment.center,
+                    children: [
+                      _TrustBadge(icon: Icons.verified, label: tr('جودة مضمونة', 'Quality Assured')),
+                      _TrustBadge(icon: Icons.support_agent, label: tr('دعم 24/7', '24/7 Support')),
+                      _TrustBadge(icon: Icons.speed, label: tr('تسليم سريع', 'Fast Delivery')),
+                      _TrustBadge(icon: Icons.lock, label: tr('أمان متقدم', 'Advanced Security')),
+                    ],
                   ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 24),
-                child: _ProfessionalServiceCard(
-                  data: services[i],
-                  isHovered: _hoveredIndex == i,
-                  onHover: (v) => setState(() => _hoveredIndex = v ? i : -1),
                 ),
               ),
-            );
-          }),
-          const SizedBox(height: 32),
-          // Bottom stats bar
-          AnimatedBuilder(
-            animation: _entranceCtrl,
-            builder: (_, __) => Opacity(
-              opacity: _entranceCtrl.value,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final isMobile = constraints.maxWidth < 500;
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32, vertical: isMobile ? 16 : 20),
+              const SizedBox(height: 48),
+              // Bento grid on desktop, stacked on mobile
+              if (isDesktop)
+                _BentoServiceGrid(services: services, hoveredIndex: _hoveredIndex, onHover: (i) => setState(() => _hoveredIndex = i), entranceCtrl: _entranceCtrl)
+              else
+                ...List.generate(services.length, (i) {
+                  final delay = (i * 0.2).clamp(0.0, 1.0);
+                  final animInterval = Interval(delay, (delay + 0.6).clamp(0.0, 1.0), curve: Curves.easeOutCubic);
+                  return AnimatedBuilder(
+                    animation: _entranceCtrl,
+                    builder: (_, child) {
+                      final animValue = animInterval.transform(_entranceCtrl.value.clamp(0.0, 1.0));
+                      return Opacity(
+                        opacity: animValue,
+                        child: Transform.translate(offset: Offset(0, 40 * (1 - animValue)), child: child),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 24),
+                      child: _ProfessionalServiceCard(
+                        data: services[i], isHovered: _hoveredIndex == i,
+                        onHover: (v) => setState(() => _hoveredIndex = v ? i : -1),
+                      ),
+                    ),
+                  );
+                }),
+              const SizedBox(height: 32),
+              // Bottom stats bar
+              AnimatedBuilder(
+                animation: _entranceCtrl,
+                builder: (_, __) => Opacity(
+                  opacity: _entranceCtrl.value,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: isDesktop ? 32 : 16, vertical: 16),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(colors: [
                         const Color(0xFF1080E0).withValues(alpha: 0.08),
@@ -1267,21 +1412,8 @@ class _ServicesSectionState extends State<ServicesSection>
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.1)),
                     ),
-                    child: isMobile
-                        ? Column(
-                            children: [
-                              _ServiceMiniStat(value: '58+', label: tr('مشروع منجز', 'Completed')),
-                              const SizedBox(height: 12),
-                              Container(height: 1, width: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
-                              const SizedBox(height: 12),
-                              _ServiceMiniStat(value: '99%', label: tr('رضا العملاء', 'Satisfaction')),
-                              const SizedBox(height: 12),
-                              Container(height: 1, width: 40, color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
-                              const SizedBox(height: 12),
-                              _ServiceMiniStat(value: '<48h', label: tr('استجابة', 'Response')),
-                            ],
-                          )
-                        : Row(
+                    child: isDesktop
+                        ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               _ServiceMiniStat(value: '58+', label: tr('مشروع منجز', 'Completed')),
@@ -1290,14 +1422,88 @@ class _ServicesSectionState extends State<ServicesSection>
                               Container(width: 1, height: 28, color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
                               _ServiceMiniStat(value: '<48h', label: tr('استجابة', 'Response')),
                             ],
+                          )
+                        : Column(
+                            children: [
+                              _ServiceMiniStat(value: '58+', label: tr('مشروع منجز', 'Completed')),
+                              const SizedBox(height: 12),
+                              _ServiceMiniStat(value: '99%', label: tr('رضا العملاء', 'Satisfaction')),
+                              const SizedBox(height: 12),
+                              _ServiceMiniStat(value: '<48h', label: tr('استجابة', 'Response')),
+                            ],
                           ),
-                  );
-                },
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-          const SizedBox(height: 16),
-        ],
+        );
+      },
+    );
+  }
+}
+
+class _BentoServiceGrid extends StatelessWidget {
+  final List<_ServiceData> services;
+  final int hoveredIndex;
+  final ValueChanged<int> onHover;
+  final AnimationController entranceCtrl;
+
+  const _BentoServiceGrid({required this.services, required this.hoveredIndex, required this.onHover, required this.entranceCtrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: entranceCtrl,
+      builder: (_, __) => Opacity(
+        opacity: entranceCtrl.value,
+        child: SizedBox(
+          height: 520,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Large card (Mobile) - takes 55% width
+              Expanded(
+                flex: 55,
+                child: Transform.translate(
+                  offset: Offset(0, 30 * (1 - entranceCtrl.value)),
+                  child: _ProfessionalServiceCard(
+                    data: services[0], isHovered: hoveredIndex == 0,
+                    onHover: (v) => onHover(v ? 0 : -1),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 20),
+              // Right column: 2 smaller cards stacked
+              Expanded(
+                flex: 45,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Transform.translate(
+                        offset: Offset(20 * (1 - entranceCtrl.value), 0),
+                        child: _ProfessionalServiceCard(
+                          data: services[1], isHovered: hoveredIndex == 1,
+                          onHover: (v) => onHover(v ? 1 : -1),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Expanded(
+                      child: Transform.translate(
+                        offset: Offset(20 * (1 - entranceCtrl.value), 0),
+                        child: _ProfessionalServiceCard(
+                          data: services[2], isHovered: hoveredIndex == 2,
+                          onHover: (v) => onHover(v ? 2 : -1),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -1521,7 +1727,7 @@ class _SampleProjectDialogState extends State<_SampleProjectDialog>
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
     return Dialog(
-      backgroundColor: const Color(0xFF0F1320),
+      backgroundColor: const Color(0xFF0B1018),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -1573,7 +1779,7 @@ class _SampleProjectDialogState extends State<_SampleProjectDialog>
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: [widget.color.withValues(alpha: isSelected ? 0.25 : 0.15), const Color(0xFF0F1320)],
+                        colors: [widget.color.withValues(alpha: isSelected ? 0.25 : 0.15), const Color(0xFF0B1018)],
                       ),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
@@ -1646,7 +1852,7 @@ class _SampleProjectDialogState extends State<_SampleProjectDialog>
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF0A0E1A),
+                              color: const Color(0xFF0B1018),
                               borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
                             ),
                             child: Row(
@@ -1741,9 +1947,9 @@ class _FullSampleView extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
     return Scaffold(
-      backgroundColor: const Color(0xFF090D16),
+      backgroundColor: const Color(0xFF080C16),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0F1320),
+      backgroundColor: const Color(0xFF0B1018),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -1762,7 +1968,7 @@ class _FullSampleView extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [color.withValues(alpha: 0.2), const Color(0xFF0F1320)],
+                  colors: [color.withValues(alpha: 0.2), const Color(0xFF0B1018)],
                 ),
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(color: color.withValues(alpha: 0.3)),
@@ -1823,7 +2029,7 @@ class _FullSampleView extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.all(isMobile ? 20 : 32),
               decoration: BoxDecoration(
-                color: const Color(0xFF141A29),
+                color: const Color(0xFF0B1018),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: color.withValues(alpha: 0.15)),
               ),
@@ -1945,12 +2151,12 @@ class _ProfessionalServiceCardState extends State<_ProfessionalServiceCard>
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOutCubic,
           decoration: BoxDecoration(
-            color: const Color(0xFF141A29),
+            color: const Color(0xFF0B1018),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: widget.isHovered
                   ? d.color.withValues(alpha: 0.6)
-                  : d.color.withValues(alpha: 0.08),
+                  : d.color.withValues(alpha: 0.06),
               width: widget.isHovered ? 2 : 1,
             ),
             boxShadow: widget.isHovered
@@ -2177,7 +2383,7 @@ class _ProfessionalServiceCardState extends State<_ProfessionalServiceCard>
                   child: Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0F1524),
+                      color: const Color(0xFF080C16),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: d.color.withValues(alpha: 0.1)),
                     ),
@@ -2303,135 +2509,100 @@ class _FAQSectionState extends State<FAQSection> {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 36 : 60),
-      child: Column(
-        children: [
-          _SectionHeader(
-            title: tr('الأسئلة الشائعة', 'Frequently Asked Questions'),
-            subtitle: tr(
-              'إجابات على أكثر الاستفسارات شيوعاً حول خدماتنا',
-              'Answers to the most common questions about our services',
-            ),
-          ),
-          const SizedBox(height: 48),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800),
-            child: Column(
-              children: List.generate(_faqs.length, (i) {
-                final faq = _faqs[i];
-                final isExpanded = _expandedIndex == i;
-                final question = LanguageManager.instance.isArabic
-                    ? faq['questionAr']!
-                    : faq['questionEn']!;
-                final answer = LanguageManager.instance.isArabic
-                    ? faq['answerAr']!
-                    : faq['answerEn']!;
+    return Column(
+      children: [
+        _WaveDivider(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 48, vertical: isMobile ? 36 : 60),
+          child: Column(
+            children: [
+              _SectionHeader(
+                title: tr('الأسئلة الشائعة', 'Frequently Asked Questions'),
+                subtitle: tr('إجابات على أكثر الاستفسارات شيوعاً', 'Answers to the most common questions'),
+              ),
+              const SizedBox(height: 48),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 800),
+                child: Column(
+                  children: List.generate(_faqs.length, (i) {
+                    final faq = _faqs[i];
+                    final isExpanded = _expandedIndex == i;
+                    final question = LanguageManager.instance.isArabic ? faq['questionAr']! : faq['questionEn']!;
+                    final answer = LanguageManager.instance.isArabic ? faq['answerAr']! : faq['answerEn']!;
 
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _expandedIndex = isExpanded ? -1 : i;
-                        });
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF141A29),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: isExpanded
-                                ? const Color(0xFF1080E0).withValues(alpha: 0.4)
-                                : const Color(0xFF1080E0).withValues(alpha: 0.08),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(24),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF1080E0).withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: const Icon(
-                                      Icons.question_answer,
-                                      color: Color(0xFF1080E0),
-                                      size: 20,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Text(
-                                      question,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                        height: 1.5,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  AnimatedRotation(
-                                    turns: isExpanded ? 0.5 : 0,
-                                    duration: const Duration(milliseconds: 300),
-                                    child: const Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: Color(0xFF1080E0),
-                                      size: 24,
-                                    ),
-                                  ),
-                                ],
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () => setState(() => _expandedIndex = isExpanded ? -1 : i),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0B1018),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: isExpanded ? const Color(0xFF1080E0).withValues(alpha: 0.4) : const Color(0xFF1080E0).withValues(alpha: 0.06),
                               ),
                             ),
-                            AnimatedCrossFade(
-                              firstChild: const SizedBox.shrink(),
-                              secondChild: Padding(
-                                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(20),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF0F1320),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: const Color(0xFF1080E0).withValues(alpha: 0.08),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    answer,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      color: Color(0xFFA6ABB6),
-                                      height: 1.8,
-                                    ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(24),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(colors: [const Color(0xFF1080E0).withValues(alpha: 0.12), const Color(0xFF1080E0).withValues(alpha: 0.04)]),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: const Icon(Icons.question_answer, color: Color(0xFF2090FF), size: 20),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Text(question, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white, height: 1.5)),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      AnimatedRotation(
+                                        turns: isExpanded ? 0.5 : 0,
+                                        duration: const Duration(milliseconds: 300),
+                                        child: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF1080E0), size: 24),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              crossFadeState: isExpanded
-                                  ? CrossFadeState.showSecond
-                                  : CrossFadeState.showFirst,
-                              duration: const Duration(milliseconds: 300),
+                                AnimatedCrossFade(
+                                  firstChild: const SizedBox.shrink(),
+                                  secondChild: Padding(
+                                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                                    child: Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.all(20),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF080C16),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.06)),
+                                      ),
+                                      child: Text(answer, style: const TextStyle(fontSize: 15, color: Color(0xFF8892A4), height: 1.8)),
+                                    ),
+                                  ),
+                                  crossFadeState: isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                  duration: const Duration(milliseconds: 300),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              }),
-            ),
+                    );
+                  }),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -2561,116 +2732,93 @@ class _CTASectionState extends State<CTASection> {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 36 : 60),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 48, vertical: isMobile ? 36 : 60),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(isMobile ? 28 : 52),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  const Color(0xFF141A29).withValues(alpha: 0.8),
-                  const Color(0xFF0F1828),
-                  const Color(0xFF141A29).withValues(alpha: 0.6),
+          constraints: const BoxConstraints(maxWidth: 900),
+          child: _AnimatedGradientBorder(
+            color: const Color(0xFF1080E0),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(isMobile ? 32 : 60),
+              decoration: BoxDecoration(
+                color: const Color(0xFF0B1018),
+                borderRadius: BorderRadius.circular(28),
+              ),
+              child: Stack(
+                children: [
+                  // Decorative orbs
+                  Positioned(
+                    top: -100, right: -100,
+                    child: Container(
+                      width: 280, height: 280,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(colors: [
+                          const Color(0xFF1080E0).withValues(alpha: 0.08),
+                          Colors.transparent,
+                        ]),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: -80, left: -80,
+                    child: Container(
+                      width: 220, height: 220,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(colors: [
+                          const Color(0xFF2090FF).withValues(alpha: 0.05),
+                          Colors.transparent,
+                        ]),
+                      ),
+                    ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ShaderMask(
+                        shaderCallback: (bounds) => const LinearGradient(
+                          colors: [Color(0xFFFFFFFF), Color(0xFF90C8FF)],
+                        ).createShader(bounds),
+                        child: Text(
+                          tr('جاهز لبناء المستقبل الرقمي؟', 'Ready to Build the Digital Future?'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: isMobile ? 26 : 36, fontWeight: FontWeight.w900, color: Colors.white, height: 1.3),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        tr('تواصل معنا الآن واحصل على استشارة مجانية', 'Contact us now for a free consultation'),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 16, color: Color(0xFF8892A4)),
+                      ),
+                      const SizedBox(height: 44),
+                      Wrap(
+                        spacing: 16, runSpacing: 12, alignment: WrapAlignment.center,
+                        children: [
+                          _CTAButton(
+                            label: 'واتساب | WhatsApp',
+                            customIcon: const _WhatsAppIcon(size: 20),
+                            color: const Color(0xFF25D366),
+                            url: 'https://wa.me/9647771632241',
+                            isHovered: _hoverWA,
+                            onHover: (v) => setState(() => _hoverWA = v),
+                          ),
+                          _CTAButton(
+                            label: 'Telegram',
+                            icon: Icons.send,
+                            color: const Color(0xFF0088cc),
+                            url: 'https://t.me/codemaster6',
+                            isHovered: _hoverTG,
+                            onHover: (v) => setState(() => _hoverTG = v),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: const Color(0xFF1080E0).withValues(alpha: 0.15)),
-              boxShadow: [
-                BoxShadow(color: const Color(0xFF1080E0).withValues(alpha: 0.06), blurRadius: 50, spreadRadius: 0),
-              ],
-            ),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: -80, right: -80,
-                  child: Container(
-                    width: 220, height: 220,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(colors: [
-                        const Color(0xFF1080E0).withValues(alpha: 0.1),
-                        Colors.transparent,
-                      ]),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: -60, left: -60,
-                  child: Container(
-                    width: 180, height: 180,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(colors: [
-                        const Color(0xFF2090FF).withValues(alpha: 0.06),
-                        Colors.transparent,
-                      ]),
-                    ),
-                  ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Gradient title
-                    ShaderMask(
-                      shaderCallback: (bounds) => const LinearGradient(
-                        colors: [Color(0xFFFFFFFF), Color(0xFFB0D4FF)],
-                      ).createShader(bounds),
-                      child: Text(
-                        tr('جاهز لبناء المستقبل الرقمي؟', 'Ready to Build the Digital Future?'),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: isMobile ? 24 : 32,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          height: 1.3,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      tr(
-                        'تواصل معنا الآن واحصل على استشارة مجانية لمشروعك',
-                        'Contact us now and get a free consultation for your project',
-                      ),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFFA6ABB6),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    Wrap(
-                      spacing: 16,
-                      runSpacing: 12,
-                      alignment: WrapAlignment.center,
-                      children: [
-                        _CTAButton(
-                          label: 'واتساب | WhatsApp',
-                          customIcon: const _WhatsAppIcon(size: 20),
-                          color: const Color(0xFF25D366),
-                          url: 'https://wa.me/9647771632241',
-                          isHovered: _hoverWA,
-                          onHover: (v) => setState(() => _hoverWA = v),
-                        ),
-                        _CTAButton(
-                          label: 'Telegram',
-                          icon: Icons.send,
-                          color: const Color(0xFF0088cc),
-                          url: 'https://t.me/codemaster6',
-                          isHovered: _hoverTG,
-                          onHover: (v) => setState(() => _hoverTG = v),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 36),
-                  ],
-                ),
-              ],
             ),
           ),
         ),
@@ -2755,7 +2903,7 @@ class FooterSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 52),
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: Color(0xFF141A29), width: 1)),
+        border: Border(top: BorderSide(color: Color(0xFF0D1220), width: 1)),
       ),
       child: Column(
         children: [

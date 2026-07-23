@@ -19,7 +19,7 @@ class _CleanHeroBgState extends State<CleanHeroBg>
     super.initState();
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 60),
+      duration: const Duration(seconds: 120),
     )..repeat();
   }
 
@@ -36,8 +36,8 @@ class _CleanHeroBgState extends State<CleanHeroBg>
         final size = MediaQuery.of(context).size;
         if (size.width > 0 && size.height > 0) {
           setState(() {
-            _pointerX = (e.position.dx / size.width) * 2 - 1;
-            _pointerY = (e.position.dy / size.height) * 2 - 1;
+            _pointerX = e.position.dx / size.width;
+            _pointerY = e.position.dy / size.height;
           });
         }
       },
@@ -45,8 +45,8 @@ class _CleanHeroBgState extends State<CleanHeroBg>
         animation: _ctrl,
         builder: (context, _) {
           return CustomPaint(
-            painter: _CleanBgPainter(
-              time: _ctrl.value * 60,
+            painter: _CodeRainPainter(
+              time: _ctrl.value * 120,
               pointerX: _pointerX,
               pointerY: _pointerY,
             ),
@@ -58,12 +58,21 @@ class _CleanHeroBgState extends State<CleanHeroBg>
   }
 }
 
-class _CleanBgPainter extends CustomPainter {
+const _codeTokens = [
+  '{', '}', '<', '>', '/', '=', '+', '-', '*', ';', ':', '(', ')',
+  'const', 'void', 'int', 'return', 'async', 'await', 'class',
+  'if', 'for', 'map', 'true', 'null', '0x10', 'E0', 'FF',
+  'pub', 'dart', 'flutter', 'import', 'final', 'var', 'bool',
+  'widget', 'state', 'build', 'context', 'theme', 'render',
+  '0', '1', '/', '*', '&&', '||', '==', '!=', '=>',
+];
+
+class _CodeRainPainter extends CustomPainter {
   final double time;
   final double pointerX;
   final double pointerY;
 
-  const _CleanBgPainter({
+  _CodeRainPainter({
     required this.time,
     required this.pointerX,
     required this.pointerY,
@@ -71,116 +80,187 @@ class _CleanBgPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
+    final rng = math.Random(42);
 
     // 1. Deep gradient background
     final bgPaint = Paint()
-      ..shader = LinearGradient(
+      ..shader = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          const Color(0xFF090D16),
-          const Color(0xFF0c1020),
-          const Color(0xFF090D16),
+          Color(0xFF04060C),
+          Color(0xFF080C18),
+          Color(0xFF04060C),
         ],
-        stops: const [0.0, 0.5, 1.0],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPaint);
 
-    // 2. Subtle animated radial glow (follows pointer slightly)
-    final glowCx = center.dx + pointerX * 40;
-    final glowCy = center.dy * 0.6 + pointerY * 30;
-    final glowPaint = Paint()
+    // 2. Mouse-following spotlight
+    final spotCx = pointerX * size.width;
+    final spotCy = pointerY * size.height;
+    final spotPaint = Paint()
       ..shader = RadialGradient(
-        center: Alignment(
-          (glowCx / size.width) * 2 - 1,
-          (glowCy / size.height) * 2 - 1,
-        ),
-        radius: 1.2,
+        radius: 0.5,
         colors: [
-          const Color(0xFF1080E0).withValues(alpha: 0.06 + math.sin(time * 0.4) * 0.02),
-          const Color(0xFF2090FF).withValues(alpha: 0.03),
+          const Color(0xFF1080E0).withValues(alpha: 0.08),
+          const Color(0xFF0060B0).withValues(alpha: 0.03),
           Colors.transparent,
         ],
         stops: const [0.0, 0.4, 1.0],
-      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), glowPaint);
+      ).createShader(Rect.fromCircle(center: Offset(spotCx, spotCy), radius: size.width * 0.5));
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), spotPaint);
 
-    // 3. Subtle secondary green glow bottom-right
-    final glow2 = Paint()
+    // 3. Central ambient glow
+    final centerGlow = Paint()
       ..shader = RadialGradient(
-        center: const Alignment(0.6, 0.4),
+        center: const Alignment(0, -0.2),
         radius: 0.8,
         colors: [
-          const Color(0xFF2090FF).withValues(alpha: 0.04),
+          const Color(0xFF1080E0).withValues(alpha: 0.04 + math.sin(time * 0.3) * 0.015),
           Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), glow2);
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), centerGlow);
 
-    // 4. Floating stars (subtle, small)
-    final rng = math.Random(42);
-    final starPaint = Paint()..style = PaintingStyle.fill;
-    for (int i = 0; i < 80; i++) {
-      final baseX = rng.nextDouble() * size.width;
-      final baseY = rng.nextDouble() * size.height;
-      final driftX = math.sin(time * 0.15 + i * 0.7) * (8 + rng.nextDouble() * 12);
-      final driftY = math.cos(time * 0.12 + i * 0.5) * (6 + rng.nextDouble() * 10);
-      final x = baseX + driftX + pointerX * (rng.nextDouble() * 6 - 3);
-      final y = baseY + driftY + pointerY * (rng.nextDouble() * 6 - 3);
-      final r = 0.5 + rng.nextDouble() * 1.2;
-      final twinkle = (0.2 + math.sin(time * (1.5 + rng.nextDouble() * 2) + i * 1.3) * 0.2)
-          .clamp(0.05, 0.45);
+    // 4. Code rain columns
+    final colSpacing = 28.0;
+    final cols = (size.width / colSpacing).ceil();
+    final speed = 35.0;
 
-      final color = rng.nextInt(3) == 0
-          ? const Color(0xFF2090FF)
-          : const Color(0xFF1080E0);
-      starPaint.color = color.withValues(alpha: twinkle);
-      canvas.drawCircle(Offset(x, y), r, starPaint);
+    for (int col = 0; col < cols; col++) {
+      final x = col * colSpacing + 4;
+      final colSeed = col * 137;
+      final colRng = math.Random(colSeed);
+
+      // Each column has a different speed offset
+      final speedMult = 0.6 + colRng.nextDouble() * 0.8;
+      final startOffset = colRng.nextDouble() * size.height * 2;
+
+      final rowCount = (size.height / 20).ceil() + 4;
+
+      for (int row = 0; row < rowCount; row++) {
+        final baseY = (startOffset + time * speed * speedMult + row * 20) % (size.height + 200) - 100;
+
+        // Distance from mouse pointer for interaction
+        final dx = (x - spotCx) / size.width;
+        final dy = (baseY - spotCy) / size.height;
+        final distFromMouse = math.sqrt(dx * dx + dy * dy);
+        final mouseInfluence = (1.0 - (distFromMouse * 3).clamp(0.0, 1.0));
+
+        // Token selection
+        final tokenIdx = (colSeed + row * 7 + (time * 0.1).toInt()) % _codeTokens.length;
+        final token = _codeTokens[tokenIdx];
+
+        // Head of column is brightest
+        final isHead = row == 0;
+        final fadePosition = (baseY / size.height).clamp(0.0, 1.0);
+        final positionFade = fadePosition < 0.1
+            ? fadePosition / 0.1
+            : fadePosition > 0.85
+                ? (1.0 - fadePosition) / 0.15
+                : 1.0;
+
+        double alpha = positionFade * (isHead ? 0.5 : 0.12 + colRng.nextDouble() * 0.12);
+        alpha += mouseInfluence * 0.4;
+        alpha = alpha.clamp(0.0, 0.65);
+
+        if (alpha < 0.01) continue;
+
+        // Color: head is white-blue, body is blue
+        final Color charColor;
+        if (isHead) {
+          charColor = const Color(0xFFE0F0FF).withValues(alpha: alpha);
+        } else if (mouseInfluence > 0.2) {
+          charColor = Color.lerp(
+            const Color(0xFF1080E0),
+            const Color(0xFF40A0FF),
+            mouseInfluence,
+          )!.withValues(alpha: alpha);
+        } else {
+          charColor = const Color(0xFF1080E0).withValues(alpha: alpha);
+        }
+
+        final textPainter = TextPainter(
+          text: TextSpan(
+            text: token,
+            style: TextStyle(
+              fontSize: isHead ? 13 : 11,
+              fontFamily: 'monospace',
+              fontWeight: isHead ? FontWeight.w700 : FontWeight.w400,
+              color: charColor,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
+
+        textPainter.paint(canvas, Offset(x, baseY));
+
+        // Head glow effect
+        if (isHead || mouseInfluence > 0.3) {
+          final glowPaint = Paint()
+            ..color = const Color(0xFF1080E0).withValues(alpha: alpha * 0.3)
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+          canvas.drawCircle(
+            Offset(x + textPainter.width / 2, baseY + textPainter.height / 2),
+            8,
+            glowPaint,
+          );
+        }
+      }
     }
 
-    // 5. Very subtle grid lines (barely visible, professional)
-    final gridPaint = Paint()
+    // 5. Subtle horizontal scan lines (CRT / retro feel)
+    final scanPaint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.3;
+      ..strokeWidth = 0.5;
+    final scanY = (time * 40) % (size.height + 400) - 200;
+    scanPaint.color = const Color(0xFF1080E0).withValues(alpha: 0.06);
+    canvas.drawLine(
+      Offset(0, scanY),
+      Offset(size.width, scanY),
+      scanPaint,
+    );
+    // Second scan line offset
+    canvas.drawLine(
+      Offset(0, (scanY + size.height * 0.4) % size.height),
+      Offset(size.width, (scanY + size.height * 0.4) % size.height),
+      scanPaint,
+    );
 
-    final gridSpacing = 120.0;
-    final gridAlpha = 0.03 + math.sin(time * 0.2) * 0.01;
-    gridPaint.color = const Color(0xFF1080E0).withValues(alpha: gridAlpha);
-
-    for (double x = 0; x < size.width; x += gridSpacing) {
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x, size.height),
-        gridPaint,
-      );
-    }
-    for (double y = 0; y < size.height; y += gridSpacing) {
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        gridPaint,
-      );
-    }
-
-    // 6. Bottom gradient fade to section color
+    // 6. Bottom gradient fade
     final fadePaint = Paint()
-      ..shader = LinearGradient(
+      ..shader = const LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
           Colors.transparent,
-          const Color(0xFF090D16),
+          Color(0xFF090D16),
         ],
-        stops: const [0.7, 1.0],
-      ).createShader(Rect.fromLTWH(0, size.height * 0.6, size.width, size.height * 0.4));
+        stops: [0.65, 1.0],
+      ).createShader(Rect.fromLTWH(0, size.height * 0.55, size.width, size.height * 0.45));
     canvas.drawRect(
-      Rect.fromLTWH(0, size.height * 0.6, size.width, size.height * 0.4),
+      Rect.fromLTWH(0, size.height * 0.55, size.width, size.height * 0.45),
       fadePaint,
+    );
+
+    // 7. Top subtle gradient fade (for navbar blending)
+    final topFade = Paint()
+      ..shader = const LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color(0xFF090D16),
+          Colors.transparent,
+        ],
+        stops: [0.0, 0.12],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height * 0.15));
+    canvas.drawRect(
+      Rect.fromLTWH(0, 0, size.width, size.height * 0.15),
+      topFade,
     );
   }
 
   @override
-  bool shouldRepaint(covariant _CleanBgPainter old) =>
+  bool shouldRepaint(covariant _CodeRainPainter old) =>
       old.time != time || old.pointerX != pointerX || old.pointerY != pointerY;
 }
